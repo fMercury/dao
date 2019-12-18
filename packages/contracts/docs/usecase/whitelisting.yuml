@@ -1,0 +1,16 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: Whitelisting of proposals senders addresses {bg:beige})
+
+[Code owner]-(Sending of the proposal sender address registration request)
+(Sending of the proposal sender address registration request)-(note: Is it necessary to add special voting case for this?)
+
+[DAO]-(Registering of address in the white-list)
+(Registering of address in the white-list)<(Access validation)
+(Access validation)-(note: How to validate?)
+
+[DAO]-(De-listing of the whitelisted addresses)
+(De-listing of the whitelisted addresses)<(Access validation)
+[DAO]-(Expose whitelisted addresses)

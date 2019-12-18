@@ -1,0 +1,18 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: Submition of the upgrade proposal {bg:beige})
+
+[Code owner]-(Creation of tagged commit with upgraded contracts code) 
+(Creation of tagged commit with upgraded contracts code)<(Commit signing)
+
+[CI/CD]-(Commit validation)
+(Commit validation)<(Commit signature validation)
+(Commit validation)<(Code linting)
+(Commit validation)<(Code testing)
+[CI/CD]-(Building of the proposal)
+(Building of the proposal)<(Fetching of the commit meta-data)
+(Building of the proposal)<(Proposal signing)
+[CI/CD]-(Proposal submitting)
+

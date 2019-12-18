@@ -1,0 +1,36 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: Voting process and proposal transaction execution {bg:beige})
+
+[DAO]-(Expose proposals for token holders)
+(Expose proposals for token holders)<(Proposal status validation)
+[DAO]-(Accept votes from token owners)
+(Accept votes from token owners)<(Tokens holder balance validation)
+(Accept votes from token owners)<(Tokens holder allowance validation)
+(Accept votes from token owners)<(Transferring of tokens to the voting stake storage)
+(Accept votes from token owners)<(Applying of voting algorithm)
+(Applying of voting algorithm)-(note: Is it should be a quadratic function?)
+[DAO]-(Validation of voting results)
+(Validation of voting results)<(Applying of voting rules)
+(Validation of voting results)<(Updating proposal status)
+(Applying of voting rules)-(note: Is this rule should be configurable?)
+[DAO]-(Expose voting results for proposal)
+[DAO]-(Execute proposal transaction)
+(Execute proposal transaction)<(Validating access rights)
+(Validating access rights)-(note: Should be whitelisted sender address)
+(Execute proposal transaction)<(Validating proposal results)
+(Execute proposal transaction)<(Updating proposal status)
+(Updating proposal status)-(note: On request from the whitelisted address. Usually from the Code owner address)
+[DAO]-(Token holders voting stake unblocking)
+(Token holders voting stake unblocking)-(note: Which way of withdrawing we should choose)
+
+[Code owner]-(View proposal voting results)
+[Code owner]-(Sending request for update proposal status)
+
+[Tokens holder]-(Viewing of proposals)
+(Viewing of proposals)<(Filtering by proposal type)
+[Tokens holder]-(Sending a vote for proposal)
+(Sending a vote for proposal)<(Tokens transfer approval)
+[Tokens holder]-(Viewing of voting results)

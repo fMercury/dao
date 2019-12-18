@@ -1,0 +1,13 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: Types of proposals  {bg:beige})-(note: Smart contracts upgrade proposal)
+(note: Types of proposals)-(note: Smart contracts governance proposal)
+(note: Types of proposals)-(note: DAO contracts upgrade proposal)
+
+[DAO]-(Acceptation of proposals)
+(Acceptation of proposals)<(Validating incoming proposal)
+(Validating incoming proposal)<(Sender whitelisting status verification)
+(Validating incoming proposal)<(Applying of proposal registration rules)
+(Applying of proposal registration rules)-(note: time terms, limits, etc)

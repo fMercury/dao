@@ -1,0 +1,29 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: System actors {bg:beige})
+
+[Code owner]-(note: Has credentials to access contracts repository) 
+[Code owner]-(note: Can send address whitelisting requests to the DAO) 
+[Code owner]-(note: Can send governance proposals to the DAO) 
+[Code owner]-(note: Can sign and send tagged commit to the repository) 
+// https://help.github.com/en/github/authenticating-to-github/signing-commits
+
+[Token holder]-(note: Owns tokens required for voting)
+[Token holder]-(note: Can view registered proposals)
+[Token holder]-(note: Can vote for proposals)
+[Token holder]-(note: Can send governance proposals to the DAO) 
+(note: Can send governance proposals to the DAO)-(note: Smart contracts governance)
+(note: Can send governance proposals to the DAO)-(note: DAO contracts governance)
+
+[CI/CD]-(note: Can validate commit signature)
+// https://help.github.com/en/github/authenticating-to-github/about-commit-signature-verification
+[CI/CD]-(note: Compiles the code and runs tests)
+[CI/CD]-(note: Has an ethereum wallet)
+[CI/CD]-(note: Can build, sign and send upgrade proposal transaction to the DAO)
+
+[DAO]-(note: Can register voting proposals)
+[DAO]-(note: Can expose proposals to the token holder for viewing)
+[DAO]-(note: Can process voting for proposals)
+[DAO]-(note: Can hold and withdraw token holders voting stake)

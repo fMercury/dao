@@ -1,0 +1,17 @@
+// {type:usecase}
+// {direction:leftToRight}
+// {generate:true}
+
+(note: Submition of the governance proposals  {bg:beige})-(note: Smart contracts governance)
+(note: Submition of the governance proposals)-(note: DAO contracts governance)
+
+[Code owner]-(Sending of the governance proposal request)
+(Sending of the governance proposal request)<(Building of the governance proposal request)
+(Building of the governance proposal request)<(Choosing of the proposal target)
+(Choosing of the proposal target)-(note: Smart contracts or DAO)
+(Building of the governance proposal request)<(Choosing of the proposal target function)
+(Building of the governance proposal request)<(Defining of the proposal meta-data)
+(Building of the governance proposal request)<(Signing and sending of the proposal request)
+(Sending of the governance proposal request)<(Viewing of the proposal status)
+
+[Token holders]-(Sending of the governance proposal request)
