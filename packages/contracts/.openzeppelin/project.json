@@ -1,0 +1,21 @@
+{
+  "manifestVersion": "2.2",
+  "contracts": {
+    "ContractForDaoTestsV1": "ContractForDaoTestsV1",
+    "ContractForDaoTestsV2": "ContractForDaoTestsV2"
+  },
+  "dependencies": {},
+  "name": "@oz-dao/contracts",
+  "version": "0.0.1",
+  "compiler": {
+    "manager": "openzeppelin",
+    "compilerSettings": {
+      "optimizer": {
+        "enabled": false,
+        "runs": "200"
+      }
+    },
+    "solcVersion": "0.5.14"
+  },
+  "telemetryOptIn": false
+}

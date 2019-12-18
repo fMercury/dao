@@ -1,0 +1,38 @@
+{
+  "name": "@oz-dao/contracts",
+  "version": "0.0.1",
+  "description": "Smart contracts for the oz-dao",
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "dao"
+  ],
+  "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
+  "homepage": "https://github.com/kostysh/oz-dao/packages/contracts#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/kostysh/oz-dao.git"
+  },
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "npx truffle compile --all",
+    "lint": "npx solhint --max-warnings 0 \"contracts/**/*.sol\"",
+    "test": "./test/runner.sh",
+    "test:coverage": "SOLIDITY_COVERAGE=true ./test/runner.sh",
+    "clean": "rm -rf ./artifacts/*"
+  },
+  "devDependencies": {
+    "@openzeppelin/cli": "2.6.0",
+    "solc": "0.5.14",
+    "solhint": "2.3.0",
+    "truffle": "5.1.4",
+    "truffle-hdwallet-provider": "1.0.17",
+    "web3-provider-engine": "15.0.4",
+    "ganache-cli": "6.7.0",
+    "chai": "4.2.0",
+    "bn-chai": "1.0.1",
+    "openzeppelin-solidity": "2.4.0",
+    "solidity-coverage": "0.7.0-beta.3"
+  }
+}

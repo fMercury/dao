@@ -1,0 +1,259 @@
+{
+  "contractName": "Dao",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/Dao.sol\":\"Dao\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/Dao.sol\":{\"keccak256\":\"0xbde06d03a19d9c5a863cf0b0d93ae06ff592c0ac0f69f43bb856fa12f526c22c\",\"urls\":[\"bzz-raw://6ffb2c6148f21134a459c01204431be5e8f5ae677f070815352b4e34b6e4df1e\",\"dweb:/ipfs/QmPXwJyZD4Ys3o6XyGfcZm8XHNWmyKSd8xCgvn2uHGMaMB\"]},\"openzeppelin-solidity/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzz-raw://216ef9d6b614db4eb46970b4e84903f2534a45572dd30a79f0041f1a5830f436\",\"dweb:/ipfs/QmNPrJ4MWKUAWzKXpUqeyKRUfosaoANZAqXgvepdrCwZAG\"]},\"openzeppelin-solidity/contracts/ownership/Ownable.sol\":{\"keccak256\":\"0xecd8ab29d9a5771c3964d0cd1788c4a5098a0081b20fb275da850a22b1c59806\",\"urls\":[\"bzz-raw://696a75bc2c55407ce8251ccc7d19ecb1b7b2be1796a160a6524312babcc7e3d4\",\"dweb:/ipfs/QmQViKEp3y99h9uhRssE29TmjBKRnFMaoz3eJZ4eggggg2\"]}},\"version\":1}",
+  "bytecode": "0x60806040526100156001600160e01b0361006216565b600080546001600160a01b0319166001600160a01b03928316178082556040519216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a3610066565b3390565b6102fb806100756000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c8063715018a6146100515780638da5cb5b1461005b5780638f32d59b1461007f578063f2fde38b1461009b575b600080fd5b6100596100c1565b005b610063610164565b604080516001600160a01b039092168252519081900360200190f35b610087610173565b604080519115158252519081900360200190f35b610059600480360360208110156100b157600080fd5b50356001600160a01b0316610197565b6100c9610173565b61011a576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b03166101886101fc565b6001600160a01b031614905090565b61019f610173565b6101f0576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6101f981610200565b50565b3390565b6001600160a01b0381166102455760405162461bcd60e51b81526004018080602001828103825260268152602001806102a16026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a723158204651d95282f40d714c02109a5a6eec48adda6fdfcf111ad5bf9218247c01dc4664736f6c634300050e0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c8063715018a6146100515780638da5cb5b1461005b5780638f32d59b1461007f578063f2fde38b1461009b575b600080fd5b6100596100c1565b005b610063610164565b604080516001600160a01b039092168252519081900360200190f35b610087610173565b604080519115158252519081900360200190f35b610059600480360360208110156100b157600080fd5b50356001600160a01b0316610197565b6100c9610173565b61011a576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b600080546001600160a01b03166101886101fc565b6001600160a01b031614905090565b61019f610173565b6101f0576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6101f981610200565b50565b3390565b6001600160a01b0381166102455760405162461bcd60e51b81526004018080602001828103825260268152602001806102a16026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a265627a7a723158204651d95282f40d714c02109a5a6eec48adda6fdfcf111ad5bf9218247c01dc4664736f6c634300050e0032",
+  "sourceMap": "91:32:0:-;;;707:12:6;-1:-1:-1;;;;;707:10:6;:12;:::i;:::-;698:6;:21;;-1:-1:-1;;;;;;698:21:6;-1:-1:-1;;;;;698:21:6;;;;;;;734:40;;767:6;;;734:40;;698:6;;734:40;91:32:0;;788:96:5;867:10;788:96;:::o;91:32:0:-;;;;;;;",
+  "deployedSourceMap": "91:32:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;91:32:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1642:137:6;;;:::i;:::-;;857:77;;;:::i;:::-;;;;-1:-1:-1;;;;;857:77:6;;;;;;;;;;;;;;1208:92;;;:::i;:::-;;;;;;;;;;;;;;;;;;1928:107;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1928:107:6;-1:-1:-1;;;;;1928:107:6;;:::i;1642:137::-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1740:1;1724:6;;1703:40;;-1:-1:-1;;;;;1724:6:6;;;;1703:40;;1740:1;;1703:40;1770:1;1753:19;;-1:-1:-1;;;;;;1753:19:6;;;1642:137::o;857:77::-;895:7;921:6;-1:-1:-1;;;;;921:6:6;857:77;:::o;1208:92::-;1248:4;1287:6;;-1:-1:-1;;;;;1287:6:6;1271:12;:10;:12::i;:::-;-1:-1:-1;;;;;1271:22:6;;1264:29;;1208:92;:::o;1928:107::-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2000:28;2019:8;2000:18;:28::i;:::-;1928:107;:::o;788:96:5:-;867:10;788:96;:::o;2136:225:6:-;-1:-1:-1;;;;;2209:22:6;;2201:73;;;;-1:-1:-1;;;2201:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2310:6;;;2289:38;;-1:-1:-1;;;;;2289:38:6;;;;2310:6;;;2289:38;;;2337:6;:17;;-1:-1:-1;;;;;;2337:17:6;-1:-1:-1;;;;;2337:17:6;;;;;;;;;;2136:225::o",
+  "source": "pragma solidity 0.5.14;\n\nimport \"openzeppelin-solidity/contracts/ownership/Ownable.sol\";\n\n\ncontract Dao is Ownable {\n    \n}",
+  "sourcePath": "/home/kostysh/dev/dao/packages/contracts/contracts/Dao.sol",
+  "ast": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/Dao.sol",
+    "exportedSymbols": {
+      "Dao": [
+        5
+      ]
+    },
+    "id": 6,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 2,
+        "nodeType": "ImportDirective",
+        "scope": 6,
+        "sourceUnit": 304,
+        "src": "25:63:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 3,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 303,
+              "src": "107:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$303",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 4,
+            "nodeType": "InheritanceSpecifier",
+            "src": "107:7:0"
+          }
+        ],
+        "contractDependencies": [
+          189,
+          303
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5,
+        "linearizedBaseContracts": [
+          5,
+          303,
+          189
+        ],
+        "name": "Dao",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 6,
+        "src": "91:32:0"
+      }
+    ],
+    "src": "0:123:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/Dao.sol",
+    "exportedSymbols": {
+      "Dao": [
+        5
+      ]
+    },
+    "id": 6,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 2,
+        "nodeType": "ImportDirective",
+        "scope": 6,
+        "sourceUnit": 304,
+        "src": "25:63:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 3,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 303,
+              "src": "107:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$303",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 4,
+            "nodeType": "InheritanceSpecifier",
+            "src": "107:7:0"
+          }
+        ],
+        "contractDependencies": [
+          189,
+          303
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5,
+        "linearizedBaseContracts": [
+          5,
+          303,
+          189
+        ],
+        "name": "Dao",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 6,
+        "src": "91:32:0"
+      }
+    ],
+    "src": "0:123:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-18T01:50:24.003Z",
+  "devdoc": {
+    "methods": {
+      "isOwner()": {
+        "details": "Returns true if the caller is the current owner."
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

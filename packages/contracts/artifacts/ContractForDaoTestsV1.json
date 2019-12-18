@@ -1,0 +1,619 @@
+{
+  "contractName": "ContractForDaoTestsV1",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "initialize",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "value",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"value\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol\":\"ContractForDaoTestsV1\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol\":{\"keccak256\":\"0x58a4ee93e3aa31ea46e96caee8f2f902527649141de0a8573fca2dd053b26b83\",\"urls\":[\"bzz-raw://aff037ec41094a37a12bcd5405bf247b448bf11efe049eef7614d113acb24967\",\"dweb:/ipfs/QmRKH3eJQ38uZ6YgEW2RMGoz1URKR1Fj3AfwPrNHxTtYMJ\"]},\"@openzeppelin/upgrades/contracts/Initializable.sol\":{\"keccak256\":\"0xf79d9851c085aa8412e87d7a26d3485488fe12538ecb4e317ce41fc1f2c3a16a\",\"urls\":[\"bzz-raw://6af1a35ad6aed2169ce9f44095438b3192cd6066903908f769d5c49a06a0caf8\",\"dweb:/ipfs/QmaH41CwJ7WrMQwSnbfCKuL2pd8bxF7sbGSLPZb6JaHBFF\"]},\"openzeppelin-solidity/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzz-raw://216ef9d6b614db4eb46970b4e84903f2534a45572dd30a79f0041f1a5830f436\",\"dweb:/ipfs/QmNPrJ4MWKUAWzKXpUqeyKRUfosaoANZAqXgvepdrCwZAG\"]},\"openzeppelin-solidity/contracts/ownership/Ownable.sol\":{\"keccak256\":\"0xecd8ab29d9a5771c3964d0cd1788c4a5098a0081b20fb275da850a22b1c59806\",\"urls\":[\"bzz-raw://696a75bc2c55407ce8251ccc7d19ecb1b7b2be1796a160a6524312babcc7e3d4\",\"dweb:/ipfs/QmQViKEp3y99h9uhRssE29TmjBKRnFMaoz3eJZ4eggggg2\"]}},\"version\":1}",
+  "bytecode": "0x60806040526100156001600160e01b0361006616565b603380546001600160a01b0319166001600160a01b0392831617908190556040519116906000907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a361006a565b3390565b61040e806100796000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c80633fa4f24514610067578063715018a6146100815780638129fc1c1461008b5780638da5cb5b146100935780638f32d59b146100b7578063f2fde38b146100d3575b600080fd5b61006f6100f9565b60408051918252519081900360200190f35b6100896100fe565b005b6100896101a1565b61009b610243565b604080516001600160a01b039092168252519081900360200190f35b6100bf610252565b604080519115158252519081900360200190f35b610089600480360360208110156100e957600080fd5b50356001600160a01b0316610278565b600590565b610106610252565b610157576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6033546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3603380546001600160a01b0319169055565b600054610100900460ff16806101ba57506101ba6102da565b806101c8575060005460ff16155b6102035760405162461bcd60e51b815260040180806020018281038252602e8152602001806103ac602e913960400191505060405180910390fd5b600054610100900460ff1615801561022e576000805460ff1961ff0019909116610100171660011790555b8015610240576000805461ff00191690555b50565b6033546001600160a01b031690565b6033546000906001600160a01b03166102696102e0565b6001600160a01b031614905090565b610280610252565b6102d1576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b610240816102e4565b303b1590565b3390565b6001600160a01b0381166103295760405162461bcd60e51b81526004018080602001828103825260268152602001806103866026913960400191505060405180910390fd5b6033546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3603380546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a7231582084ad5bc638a8d147068d056b84ca2137fa999b37d2c6d2962e4261abd22a31f164736f6c634300050e0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100625760003560e01c80633fa4f24514610067578063715018a6146100815780638129fc1c1461008b5780638da5cb5b146100935780638f32d59b146100b7578063f2fde38b146100d3575b600080fd5b61006f6100f9565b60408051918252519081900360200190f35b6100896100fe565b005b6100896101a1565b61009b610243565b604080516001600160a01b039092168252519081900360200190f35b6100bf610252565b604080519115158252519081900360200190f35b610089600480360360208110156100e957600080fd5b50356001600160a01b0316610278565b600590565b610106610252565b610157576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6033546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3603380546001600160a01b0319169055565b600054610100900460ff16806101ba57506101ba6102da565b806101c8575060005460ff16155b6102035760405162461bcd60e51b815260040180806020018281038252602e8152602001806103ac602e913960400191505060405180910390fd5b600054610100900460ff1615801561022e576000805460ff1961ff0019909116610100171660011790555b8015610240576000805461ff00191690555b50565b6033546001600160a01b031690565b6033546000906001600160a01b03166102696102e0565b6001600160a01b031614905090565b610280610252565b6102d1576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b610240816102e4565b303b1590565b3390565b6001600160a01b0381166103295760405162461bcd60e51b81526004018080602001828103825260268152602001806103866026913960400191505060405180910390fd5b6033546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3603380546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a7231582084ad5bc638a8d147068d056b84ca2137fa999b37d2c6d2962e4261abd22a31f164736f6c634300050e0032",
+  "sourceMap": "152:194:2:-;;;707:12:6;-1:-1:-1;;;;;707:10:6;:12;:::i;:::-;698:6;:21;;-1:-1:-1;;;;;;698:21:6;-1:-1:-1;;;;;698:21:6;;;;;;;;734:40;;767:6;;;-1:-1:-1;;734:40:6;;-1:-1:-1;;734:40:6;152:194:2;;788:96:5;867:10;788:96;:::o;152:194:2:-;;;;;;;",
+  "deployedSourceMap": "152:194:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;152:194:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;270:74;;;:::i;:::-;;;;;;;;;;;;;;;;1642:137:6;;;:::i;:::-;;216:44:2;;;:::i;857:77:6:-;;;:::i;:::-;;;;-1:-1:-1;;;;;857:77:6;;;;;;;;;;;;;;1208:92;;;:::i;:::-;;;;;;;;;;;;;;;;;;1928:107;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1928:107:6;-1:-1:-1;;;;;1928:107:6;;:::i;270:74:2:-;336:1;270:74;:::o;1642:137:6:-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1724:6;;1703:40;;1740:1;;-1:-1:-1;;;;;1724:6:6;;1703:40;;1740:1;;1703:40;1753:6;:19;;-1:-1:-1;;;;;;1753:19:6;;;1642:137::o;216:44:2:-;1024:12:4;;;;;;;;:31;;;1040:15;:13;:15::i;:::-;1024:47;;;-1:-1:-1;1060:11:4;;;;1059:12;1024:47;1016:106;;;;-1:-1:-1;;;1016:106:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1129:19;1152:12;;;;;;1151:13;1170:80;;;;1198:12;:19;;-1:-1:-1;;;;1198:19:4;;;;;1225:18;1213:4;1225:18;;;1170:80;1268:14;1264:55;;;1307:5;1292:20;;-1:-1:-1;;1292:20:4;;;1264:55;216:44:2;:::o;857:77:6:-;921:6;;-1:-1:-1;;;;;921:6:6;857:77;:::o;1208:92::-;1287:6;;1248:4;;-1:-1:-1;;;;;1287:6:6;1271:12;:10;:12::i;:::-;-1:-1:-1;;;;;1271:22:6;;1264:29;;1208:92;:::o;1928:107::-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2000:28;2019:8;2000:18;:28::i;1409:467:4:-;1842:7;1830:20;1864:7;1409:467;:::o;788:96:5:-;867:10;788:96;:::o;2136:225:6:-;-1:-1:-1;;;;;2209:22:6;;2201:73;;;;-1:-1:-1;;;2201:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2310:6;;2289:38;;-1:-1:-1;;;;;2289:38:6;;;;2310:6;;2289:38;;2310:6;;2289:38;2337:6;:17;;-1:-1:-1;;;;;;2337:17:6;-1:-1:-1;;;;;2337:17:6;;;;;;;;;;2136:225::o",
+  "source": "pragma solidity 0.5.14;\n\nimport \"@openzeppelin/upgrades/contracts/Initializable.sol\";\nimport \"openzeppelin-solidity/contracts/ownership/Ownable.sol\";\n\n\ncontract ContractForDaoTestsV1 is Initializable, Ownable {\n\n    function initialize() initializer public { }\n    \n    function value() external pure returns (uint256) {\n        return 5;\n    }\n}",
+  "sourcePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
+  "ast": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
+    "exportedSymbols": {
+      "ContractForDaoTestsV1": [
+        82
+      ]
+    },
+    "id": 83,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 61,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "absolutePath": "@openzeppelin/upgrades/contracts/Initializable.sol",
+        "file": "@openzeppelin/upgrades/contracts/Initializable.sol",
+        "id": 62,
+        "nodeType": "ImportDirective",
+        "scope": 83,
+        "sourceUnit": 160,
+        "src": "25:60:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 63,
+        "nodeType": "ImportDirective",
+        "scope": 83,
+        "sourceUnit": 301,
+        "src": "86:63:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 64,
+              "name": "Initializable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 159,
+              "src": "186:13:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Initializable_$159",
+                "typeString": "contract Initializable"
+              }
+            },
+            "id": 65,
+            "nodeType": "InheritanceSpecifier",
+            "src": "186:13:2"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 66,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 300,
+              "src": "201:7:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$300",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 67,
+            "nodeType": "InheritanceSpecifier",
+            "src": "201:7:2"
+          }
+        ],
+        "contractDependencies": [
+          159,
+          186,
+          300
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 82,
+        "linearizedBaseContracts": [
+          82,
+          300,
+          186,
+          159
+        ],
+        "name": "ContractForDaoTestsV1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 72,
+              "nodeType": "Block",
+              "src": "257:3:2",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 73,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 70,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 69,
+                  "name": "initializer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 140,
+                  "src": "238:11:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "238:11:2"
+              }
+            ],
+            "name": "initialize",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 68,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "235:2:2"
+            },
+            "returnParameters": {
+              "id": 71,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "257:0:2"
+            },
+            "scope": 82,
+            "src": "216:44:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 80,
+              "nodeType": "Block",
+              "src": "319:25:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "35",
+                    "id": 78,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "336:1:2",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_5_by_1",
+                      "typeString": "int_const 5"
+                    },
+                    "value": "5"
+                  },
+                  "functionReturnParameters": 77,
+                  "id": 79,
+                  "nodeType": "Return",
+                  "src": "329:8:2"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 81,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "value",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 74,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "284:2:2"
+            },
+            "returnParameters": {
+              "id": 77,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 76,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "310:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 75,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "310:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "309:9:2"
+            },
+            "scope": 82,
+            "src": "270:74:2",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 83,
+        "src": "152:194:2"
+      }
+    ],
+    "src": "0:346:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
+    "exportedSymbols": {
+      "ContractForDaoTestsV1": [
+        82
+      ]
+    },
+    "id": 83,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 61,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "absolutePath": "@openzeppelin/upgrades/contracts/Initializable.sol",
+        "file": "@openzeppelin/upgrades/contracts/Initializable.sol",
+        "id": 62,
+        "nodeType": "ImportDirective",
+        "scope": 83,
+        "sourceUnit": 160,
+        "src": "25:60:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
+        "id": 63,
+        "nodeType": "ImportDirective",
+        "scope": 83,
+        "sourceUnit": 301,
+        "src": "86:63:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 64,
+              "name": "Initializable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 159,
+              "src": "186:13:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Initializable_$159",
+                "typeString": "contract Initializable"
+              }
+            },
+            "id": 65,
+            "nodeType": "InheritanceSpecifier",
+            "src": "186:13:2"
+          },
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 66,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 300,
+              "src": "201:7:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$300",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 67,
+            "nodeType": "InheritanceSpecifier",
+            "src": "201:7:2"
+          }
+        ],
+        "contractDependencies": [
+          159,
+          186,
+          300
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 82,
+        "linearizedBaseContracts": [
+          82,
+          300,
+          186,
+          159
+        ],
+        "name": "ContractForDaoTestsV1",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 72,
+              "nodeType": "Block",
+              "src": "257:3:2",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 73,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 70,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 69,
+                  "name": "initializer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 140,
+                  "src": "238:11:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "238:11:2"
+              }
+            ],
+            "name": "initialize",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 68,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "235:2:2"
+            },
+            "returnParameters": {
+              "id": 71,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "257:0:2"
+            },
+            "scope": 82,
+            "src": "216:44:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 80,
+              "nodeType": "Block",
+              "src": "319:25:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "35",
+                    "id": 78,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "336:1:2",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_5_by_1",
+                      "typeString": "int_const 5"
+                    },
+                    "value": "5"
+                  },
+                  "functionReturnParameters": 77,
+                  "id": 79,
+                  "nodeType": "Return",
+                  "src": "329:8:2"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 81,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "value",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 74,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "284:2:2"
+            },
+            "returnParameters": {
+              "id": 77,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 76,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 81,
+                  "src": "310:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 75,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "310:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "309:9:2"
+            },
+            "scope": 82,
+            "src": "270:74:2",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 83,
+        "src": "152:194:2"
+      }
+    ],
+    "src": "0:346:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-18T01:29:36.715Z",
+  "devdoc": {
+    "methods": {
+      "isOwner()": {
+        "details": "Returns true if the caller is the current owner."
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

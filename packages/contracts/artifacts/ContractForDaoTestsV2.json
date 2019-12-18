@@ -1,0 +1,476 @@
+{
+  "contractName": "ContractForDaoTestsV2",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "initialize",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "value",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "newFunction",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"newFunction\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"value\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{\"isOwner()\":{\"details\":\"Returns true if the caller is the current owner.\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol\":\"ContractForDaoTestsV2\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol\":{\"keccak256\":\"0x58a4ee93e3aa31ea46e96caee8f2f902527649141de0a8573fca2dd053b26b83\",\"urls\":[\"bzz-raw://aff037ec41094a37a12bcd5405bf247b448bf11efe049eef7614d113acb24967\",\"dweb:/ipfs/QmRKH3eJQ38uZ6YgEW2RMGoz1URKR1Fj3AfwPrNHxTtYMJ\"]},\"/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol\":{\"keccak256\":\"0xd9db7afa7f2f6df9960710fa15029de4a8c7e8433448e552d513efbc8fb265b7\",\"urls\":[\"bzz-raw://0ff7c3cd42e47283fc77d2d8f99552b576c20d9c25ca62398eaab7d5adbe4c0b\",\"dweb:/ipfs/QmW3Kx9HwSdrv55ii4hGddhrDy16xGYciJJagPqf1vxieR\"]},\"@openzeppelin/upgrades/contracts/Initializable.sol\":{\"keccak256\":\"0xf79d9851c085aa8412e87d7a26d3485488fe12538ecb4e317ce41fc1f2c3a16a\",\"urls\":[\"bzz-raw://6af1a35ad6aed2169ce9f44095438b3192cd6066903908f769d5c49a06a0caf8\",\"dweb:/ipfs/QmaH41CwJ7WrMQwSnbfCKuL2pd8bxF7sbGSLPZb6JaHBFF\"]},\"openzeppelin-solidity/contracts/GSN/Context.sol\":{\"keccak256\":\"0x90a3995645af7562d84b9d69363ffa5ae7217714ab61e951bf7bc450f40e4061\",\"urls\":[\"bzz-raw://216ef9d6b614db4eb46970b4e84903f2534a45572dd30a79f0041f1a5830f436\",\"dweb:/ipfs/QmNPrJ4MWKUAWzKXpUqeyKRUfosaoANZAqXgvepdrCwZAG\"]},\"openzeppelin-solidity/contracts/ownership/Ownable.sol\":{\"keccak256\":\"0xecd8ab29d9a5771c3964d0cd1788c4a5098a0081b20fb275da850a22b1c59806\",\"urls\":[\"bzz-raw://696a75bc2c55407ce8251ccc7d19ecb1b7b2be1796a160a6524312babcc7e3d4\",\"dweb:/ipfs/QmQViKEp3y99h9uhRssE29TmjBKRnFMaoz3eJZ4eggggg2\"]}},\"version\":1}",
+  "bytecode": "0x60806040526100156001600160e01b0361006616565b603380546001600160a01b0319166001600160a01b0392831617908190556040519116906000907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a361006a565b3390565b610436806100796000396000f3fe608060405234801561001057600080fd5b506004361061007d5760003560e01c80638129fc1c1161005b5780638129fc1c146100ae5780638da5cb5b146100b65780638f32d59b146100da578063f2fde38b146100f65761007d565b80631b28d63e146100825780633fa4f2451461009c578063715018a6146100a4575b600080fd5b61008a61011c565b60408051918252519081900360200190f35b61008a610121565b6100ac610126565b005b6100ac6101c9565b6100be61026b565b604080516001600160a01b039092168252519081900360200190f35b6100e261027a565b604080519115158252519081900360200190f35b6100ac6004803603602081101561010c57600080fd5b50356001600160a01b03166102a0565b606490565b600590565b61012e61027a565b61017f576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6033546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3603380546001600160a01b0319169055565b600054610100900460ff16806101e257506101e2610302565b806101f0575060005460ff16155b61022b5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103d4602e913960400191505060405180910390fd5b600054610100900460ff16158015610256576000805460ff1961ff0019909116610100171660011790555b8015610268576000805461ff00191690555b50565b6033546001600160a01b031690565b6033546000906001600160a01b0316610291610308565b6001600160a01b031614905090565b6102a861027a565b6102f9576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6102688161030c565b303b1590565b3390565b6001600160a01b0381166103515760405162461bcd60e51b81526004018080602001828103825260268152602001806103ae6026913960400191505060405180910390fd5b6033546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3603380546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a72315820c67d44f0654eb569a2abe8c5c24d4e2e1628786821714a81eb670ab2d357f8c264736f6c634300050e0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061007d5760003560e01c80638129fc1c1161005b5780638129fc1c146100ae5780638da5cb5b146100b65780638f32d59b146100da578063f2fde38b146100f65761007d565b80631b28d63e146100825780633fa4f2451461009c578063715018a6146100a4575b600080fd5b61008a61011c565b60408051918252519081900360200190f35b61008a610121565b6100ac610126565b005b6100ac6101c9565b6100be61026b565b604080516001600160a01b039092168252519081900360200190f35b6100e261027a565b604080519115158252519081900360200190f35b6100ac6004803603602081101561010c57600080fd5b50356001600160a01b03166102a0565b606490565b600590565b61012e61027a565b61017f576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6033546040516000916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3603380546001600160a01b0319169055565b600054610100900460ff16806101e257506101e2610302565b806101f0575060005460ff16155b61022b5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103d4602e913960400191505060405180910390fd5b600054610100900460ff16158015610256576000805460ff1961ff0019909116610100171660011790555b8015610268576000805461ff00191690555b50565b6033546001600160a01b031690565b6033546000906001600160a01b0316610291610308565b6001600160a01b031614905090565b6102a861027a565b6102f9576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6102688161030c565b303b1590565b3390565b6001600160a01b0381166103515760405162461bcd60e51b81526004018080602001828103825260268152602001806103ae6026913960400191505060405180910390fd5b6033546040516001600160a01b038084169216907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a3603380546001600160a01b0319166001600160a01b039290921691909117905556fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373436f6e747261637420696e7374616e63652068617320616c7265616479206265656e20696e697469616c697a6564a265627a7a72315820c67d44f0654eb569a2abe8c5c24d4e2e1628786821714a81eb670ab2d357f8c264736f6c634300050e0032",
+  "sourceMap": "65:170:3:-;;;707:12:6;-1:-1:-1;;;;;707:10:6;:12;:::i;:::-;698:6;:21;;-1:-1:-1;;;;;;698:21:6;-1:-1:-1;;;;;698:21:6;;;;;;;;734:40;;767:6;;;-1:-1:-1;;734:40:6;;-1:-1:-1;;734:40:6;65:170:3;;788:96:5;867:10;788:96;:::o;65:170:3:-;;;;;;;",
+  "deployedSourceMap": "65:170:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;65:170:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;154:79;;;:::i;:::-;;;;;;;;;;;;;;;;270:74:2;;;:::i;1642:137:6:-;;;:::i;:::-;;216:44:2;;;:::i;857:77:6:-;;;:::i;:::-;;;;-1:-1:-1;;;;;857:77:6;;;;;;;;;;;;;;1208:92;;;:::i;:::-;;;;;;;;;;;;;;;;;;1928:107;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;1928:107:6;-1:-1:-1;;;;;1928:107:6;;:::i;154:79:3:-;223:3;154:79;:::o;270:74:2:-;336:1;270:74;:::o;1642:137:6:-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1724:6;;1703:40;;1740:1;;-1:-1:-1;;;;;1724:6:6;;1703:40;;1740:1;;1703:40;1753:6;:19;;-1:-1:-1;;;;;;1753:19:6;;;1642:137::o;216:44:2:-;1024:12:4;;;;;;;;:31;;;1040:15;:13;:15::i;:::-;1024:47;;;-1:-1:-1;1060:11:4;;;;1059:12;1024:47;1016:106;;;;-1:-1:-1;;;1016:106:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1129:19;1152:12;;;;;;1151:13;1170:80;;;;1198:12;:19;;-1:-1:-1;;;;1198:19:4;;;;;1225:18;1213:4;1225:18;;;1170:80;1268:14;1264:55;;;1307:5;1292:20;;-1:-1:-1;;1292:20:4;;;1264:55;216:44:2;:::o;857:77:6:-;921:6;;-1:-1:-1;;;;;921:6:6;857:77;:::o;1208:92::-;1287:6;;1248:4;;-1:-1:-1;;;;;1287:6:6;1271:12;:10;:12::i;:::-;-1:-1:-1;;;;;1271:22:6;;1264:29;;1208:92;:::o;1928:107::-;1061:9;:7;:9::i;:::-;1053:54;;;;;-1:-1:-1;;;1053:54:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2000:28;2019:8;2000:18;:28::i;1409:467:4:-;1842:7;1830:20;1864:7;1409:467;:::o;788:96:5:-;867:10;788:96;:::o;2136:225:6:-;-1:-1:-1;;;;;2209:22:6;;2201:73;;;;-1:-1:-1;;;2201:73:6;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2310:6;;2289:38;;-1:-1:-1;;;;;2289:38:6;;;;2310:6;;2289:38;;2310:6;;2289:38;2337:6;:17;;-1:-1:-1;;;;;;2337:17:6;-1:-1:-1;;;;;2337:17:6;;;;;;;;;;2136:225::o",
+  "source": "pragma solidity 0.5.14;\n\nimport \"./ContractForDaoTestsV1.sol\";\n\n\ncontract ContractForDaoTestsV2 is ContractForDaoTestsV1 {\n\n    // new function added\n    function newFunction() public pure returns(uint256) {\n        return 100;\n    }\n}",
+  "sourcePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol",
+  "ast": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol",
+    "exportedSymbols": {
+      "ContractForDaoTestsV2": [
+        96
+      ]
+    },
+    "id": 97,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 84,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:3"
+      },
+      {
+        "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
+        "file": "./ContractForDaoTestsV1.sol",
+        "id": 85,
+        "nodeType": "ImportDirective",
+        "scope": 97,
+        "sourceUnit": 83,
+        "src": "25:37:3",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 86,
+              "name": "ContractForDaoTestsV1",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 82,
+              "src": "99:21:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$82",
+                "typeString": "contract ContractForDaoTestsV1"
+              }
+            },
+            "id": 87,
+            "nodeType": "InheritanceSpecifier",
+            "src": "99:21:3"
+          }
+        ],
+        "contractDependencies": [
+          82,
+          159,
+          186,
+          300
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 96,
+        "linearizedBaseContracts": [
+          96,
+          82,
+          300,
+          186,
+          159
+        ],
+        "name": "ContractForDaoTestsV2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 94,
+              "nodeType": "Block",
+              "src": "206:27:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "313030",
+                    "id": 92,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "223:3:3",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_100_by_1",
+                      "typeString": "int_const 100"
+                    },
+                    "value": "100"
+                  },
+                  "functionReturnParameters": 91,
+                  "id": 93,
+                  "nodeType": "Return",
+                  "src": "216:10:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 95,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "newFunction",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 88,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "174:2:3"
+            },
+            "returnParameters": {
+              "id": 91,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 90,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 95,
+                  "src": "197:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 89,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "197:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "196:9:3"
+            },
+            "scope": 96,
+            "src": "154:79:3",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 97,
+        "src": "65:170:3"
+      }
+    ],
+    "src": "0:235:3"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol",
+    "exportedSymbols": {
+      "ContractForDaoTestsV2": [
+        96
+      ]
+    },
+    "id": 97,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 84,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:3"
+      },
+      {
+        "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
+        "file": "./ContractForDaoTestsV1.sol",
+        "id": 85,
+        "nodeType": "ImportDirective",
+        "scope": 97,
+        "sourceUnit": 83,
+        "src": "25:37:3",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 86,
+              "name": "ContractForDaoTestsV1",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 82,
+              "src": "99:21:3",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$82",
+                "typeString": "contract ContractForDaoTestsV1"
+              }
+            },
+            "id": 87,
+            "nodeType": "InheritanceSpecifier",
+            "src": "99:21:3"
+          }
+        ],
+        "contractDependencies": [
+          82,
+          159,
+          186,
+          300
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 96,
+        "linearizedBaseContracts": [
+          96,
+          82,
+          300,
+          186,
+          159
+        ],
+        "name": "ContractForDaoTestsV2",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 94,
+              "nodeType": "Block",
+              "src": "206:27:3",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "313030",
+                    "id": 92,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "223:3:3",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_100_by_1",
+                      "typeString": "int_const 100"
+                    },
+                    "value": "100"
+                  },
+                  "functionReturnParameters": 91,
+                  "id": 93,
+                  "nodeType": "Return",
+                  "src": "216:10:3"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 95,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "newFunction",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 88,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "174:2:3"
+            },
+            "returnParameters": {
+              "id": 91,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 90,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 95,
+                  "src": "197:7:3",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 89,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "197:7:3",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "196:9:3"
+            },
+            "scope": 96,
+            "src": "154:79:3",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 97,
+        "src": "65:170:3"
+      }
+    ],
+    "src": "0:235:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-18T01:29:36.720Z",
+  "devdoc": {
+    "methods": {
+      "isOwner()": {
+        "details": "Returns true if the caller is the current owner."
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner.     * NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    }
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

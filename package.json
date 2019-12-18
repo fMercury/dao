@@ -1,0 +1,31 @@
+{
+  "name": "oz-dao",
+  "version": "0.0.1",
+  "description": "Universal DAO for projects based Openzeppelin SDK",
+  "main": "index.js",
+  "scripts": {
+    "bootstrap": "npx lerna bootstrap",
+    "test": "npx lerna run test",
+    "build": "npx lerna run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/kostysh/unstoppable.git"
+  },
+  "keywords": [
+    "solidity",
+    "smart contract",
+    "dapp"
+  ],
+  "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/kostysh/unstoppable#readme",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "3.19.0",
+    "eslint": "6.7.2"
+  }
+}
