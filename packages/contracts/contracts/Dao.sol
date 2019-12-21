@@ -3,10 +3,11 @@ pragma solidity 0.5.14;
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
+import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "node_modules/openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./libraries/Voting.sol";
+import "./libraries/VotingLib.sol";
 
 
 /**
@@ -14,7 +15,7 @@ import "./libraries/Voting.sol";
  * @dev This contract holds main DAO logic and storages
  * @author Kostiantyn Smyrnov <kostysh@gmail.com>
  */
-contract Dao is Initializable, Pausable, WhitelistedRole {
+contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -117,7 +118,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     /**
      * @dev This event will be emitted when
      * @param voter Voter address
-     * @param votes Locked tokens amount
+     * @param value Locked tokens amount
      */
     event TokensLocked(
         address voter,
@@ -127,7 +128,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     /**
      * @dev This event will be emitted when
      * @param voter Voter address
-     * @param votes Released tokens amount
+     * @param value Released tokens amount
      */
     event TokensReleased(
         address voter,
@@ -173,7 +174,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     mapping (uint256 => Proposal) internal proposals;// proposalId => Proposal
 
     /// @dev Proposals votings 
-    mapping (uint256 => Voting) internal votes;// proposalId => Voting
+    mapping (uint256 => Voting) internal votings;// proposalId => Voting
 
     
     /**
@@ -215,37 +216,18 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     /**
      * @dev Contract initializer
      * @param token Address of the service token
-     * @param manager Initial DAO manager address
      */
-    function initialize(
-        address token, 
-        address manager
-    ) external initializer {
+    function initialize(address token) external initializer {
         serviceToken = IERC20(token);
         proposalCount = 0;
-        
-        // Configure Pausable behavior
-        _addPauser(manager);
-        _removePauser(msg.sender);// Because of msg.sender here is Proxy owner
 
-        // Configure WhitelistedRole behavior
-        _addWhitelistAdmin(manager);
-        _removeWhitelistAdmin(msg.sender);// Because of msg.sender here is Proxy owner
+        // Add proxy owner PuserRole
+        _addPauser(msg.sender);
+
+        // Add proxy owner WhitelistAdminRole
+        _addWhitelistAdmin(msg.sender);
     }
 
-    /**
-     * @dev Replace whitelist admin with new one
-     * 
-     * Requirements:
-     *  - sender address should be a whitelisted admin address
-     * 
-     * @param account Initial DAO manager address
-     */
-    function replaceWhitelistAdmin(address account) public onlyWhitelistAdmin {
-        _addWhitelistAdmin(account);
-        _removeWhitelistAdmin(msg.sender);
-    }
-    
     /**
      * @dev Add new proposal
      *
@@ -265,7 +247,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @param data Signed transaction data
      */
     function addProposal(
-        string details,
+        string calldata details,
         ProposalType proposalType,
         uint256 duration,
         address destination,
@@ -294,10 +276,14 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @dev Vote for the proposal
      *
      * Requirements:
+     *  - contract not paused
+     *  - not a reentrant call
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
      *  - sender tokens balance should be sufficient
      *  - tokens allowance for the DAO address should be sufficient
+     *  - not yet enough votes in voting
+     *  - voting not expired (does not exceed voting time frame)
      *
      * @param proposalId Proposal Id
      * @param votes Amount of service token to use in the vote
@@ -307,6 +293,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
         uint256 votes
     ) 
         external 
+        whenNotPaused
+        nonReentrant
         notPassed(proposalId) 
         notCancelled(proposalId)
     {
@@ -332,6 +320,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @dev Process proposal
      *
      * Requirements:
+     *  - contract not paused
      *  - sender address should be a proposer address
      *  - proposal should not be processed
      *  - proposal should not be cancelled
@@ -340,10 +329,27 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      */
     function processProposal(uint256 proposalId) 
         external 
+        whenNotPaused
         onlyProposer(proposalId) 
         notProcessed(proposalId) 
         notCancelled(proposalId) 
     {}
+
+    /**
+     * @dev Withdraw released tokens
+     * @return uint256 Balance of tokens that available to withdraw
+     */
+    function tokensBalance() external view returns (uint256) {}
+
+    /**
+     * @dev Withdraw released tokens
+     *
+     * Requirements:
+     *  - sender has positive released tokens balance
+     *  - call not reentrant
+     *
+     */
+    function withdrawTokens() external nonReentrant {}
 
     /**
      * @dev Get proposal by Id (index)
@@ -364,17 +370,17 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @return bool Transaction execution result status
      */
     function getProposal(uint256 proposalId) 
-        public 
+        external 
         view 
         returns (
-            string details,
+            string memory details,
             ProposalType proposalType,
             uint256 duration,
             uint256 end,
             bool[3] memory flags,
             address txDestination,
             uint256 txValue,
-            bytes txData,
+            bytes memory txData,
             bool txExecuted,
             bool txSuccess
         ) 
@@ -384,13 +390,43 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @dev Get all active proposals Ids
      * @return uint256[] List of proposals Ids
      */
-    function getActiveProposalsIds() public view returns (uint256[]) {}
+    function getActiveProposalsIds() external view returns (uint256[] memory) {}
 
     /**
      * @dev Get all active proposals Ids filtered by proposal type
+     *
+     * Requirements:
+     *  - proposal type should be valid 
+     * 
      * @return uint256[] List of proposals Ids
      */
-    function getActiveProposalsIds(ProposalType proposalType) public view returns (uint256[]) {}
+    function getActiveProposalsIds(ProposalType proposalType) external view returns (uint256[] memory) {}
+
+    /**
+     * @dev Replace pauser to the new one
+     * 
+     * Requirements:
+     *  - sender address should be a pauser address
+     * 
+     * @param account New DAO pauser address
+     */
+    function replacePauser(address account) external onlyPauser {
+        _addPauser(account);
+        _removePauser(msg.sender);
+    }
+
+    /**
+     * @dev Replace whitelist admin with new one
+     * 
+     * Requirements:
+     *  - sender address should be a whitelisted admin address
+     * 
+     * @param account New DAO whitelist admin address
+     */
+    function replaceWhitelistAdmin(address account) external onlyWhitelistAdmin {
+        _addWhitelistAdmin(account);
+        _removeWhitelistAdmin(msg.sender);
+    }
 
     /**
      * @dev Transfer service tokens from the voter to the DAO
@@ -424,7 +460,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * @return uint256 Converted votes value
      */
     function convertVotes(uint256 votes) internal pure returns (uint256) {
-        return Voting.sqrt(votes);
+        return VotingLib.sqrt(votes);
     }
 
     /**

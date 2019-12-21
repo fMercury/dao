@@ -36,6 +36,7 @@
     "globals": {
         "artifacts": "readonly",
         "web3": "readonly",
-        "contract": "readonly"
+        "contract": "readonly",
+        "assert": "readonly"
     }
 }

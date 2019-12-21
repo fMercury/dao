@@ -6,7 +6,7 @@ pragma solidity 0.5.14;
  * @dev This library holds voting utilities
  * @author Kostiantyn Smyrnov <kostysh@gmail.com>
  */
-library Voting {
+library VotingLib {
 
     /**
      * @dev Returns a square root

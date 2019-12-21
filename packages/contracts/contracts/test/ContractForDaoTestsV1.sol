@@ -1,14 +1,17 @@
 pragma solidity 0.5.14;
 
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
-contract ContractForDaoTestsV1 is Initializable, Ownable {
+contract ContractForDaoTestsV1 is Initializable {
 
-    function initialize() initializer public { }
+    uint256 public val;
+
+    function initialize(uint256 _val) initializer public {
+        val = _val;
+    }
     
-    function value() external pure returns (uint256) {
-        return 5;
+    function getValue() external view returns (uint256) {
+        return val;
     }
 }

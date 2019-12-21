@@ -16,27 +16,32 @@ const ContractForDaoTestsV1 = Contracts.getFromLocal('ContractForDaoTestsV1');
 const ContractForDaoTestsV2 = Contracts.getFromLocal('ContractForDaoTestsV2');
 
 contract('Upgradeability case without DAO', (accounts) => {
-    const owner = accounts[1];
-    const proxyOwner = accounts[2];
+    const proxyOwner = accounts[1];
+    const owner = accounts[2];
     let project;
-    let proxy;
+    let instance;
 
     beforeEach(async () => {
-        project = await TestHelper({
-            from: proxyOwner
-        });
-        proxy = await project.createProxy(ContractForDaoTestsV1);        
+        project = await TestHelper();
+        instance = await project.createProxy(ContractForDaoTestsV1, {
+            from: proxyOwner,
+            initArgs: [5]
+        });        
     });
     
     it('should create initial contract version', async () => {
-        (await proxy.methods.value().call()).should.equal('5');
+        (await instance.methods['getValue()']().call()).should.equal('5');
     });
 
     it('should upgrade contract', async () => {
-        const v2 = await ContractForDaoTestsV2.new({
+        instance = await project.upgradeProxy(instance.address, ContractForDaoTestsV2, {
+            from: proxyOwner,
+            initMethod: 'setOwner',
+            initArgs: [owner]
+        });
+        await instance.methods['setVal(uint256)'](100).send({
             from: owner
         });
-        const newInstance = await project.proxyAdmin.upgradeProxy(proxy.address, v2.address, ContractForDaoTestsV2);
-        (await newInstance.methods.newFunction().call()).should.equal('100');
+        (await instance.methods['getValue()']().call()).should.equal('100');
     });
 });
