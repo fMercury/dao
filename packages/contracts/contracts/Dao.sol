@@ -236,8 +236,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - contract should not be in paused state
      *  - proposal type should allowed proposalType
      *  - destination address should not be a valid target address
-     *  - sender balance should be sufficient 
-     *  - transaction data should valid
+     *  - sent ether value should be consistent with value parameter
      * 
      * @param details Proposal details
      * @param proposalType Proposal type
@@ -253,7 +252,33 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         address destination,
         uint256 value,
         bytes calldata data
-    ) external payable onlyWhitelisted whenNotPaused {}
+    ) external payable onlyWhitelisted whenNotPaused {
+        assertProposalType(proposalType);// Throws an Invalid opcode if proposalType not valid
+        // @todo Add conditions and test for proposal `duration` (s.l. min and max value)
+        require(destination != address(0), "INVALID_DESTINATION");
+        require(value == 0 || (value > 0 && msg.value >= value), "INSUFFICIENT_ETHER_VALUE");
+
+        emit ProposalAdded(msg.sender, proposalCount);
+
+        bool[3] memory flags;
+        proposals[proposalCount] = Proposal(
+            msg.sender,
+            details,
+            proposalType,
+            Transaction(
+                destination,
+                value,
+                data,
+                false,
+                false
+            ),
+            duration,
+            time().add(duration.mul(86400)),
+            flags
+        );
+        
+        proposalCount += 1;
+    }
 
     /**
      * @dev Cancelling of the proposal
@@ -473,4 +498,15 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function time() internal view returns (uint256) {
         return now;// solhint-disable-line not-rely-on-time
     }
+
+    /**
+     * @dev Validate given ProposalType value
+     * @param typeValue Value of ProposalType to validate
+     * @return uint256 Validation result (or throws Invalide opcode instead)
+     */
+    function assertProposalType(ProposalType typeValue) private pure returns (uint256) {
+        return uint256(typeValue);
+    }
+
+    // @todo Add function to withdraw ether funds from contract 
 }

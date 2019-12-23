@@ -22,11 +22,12 @@ fi
 start_ganache() {
   if [ "$SOLIDITY_COVERAGE" = true ]; then
     echo "Testing coverage mode"
+    npx ganache-cli --allowUnlimitedContractSize --gasLimit 0xfffffffffff --port "$ganache_port" --accounts 20 --defaultBalanceEther 1000000 > /dev/null &    
   else
-    npx ganache-cli --gasLimit 0xfffffffffff --port "$ganache_port" --defaultBalanceEther 1000000 > /dev/null &    
-    ganache_pid=$! 
-    echo "Server is listening on the port $ganache_port (pid: $ganache_pid)"
+    npx ganache-cli  --gasLimit 0xfffffffffff --port "$ganache_port" --accounts 20 --defaultBalanceEther 1000000 > /dev/null &        
   fi
+  ganache_pid=$! 
+  echo "Server is listening on the port $ganache_port (pid: $ganache_pid)"
 }
 
 ganache_running() {

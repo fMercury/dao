@@ -6,7 +6,13 @@ const {
     zeroAddress, 
     ProposalType
 } = require('./helpers/constants');
-const assertRevert = require('./helpers/assertRevert');
+const { assertRevert, assertEvent } = require('./helpers/assertions');
+const { buildCallData } = require('./helpers/transactions');
+const {
+    createTokenAndDistribute,
+    createDaoContract,
+    createTargetContract
+} = require('./helpers/contracts');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
 
@@ -21,17 +27,19 @@ ZWeb3.initialize(web3.currentProvider);
 
 const Erc20Token = Contracts.getFromLocal('Erc20Token');
 const Dao = Contracts.getFromLocal('Dao');
+const ContractForDaoTestsV1 = Contracts.getFromLocal('ContractForDaoTestsV1');
 
 contract('DAO', accounts => {
     const tokenOwner = accounts[1];
-    const initialProxyOwner = accounts[3];
+    const initialProxyOwner = accounts[2];
+    const initialTargetOwner = accounts[3];
     const proposalCreator1 = accounts[4];
     const proposalCreator2 = accounts[5];
-    const voter1 = accounts[5];
-    const voter2 = accounts[6];
-    const voter3 = accounts[7];
-    const voter4 = accounts[8];
-    const voter5 = accounts[9];
+    const voter1 = accounts[6];
+    const voter2 = accounts[7];
+    const voter3 = accounts[8];
+    const voter4 = accounts[9];
+    const voter5 = accounts[10];
 
     // values in ether
     const tokensDistribution = [
@@ -57,22 +65,17 @@ contract('DAO', accounts => {
     let token;
     let project;
     let dao;
+    let daoPaused;
+    let target;
 
     beforeEach(async () => {
         // Create service token instance
-        token = await Erc20Token.new('Test Coin', 'TEST', 18, web3.utils.toWei('1000000000', 'ether'), {
-            from: tokenOwner
-        });
-
-        // Transfer initial amount of tokens to voters
-        await Promise.all(tokensDistribution.map(
-            v => token.methods['transfer(address,uint256)'](
-                v.owner, 
-                web3.utils.toWei(v.value, 'ether')
-            ).send({
-                from: tokenOwner
-            })
-        ));
+        token = await createTokenAndDistribute(
+            Erc20Token,
+            '1000000000',
+            tokenOwner,
+            tokensDistribution
+        );
         
         // Create upgradeability project
         project = await TestHelper({
@@ -80,47 +83,129 @@ contract('DAO', accounts => {
         });
 
         // DAO instance
-        dao = await project.createProxy(Dao, {
-            initArgs: [token.address]
-        });
+        dao = await createDaoContract(
+            project,
+            Dao,
+            token.address,
+            initialProxyOwner,
+            [proposalCreator1]
+        );
 
-        // Add first proposals creator address to white-list
-        await dao.methods['addWhitelisted(address)'](proposalCreator1).send({
-            from: initialProxyOwner
-        });
+        // DAO instance
+        daoPaused = await createDaoContract(
+            project,
+            Dao,
+            token.address,
+            initialProxyOwner,
+            [proposalCreator1],
+            true,
+            true
+        );
 
-        // Grant ability to manage white-list to DAO itself only
-        await dao.methods['replaceWhitelistAdmin(address)'](dao.address).send({
-            from: initialProxyOwner
-        });
-        
-        // Grant ability to manage Pausable state to DAO itself only
-        await dao.methods['replacePauser(address)'](dao.address).send({
-            from: initialProxyOwner
-        });
-
-        // Grant ability to upgrade DAO contract to DAO itself only
-        await project.transferAdminOwnership(dao.address);
+        // Target contract for testing governance features of DAO
+        target = await createTargetContract(
+            project,
+            ContractForDaoTestsV1,
+            dao,
+            initialTargetOwner
+        );        
     });
 
     describe('#addProposal(string,uint8,uint256,address,uint256,bytes)', () => {
 
-        it('should fail if sender address not whitelisted', async () => {});
+        it('should fail if sender address not whitelisted', async () => {
+            await assertRevert(dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                ProposalType.MethodCall,
+                '10',
+                target.address,
+                '0',
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: voter1// Not whitelisted
+            }), 'WhitelistedRole: caller does not have the Whitelisted role');
+        });
 
-        it('should fail if contract in a paused state', async () => {});
+        it('should fail if contract in a paused state', async () => {
+            await assertRevert(daoPaused.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                ProposalType.MethodCall,
+                '10',
+                target.address,
+                '0',
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: proposalCreator1
+            }), 'Pausable: paused');
+        });
 
-        it('should fail if proposal type has unknown value', async () => {});
+        it('should fail if proposal type has unknown value', async () => {
+            await assertRevert(dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                5,// Wrong type
+                '10',
+                target.address,
+                '0',
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: proposalCreator1
+            }));
+        });
 
-        it('should fail if destination target address equal to zero', async () => {});
+        it('should fail if destination target address equal to zero', async () => {
+            await assertRevert(dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                1,
+                '10',
+                zeroAddress,
+                '0',
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: proposalCreator1
+            }), 'INVALID_DESTINATION');
+        });
 
-        it('should fail if sender has insufficient balance', async () => {});
+        it('sent ether value should be consistent with value parameter', async () => {
+            await assertRevert(dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                1,
+                '10',
+                target.address,
+                web3.utils.toWei('1', 'ether'),
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: proposalCreator1,
+                value: web3.utils.toWei('0.9', 'ether')
+            }), 'INSUFFICIENT_ETHER_VALUE');
+        });
 
-        it('should fail if transaction data not valid', async () => {});
-
-        it('should add new proposal', async () => {});        
+        it('should add new proposal', async () => {
+            const result = await dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
+                'Change target contract owner',
+                1,
+                '10',
+                target.address,
+                '0',
+                buildCallData('transferOwnership(address)', ['address'], [voter1])
+            ).send({
+                from: proposalCreator1
+            });
+            const totalProposals = await dao.methods['proposalCount()']().call();
+            const proposalId = (totalProposals - 1).toString();
+            assertEvent(result, 'ProposalAdded', [
+                [
+                    'proposer',
+                    p => (p).should.equal(proposalCreator1)
+                ],
+                [
+                    'proposalId',
+                    p => (p).should.equal(proposalId)
+                ]
+            ]);
+        });        
     });
 
-    describe('#cancelProposal(uint256)', () => {
+    describe.skip('#cancelProposal(uint256)', () => {
 
         beforeEach(async () => {
             // Add proposal
@@ -135,7 +220,7 @@ contract('DAO', accounts => {
         it('should cancel proposal', async () => {});
     });
 
-    describe('#vote(uint256,uint256)', () => {
+    describe.skip('#vote(uint256,uint256)', () => {
 
         beforeEach(async () => {
             // Add proposal
@@ -160,7 +245,7 @@ contract('DAO', accounts => {
         it('should accept a vote', async () => {});
     });
 
-    describe('#revokeVote(uint256)', () => {
+    describe.skip('#revokeVote(uint256)', () => {
 
         beforeEach(async () => {
             // Add proposal
@@ -174,7 +259,7 @@ contract('DAO', accounts => {
         it('should revoke a vote', async () => {});
     });
 
-    describe('#processProposal(uint256)', () => {
+    describe.skip('#processProposal(uint256)', () => {
 
         describe('In a case of the voting success', () => {
 
@@ -207,7 +292,7 @@ contract('DAO', accounts => {
         });
     });
 
-    describe('#tokensBalance()', () => {
+    describe.skip('#tokensBalance()', () => {
 
         it('should return 0 if votes are not been placed', async () => {});
 
@@ -218,7 +303,7 @@ contract('DAO', accounts => {
         });
     });
 
-    describe('#withdrawTokens()', () => {
+    describe.skip('#withdrawTokens()', () => {
 
         it('should fail if sender has empty released tokens balance', async () => {});
 
@@ -255,14 +340,14 @@ contract('DAO', accounts => {
         });        
     });
 
-    describe('#getProposal(uint256)', () => {
+    describe.skip('#getProposal(uint256)', () => {
 
         it('should fail if proposal not found', async () => {});
     
         it('should return a proposal', async () => {});
     });
 
-    describe('#getActiveProposalsIds()', () => {
+    describe.skip('#getActiveProposalsIds()', () => {
 
         describe('In a case when proposals has not been added at all', () => {
 
@@ -284,7 +369,7 @@ contract('DAO', accounts => {
         });
     });
 
-    describe('#getActiveProposalsIds()', () => {
+    describe.skip('#getActiveProposalsIds()', () => {
 
         it('should fail if unknown proposal type has been provided', async () => {});
 
@@ -308,14 +393,14 @@ contract('DAO', accounts => {
         });
     });
 
-    describe('#replacePauser(address)', () => {
+    describe.skip('#replacePauser(address)', () => {
 
         it('should fail if sender not a pauser', async () => {});
 
         it('should replace existed pauser to the new one', async () => {}); 
     });
 
-    describe('#replaceWhitelistAdmin(address)', () => {
+    describe.skip('#replaceWhitelistAdmin(address)', () => {
 
         it('should fail if sender not a WhitelistAdmin', async () => {});
 

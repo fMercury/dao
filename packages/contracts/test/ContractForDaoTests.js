@@ -25,7 +25,7 @@ contract('Upgradeability case without DAO', (accounts) => {
         project = await TestHelper();
         instance = await project.createProxy(ContractForDaoTestsV1, {
             from: proxyOwner,
-            initArgs: [5]
+            initArgs: [5, owner]
         });        
     });
     
@@ -35,9 +35,7 @@ contract('Upgradeability case without DAO', (accounts) => {
 
     it('should upgrade contract', async () => {
         instance = await project.upgradeProxy(instance.address, ContractForDaoTestsV2, {
-            from: proxyOwner,
-            initMethod: 'setOwner',
-            initArgs: [owner]
+            from: proxyOwner
         });
         await instance.methods['setVal(uint256)'](100).send({
             from: owner
