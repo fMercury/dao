@@ -286,6 +286,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * Requirements:
      *  - sender address should be a proposer address
      *  - proposal should not be in a passed state
+     *  - proposal should not be in a processed state
      *  - proposal should not be cancelled
      *
      * @param proposalId Proposal Id
@@ -294,8 +295,12 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         external 
         onlyProposer(proposalId)
         notPassed(proposalId) 
+        notProcessed(proposalId) 
         notCancelled(proposalId)
-    {}
+    {
+        emit ProposalCancelled(proposalId);
+        proposals[proposalId].flags[2] = true;
+    }
 
     /**
      * @dev Vote for the proposal

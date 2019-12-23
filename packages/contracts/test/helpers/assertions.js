@@ -31,7 +31,7 @@ module.exports.assertRevert = async (promise, reason = false) => {
  * @param {Array<[{string,{Function}}]>} validationConfig
  */
 module.exports.assertEvent = (result, eventName, validationConfig) => {
-    const event = result.events[eventName];
+    const event = result.events && result.events[eventName] ? result.events[eventName] : false;
     assert(typeof event === 'object', `Event "${eventName}" not found`);
     validationConfig.forEach(c => {
         assert(typeof c[0] === 'string', 'Property name has not a string value');

@@ -13,6 +13,10 @@ const {
     createDaoContract,
     createTargetContract
 } = require('./helpers/contracts');
+const {
+    addProposal,
+    cancelProposal
+} = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
 
@@ -179,45 +183,90 @@ contract('DAO', accounts => {
             }), 'INSUFFICIENT_ETHER_VALUE');
         });
 
-        it('should add new proposal', async () => {
-            const result = await dao.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
-                'Change target contract owner',
-                1,
-                '10',
+        it('should add new proposal (without sent ether value)', async () => {
+            await addProposal(
+                dao,
                 target.address,
-                '0',
-                buildCallData('transferOwnership(address)', ['address'], [voter1])
-            ).send({
-                from: proposalCreator1
-            });
-            const totalProposals = await dao.methods['proposalCount()']().call();
-            const proposalId = (totalProposals - 1).toString();
-            assertEvent(result, 'ProposalAdded', [
-                [
-                    'proposer',
-                    p => (p).should.equal(proposalCreator1)
-                ],
-                [
-                    'proposalId',
-                    p => (p).should.equal(proposalId)
-                ]
-            ]);
-        });        
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+        });
+
+        it('should add new proposal (with sent ether value)', async () => {
+            await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '1',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+        });
     });
 
-    describe.skip('#cancelProposal(uint256)', () => {
+    describe('#cancelProposal(uint256)', () => {
+        let proposalId;
 
         beforeEach(async () => {
             // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
         });
 
-        it('should fail if sender address not a proposer address', async () => {});
+        it('should fail if sender address not a proposer address', async () => {
+            await assertRevert(dao.methods['cancelProposal'](proposalId).send({
+                from: voter1// Not a proposer
+            }), 'NOT_A_PROPOSER');
+        });
 
-        it('should fail if proposal in a passed state', async () => {});
+        it.skip('should fail if proposal in a passed state', async () => {});
 
-        it('should fail if proposal cancelled', async () => {});
+        it.skip('should fail if proposal in a processed state', async () => {});
+
+        it('should fail if proposal cancelled', async () => {
+            await cancelProposal(
+                dao,
+                proposalId,
+                proposalCreator1
+            );
+            await assertRevert(dao.methods['cancelProposal'](proposalId).send({
+                from: proposalCreator1
+            }), 'ALREADY_CANCELLED');
+        });
         
-        it('should cancel proposal', async () => {});
+        it('should cancel proposal', async () => {
+            await cancelProposal(
+                dao,
+                proposalId,
+                proposalCreator1
+            );
+        });
     });
 
     describe.skip('#vote(uint256,uint256)', () => {
