@@ -1,9 +1,9 @@
 pragma solidity 0.5.14;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 
 
-contract Erc20Token is ERC20 {
+contract Erc20Token is ERC20Mintable {
 
     string public name;
     string public symbol;

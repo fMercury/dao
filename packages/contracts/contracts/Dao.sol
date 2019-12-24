@@ -257,6 +257,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         // @todo Add conditions and test for proposal `duration` (s.l. min and max value)
         require(destination != address(0), "INVALID_DESTINATION");
         require(value == 0 || (value > 0 && msg.value >= value), "INSUFFICIENT_ETHER_VALUE");
+        // @todo Add Condition to avoid proposal queue maximum length (uint256 restriction)
 
         emit ProposalAdded(msg.sender, proposalCount);
 
@@ -493,6 +494,19 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function votingResult(uint256 proposalId) public view returns(uint256) {
         return votings[proposalId].balance;
+    }
+
+    /**
+     * @dev Check is voting is passed 
+     * @param proposalId Proposal Id
+     * @return uint256 Voting result
+     */
+    function isVotingPassed(uint256 proposalId) public view returns(bool) {
+        uint256 totalSupply = serviceToken.totalSupply();
+        uint256 votingThreshold = convertVotes(totalSupply)
+            .div(totalSupply.div(2))
+            .add(1);
+        return votings[proposalId].balance >= votingThreshold;
     }
 
     /**

@@ -79,7 +79,7 @@ contract('DAO', accounts => {
         // Create service token instance
         token = await createTokenAndDistribute(
             Erc20Token,
-            '1000000000',
+            '0',
             tokenOwner,
             tokensDistribution
         );

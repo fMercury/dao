@@ -19,9 +19,9 @@ const createTokenAndDistribute = async (
         from: tokenOwner
     });
 
-    // Transfer initial amount of tokens to voters
+    // Mint and transfer initial amount of tokens to voters
     await Promise.all(distributionList.map(
-        v => token.methods['transfer(address,uint256)'](
+        v => token.methods['mint(address,uint256)'](
             v.owner, 
             web3.utils.toWei(v.value, 'ether')
         ).send({
