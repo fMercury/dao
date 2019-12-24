@@ -331,8 +331,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
         require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
 
-        // Lock voters tokens 
-        serviceToken.safeTransferFrom(msg.sender, address(this), votes); 
+        // Transfer voters tokens to the DAO
+        lockTokens(msg.sender, votes);
 
         // Calculate acceptes value
         uint256 votesAccepted = convertVotes(votes);
@@ -494,7 +494,9 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function lockTokens(
         address voter, 
         uint256 value
-    ) internal {}
+    ) internal {
+        return serviceToken.safeTransferFrom(voter, address(this), value);
+    }
 
     /**
      * @dev Release locked tokens for the voter
