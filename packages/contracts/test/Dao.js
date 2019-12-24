@@ -8,6 +8,8 @@ const {
 } = require('./helpers/constants');
 const { assertRevert, assertEvent } = require('./helpers/assertions');
 const { buildCallData } = require('./helpers/transactions');
+const { toBN, toWeiBN } = require('./helpers/common');
+const { isqrt } = require('./helpers/bnmath');
 const {
     createTokenAndDistribute,
     createDaoContract,
@@ -15,7 +17,8 @@ const {
 } = require('./helpers/contracts');
 const {
     addProposal,
-    cancelProposal
+    cancelProposal,
+    doVote
 } = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
@@ -269,29 +272,79 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#vote(uint256,uint256)', () => {
+    describe('#vote(uint256,uint256)', () => {
+        let proposalId;
 
         beforeEach(async () => {
             // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
         });
 
-        it('should fail if contract is paused', async () => {});
+        it.skip('should fail if contract is paused', async () => {
+            // @todo Implement this after whole DAO workflow will be implemented
+        });
 
-        it('should fail if reentrant call detected', async () => {});
+        it.skip('should fail if reentrant call detected', async () => {});
 
-        it('should fail if proposal in a passed state', async () => {});
+        it.skip('should fail if proposal in a passed state', async () => {});
 
-        it('should fail if proposal cancelled', async () => {});
+        it('should fail if proposal cancelled', async () => {
+            await cancelProposal(
+                dao,
+                proposalId,
+                proposalCreator1
+            );
+            await assertRevert(dao.methods['vote(uint256,uint256)'](
+                proposalId,
+                toWeiBN('5').toString()
+            ).send({
+                from: voter1
+            }), 'ALREADY_CANCELLED');
+        });
 
-        it('should fail if sender tokens balance insufficient', async () => {});
+        it('should fail if sender tokens balance insufficient', async () => {
+            await assertRevert(dao.methods['vote(uint256,uint256)'](
+                proposalId,
+                toWeiBN('15').toString()
+            ).send({
+                from: voter1
+            }), 'INSUFFICIENT_TOKENS_BALANCE');
+        });
 
-        it('should fail if tokens allowance for the DAO address insufficient', async () => {});
+        it('should fail if tokens allowance for the DAO address insufficient', async () => {
+            await assertRevert(dao.methods['vote(uint256,uint256)'](
+                proposalId,
+                toWeiBN('5').toString()
+            ).send({
+                from: voter1
+            }), 'INSUFFICIENT_TOKENS_ALLOWANCE');
+        });
 
-        it('should fail if already enough votes in voting', async () => {});
+        it.skip('should fail if already enough votes in voting', async () => {});
 
-        it('should fail if voting is expired', async () => {});
+        it.skip('should fail if voting is expired', async () => {});
 
-        it('should accept a vote', async () => {});
+        it('should accept a vote', async () => {
+            await doVote(
+                dao,
+                proposalId,
+                '5',
+                voter1
+            );
+        });
     });
 
     describe.skip('#revokeVote(uint256)', () => {

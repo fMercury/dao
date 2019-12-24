@@ -1,6 +1,11 @@
 const { assertEvent } = require('./assertions');
 const { buildCallData } = require('./transactions');
-const { toBN, toWeiBN } = require('./bnmath');
+const { toBN, toWeiBN } = require('./common');
+const { isqrt } = require('./bnmath');
+const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
+Contracts.setLocalBuildDir('./artifacts');
+ZWeb3.initialize(web3.currentProvider);
+const Erc20Token = Contracts.getFromLocal('Erc20Token');
 
 /**
  * Add new proposal and assert result
@@ -71,3 +76,51 @@ const cancelProposal = async (
     ]);
 };
 module.exports.cancelProposal = cancelProposal;
+
+
+const doVote = async (
+    daoInstance,
+    proposalId,
+    voteValue,
+    voterAddress
+) => {
+    const serviceTokenAddress = await daoInstance.methods['serviceToken()']().call();
+    const serviceTokenInstance = await Erc20Token.at(serviceTokenAddress);
+    voteValue = toWeiBN(voteValue);
+    await serviceTokenInstance.methods['approve(address,uint256)'](
+        daoInstance.address,
+        voteValue.toString()
+    ).send({
+        from: voterAddress
+    });
+    const tokensBalanceBefore = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
+    const result = await daoInstance.methods['vote(uint256,uint256)'](
+        proposalId,
+        voteValue.toString()
+    ).send({
+        from: voterAddress
+    });
+    assertEvent(result, 'VoteAdded', [
+        [
+            'proposalId',
+            p => (p).should.equal(proposalId)
+        ],
+        [
+            'voter',
+            p => (p).should.equal(voterAddress)
+        ],
+        [
+            'votes',
+            p => (p).should.equal(voteValue.toString())
+        ],
+        [
+            'votesAccepted',
+            p => (p).should.equal(isqrt(voteValue).toString())
+        ]
+    ]);
+    const tokensBalanceAfter = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
+    
+    // Validate locked tokens
+    (toBN(tokensBalanceBefore).sub(toBN(tokensBalanceAfter))).should.eq.BN(voteValue);
+};
+module.exports.doVote = doVote;

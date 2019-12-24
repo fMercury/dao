@@ -298,8 +298,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         notProcessed(proposalId) 
         notCancelled(proposalId)
     {
-        emit ProposalCancelled(proposalId);
         proposals[proposalId].flags[2] = true;
+        emit ProposalCancelled(proposalId);
     }
 
     /**
@@ -328,7 +328,35 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         notPassed(proposalId) 
         notCancelled(proposalId)
     {
-        require(serviceToken.balanceOf(msg.sender) > votes, "INSUFFICIENT_TOKENS_BALANCE");
+        require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
+        require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
+
+        // Lock voters tokens 
+        serviceToken.safeTransferFrom(msg.sender, address(this), votes); 
+
+        // Calculate acceptes value
+        uint256 votesAccepted = convertVotes(votes);
+
+        if (votings[proposalId].balance == 0) {
+            
+            // Create new Voting structure
+            votings[proposalId] = Voting({
+                balance: votesAccepted
+            });
+            votings[proposalId].votes[msg.sender] = votings[proposalId].votes[msg.sender].add(votes);
+        } else {
+            
+            // Use existed Voting structure
+            votings[proposalId].balance = votings[proposalId].balance.add(votesAccepted);
+            votings[proposalId].votes[msg.sender] = votings[proposalId].votes[msg.sender].add(votes);
+        }
+
+        emit VoteAdded(
+            proposalId,
+            msg.sender,
+            votes,
+            votesAccepted
+        );
     }
 
     /**

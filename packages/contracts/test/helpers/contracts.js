@@ -1,3 +1,5 @@
+const { toBN, toWeiBN } = require('./bnmath');
+
 /**
  * Create service (governance) token instance
  * @param {Object} contract Contract object (obtained from getFromLocal)
