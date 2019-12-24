@@ -5,11 +5,12 @@
   "keywords": [
     "ethereum",
     "solidity",
-    "dao"
+    "dao",
+    "winding-tree"
   ],
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
   "homepage": "https://github.com/kostysh/oz-dao/packages/contracts#readme",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/kostysh/oz-dao.git"
