@@ -94,12 +94,14 @@ const doVote = async (
         from: voterAddress
     });
     const tokensBalanceBefore = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
+    const votingResultBefore = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
     const result = await daoInstance.methods['vote(uint256,uint256)'](
         proposalId,
         voteValue.toString()
     ).send({
         from: voterAddress
     });
+    const votesAccepted = isqrt(voteValue);
     assertEvent(result, 'VoteAdded', [
         [
             'proposalId',
@@ -115,12 +117,16 @@ const doVote = async (
         ],
         [
             'votesAccepted',
-            p => (p).should.equal(isqrt(voteValue).toString())
+            p => (p).should.equal(votesAccepted.toString())
         ]
     ]);
     const tokensBalanceAfter = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
     
     // Validate locked tokens
     (toBN(tokensBalanceBefore).sub(toBN(tokensBalanceAfter))).should.eq.BN(voteValue);
+
+    // Validate voting result
+    const votingResultAfter = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
+    (toBN(votingResultAfter).sub(toBN(votingResultBefore))).should.eq.BN(votesAccepted);
 };
 module.exports.doVote = doVote;

@@ -471,7 +471,7 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#getActiveProposalsIds()', () => {
+    describe.skip('#getActiveProposalsIds(uint8)', () => {
 
         it('should fail if unknown proposal type has been provided', async () => {});
 
@@ -507,5 +507,46 @@ contract('DAO', accounts => {
         it('should fail if sender not a WhitelistAdmin', async () => {});
 
         it('should replace existed WhitelistAdmin to the new one', async () => {}); 
+    });
+
+    describe('#votingResult(uint256)', () => {
+        let proposalId;
+
+        beforeEach(async () => {
+            // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+        });
+
+        it('should return 0 if no votes has beed added', async () => {
+            const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
+            (votingResult).should.equal('0');
+        });
+
+        it.skip('should return 0 if votes has been added and then revoked', async () => {});
+
+        it('should return a voting result', async () => {
+            const votesToVote = '5';
+            await doVote(
+                dao,
+                proposalId,
+                votesToVote,
+                voter1
+            );
+            const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
+            (votingResult).should.equal(isqrt(toWeiBN(votesToVote)).toString());
+        });
     });
 });

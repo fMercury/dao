@@ -487,6 +487,15 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
+     * @dev Get a result of the proposal voting
+     * @param proposalId Proposal Id
+     * @return uint256 Voting result
+     */
+    function votingResult(uint256 proposalId) public view returns(uint256) {
+        return votings[proposalId].balance;
+    }
+
+    /**
      * @dev Transfer service tokens from the voter to the DAO
      * @param voter Proposal voter
      * @param value Amount of service tokens to transfer
