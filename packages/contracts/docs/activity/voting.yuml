@@ -1,0 +1,13 @@
+// {type:activity}
+// {generate:true}
+
+(start)->(Proposal selection)->|f|-><a>[Voting not active]->(end)
+|f|-><g>[Withdrawal\n not allowed]->(end)
+<g>[Withdrawal allowed]->(Withdraw\n locked tokens)->(end)
+<a>[Voting active]->|b|
+|b|-><c>[Revoking not allowed]->(end)
+<c>[Revoking is allowed]->(Revoke previous vote)->(Update\n voting store)->(end)
+|b|-><h>[Voting\n not allowed]->(end)
+<h>[Voting allowed]->(Choosing YES / NO\n vote variant)->(Add vote)->(Locking\n a governance tokens\n by the Dao)->|d|
+|d|->(Save original 'voices')->|e|
+|d|->(Add square root value\n of original 'voices'\n to voting balance)->|e|->(end)

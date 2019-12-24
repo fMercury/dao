@@ -1,11 +1,11 @@
 // {type:activity}
 // {generate:true}
 
-(start)-><a>[Addition conditions not fulfilled]->(end)
-<a>[Addition conditions fulfilled]->(Add proposal)->|b|
-|b|->(Cancel proposal)-><c>[Cancellation conditions fulfilled]->(Update proposal state to 'cancelled')->(end)
+(start)-><a>[Addition conditions\n not fulfilled]->(end)
+<a>[Addition conditions\n fulfilled]->(Add proposal)->|b|
+|b|->(Cancel proposal)-><c>[Cancellation conditions\n fulfilled]->(Update proposal state\n to 'cancelled')->(end)
 <c>[Cancellation prohibited]->(end)
-|b|-><d>[Processing conditions not fulfilled]->(end)
-<d>[Processing allowed]->(Process proposal)->(Update proposal state to 'processed')-><e>
+|b|-><d>[Processing conditions\n not fulfilled]->(end)
+<d>[Processing allowed]->(Process proposal)->(Update proposal state\n to 'processed')-><e>
 <e>[Proposal voting failed]->(end)
-<e>[Proposal voting succeeded]->(Update proposal state to 'passed')->(end)
+<e>[Proposal voting succeeded]->(Update proposal state\n to 'passed')->(end)
