@@ -1,0 +1,8 @@
+// {type:activity}
+// {generate:true}
+
+(note: Voting results\n validation)
+
+(start)-><a>[NO balance\n greater than YES]->(Voting failure)->|b|
+<a>[YES balance\n greater than NO]->(Voting success)->|b|
+|b|->(end)
