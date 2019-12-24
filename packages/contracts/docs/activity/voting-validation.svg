@@ -12,7 +12,7 @@
 <!-- A0 -->
 <g id="node1" class="node">
 <title>A0</title>
-<polygon fill="none" stroke="#000000" points="82.353,-314 .215,-314 .215,-278 88.353,-278 88.353,-308 82.353,-314"/>
+<polygon fill="#f5f5dc" stroke="#000000" points="82.353,-314 .215,-314 .215,-278 88.353,-278 88.353,-308 82.353,-314"/>
 <polyline fill="none" stroke="#000000" points="82.353,-314 82.353,-308 "/>
 <polyline fill="none" stroke="#000000" points="88.353,-308 82.353,-308 "/>
 <text text-anchor="middle" x="44.284" y="-299" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">Voting results</text>

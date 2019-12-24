@@ -1,6 +1,8 @@
 // {type:activity}
 // {generate:true}
 
+(note: Voting\n process {bg:beige})
+
 (start)->(Proposal selection)->|f|-><a>[Voting not active]->(end)
 |f|-><g>[Withdrawal\n not allowed]->(end)
 <g>[Withdrawal allowed]->(Withdraw\n locked tokens)->(end)

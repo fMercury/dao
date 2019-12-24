@@ -1,6 +1,8 @@
 // {type:activity}
 // {generate:true}
 
+(note: Proposal\n process {bg:beige})
+
 (start)-><a>[Addition conditions\n not fulfilled]->(end)
 <a>[Addition conditions\n fulfilled]->(Add proposal)->|b|
 |b|->(Cancel proposal)-><c>[Cancellation conditions\n fulfilled]->(Update\n proposal state\n to 'cancelled')->(end)
