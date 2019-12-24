@@ -3,9 +3,11 @@
 
 (start)-><a>[Addition conditions\n not fulfilled]->(end)
 <a>[Addition conditions\n fulfilled]->(Add proposal)->|b|
-|b|->(Cancel proposal)-><c>[Cancellation conditions\n fulfilled]->(Update proposal state\n to 'cancelled')->(end)
+|b|->(Cancel proposal)-><c>[Cancellation conditions\n fulfilled]->(Update\n proposal state\n to 'cancelled')->(end)
 <c>[Cancellation prohibited]->(end)
 |b|-><d>[Processing conditions\n not fulfilled]->(end)
-<d>[Processing allowed]->(Process proposal)->(Update proposal state\n to 'processed')-><e>
+<d>[Processing allowed]->(Update\n proposal state\n to 'processed')->(Voting results\n validation {bg:beige})[process\n diagram\n exists]-><e>
 <e>[Proposal voting failed]->(end)
-<e>[Proposal voting succeeded]->(Update proposal state\n to 'passed')->(end)
+<e>[Proposal voting succeeded]->(Execute transaction)-><q>[Transaction\n execution\n succeeded]->|j|
+<q>[Transaction\n execution\n failed]->(Save failure result)->|j|
+|j|->(Update\n proposal state\n to 'passed')->(end)
