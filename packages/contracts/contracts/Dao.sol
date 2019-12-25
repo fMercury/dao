@@ -259,7 +259,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     modifier voteExists(uint256 proposalId) {
         require(
             votings[proposalId].votes[votings[proposalId].ids[msg.sender]].valueOriginal != 0, 
-            "VOTING_NOT_FOUND"
+            "VOTE_NOT_FOUND"
         );
         _;
     }
@@ -450,6 +450,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - proposal should exists
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
+     *  - vote should not been already revoked
      *
      * @param proposalId Proposal Id
      */

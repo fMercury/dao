@@ -629,11 +629,67 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#getVote(uint256)', () => {
+    describe('#getVote(uint256)', () => {
+        let proposalId;
 
-        it('should fail if proposal not found', async () => {});
+        beforeEach(async () => {
+            // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+
+            
+        });
+
+        it('should fail if proposal not found', async () => {
+            await assertRevert(
+                dao.methods['getVote(uint256)'](web3.utils.asciiToHex('test')).call({
+                    from: voter1
+                }),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
+
+        it('should fail if vote not not been sent', async () => {
+            await assertRevert(
+                dao.methods['getVote(uint256)'](proposalId).call({
+                    from: voter1
+                }),
+                'VOTE_NOT_FOUND'
+            );
+        });
     
-        it('should return a vote', async () => {});
+        it('should return a vote', async () => {
+            const value = '5';
+            const voteType = VoteType.Yes;
+            // Add a vote for proposal
+            await doVote(
+                dao,
+                proposalId,
+                voteType,
+                value,
+                voter1
+            );
+
+            const vote = await dao.methods['getVote(uint256)'](proposalId).call({
+                from: voter1
+            });
+            (vote.voteType).should.equal(voteType.toString());
+            (vote.valueOriginal).should.equal(toWeiBN(value).toString());
+            (vote.valueAccepted).should.equal(isqrt(toWeiBN(value)).toString());
+            (vote.revoked).should.equal(false);            
+        });
     });
 
     describe.skip('#getActiveProposalsIds()', () => {
