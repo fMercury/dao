@@ -577,11 +577,56 @@ contract('DAO', accounts => {
         });        
     });
 
-    describe.skip('#getProposal(uint256)', () => {
+    describe('#getProposal(uint256)', () => {
+        let proposalId;
+        const proposalConfig = {
+            details: 'Change target contract owner',
+            proposalType: ProposalType.MethodCall,
+            duration: '10',
+            value: '0',
+            methodName: 'transferOwnership(address)',
+            methodParamTypes: ['address'],
+            methodParams: [voter1]
+        };
 
-        it('should fail if proposal not found', async () => {});
+        beforeEach(async () => {
+            // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                proposalConfig
+            );
+        });
+
+        it('should fail if proposal not existed', async () => {
+            await assertRevert(
+                dao.methods['getProposal(uint256)'](web3.utils.asciiToHex('test')).call({
+                    from: voter1
+                }),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
     
-        it('should return a proposal', async () => {});
+        it('should return a proposal', async () => {
+            const proposal = await dao.methods['getProposal(uint256)'](proposalId).call({
+                from: voter1
+            });
+            (proposal.details).should.equal(proposalConfig.details);
+            (proposal.proposalType).should.equal(proposalConfig.proposalType.toString());
+            (proposal.duration).should.equal(proposalConfig.duration);
+            (proposal.end < (Date.now()/1000)*Number(proposalConfig.duration)).should.true;
+            (proposal.flags).should.deep.equal([false, false, false]);
+            (proposal.txDestination).should.equal(target.address);
+            (proposal.txValue).should.equal(proposalConfig.value);
+            (proposal.txData).should.equal(buildCallData(
+                proposalConfig.methodName, 
+                proposalConfig.methodParamTypes,
+                proposalConfig.methodParams
+            ));
+            (proposal.txExecuted).should.equal(false);
+            (proposal.txSuccess).should.equal(false);
+        });
     });
 
     describe.skip('#getVote(uint256)', () => {

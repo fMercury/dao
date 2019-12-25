@@ -547,7 +547,19 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             bool txExecuted,
             bool txSuccess
         ) 
-    {}
+    {
+        Proposal storage existedProposal = proposals[proposalId];
+        details = existedProposal.details;
+        proposalType = existedProposal.proposalType;
+        duration = existedProposal.duration;
+        end = existedProposal.end;
+        flags = existedProposal.flags;
+        txDestination = existedProposal.transaction.destination;
+        txValue = existedProposal.transaction.value;
+        txData = existedProposal.transaction.data;
+        txExecuted = existedProposal.transaction.executed;
+        txSuccess = existedProposal.transaction.success;
+    }
 
     /**
      * @dev Get own vote from proposal voting
