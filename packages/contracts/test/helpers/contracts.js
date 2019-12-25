@@ -1,4 +1,4 @@
-const { toBN, toWeiBN } = require('./bnmath');
+const { toWeiEther } = require('./common');
 
 /**
  * Create service (governance) token instance
@@ -15,7 +15,7 @@ const createTokenAndDistribute = async (
     distributionList = []
 ) => {
     // Create service token instance
-    const token = await contract.new('Governance Coin', 'GOVC', 18, web3.utils.toWei(totalSupply, 'ether'), {
+    const token = await contract.new('Governance Coin', 'GOVC', 18, toWeiEther(totalSupply), {
         from: tokenOwner
     });
 
@@ -23,7 +23,7 @@ const createTokenAndDistribute = async (
     await Promise.all(distributionList.map(
         v => token.methods['mint(address,uint256)'](
             v.owner, 
-            web3.utils.toWei(v.value, 'ether')
+            toWeiEther(v.value)
         ).send({
             from: tokenOwner
         })

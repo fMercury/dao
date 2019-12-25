@@ -5,5 +5,13 @@ module.exports = {
     ProposalType: {
         ContractUpgrade: 0,
         MethodCall: 1
+    },
+
+    // Types of the Vote
+    VoteType: {
+        Yes: 0,
+        No: 1,
+        0: 'yes',
+        1: 'no'
     }
 };

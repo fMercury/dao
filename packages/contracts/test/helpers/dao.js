@@ -1,3 +1,4 @@
+const { VoteType } = require('./constants');
 const { assertEvent } = require('./assertions');
 const { buildCallData } = require('./transactions');
 const { toBN, toWeiBN } = require('./common');
@@ -13,7 +14,7 @@ const Erc20Token = Contracts.getFromLocal('Erc20Token');
  * @param {string} targetAddress Target contract address
  * @param {string} proposalCreator Proposal creator address
  * @param {Object} proposalOptions Proposal options object
- * @returns {string} Proposal Id (stringified integer value)
+ * @returns {Promise<{string}>} Proposal Id (stringified integer value)
  */
 const addProposal = async (
     daoInstance, 
@@ -59,6 +60,7 @@ module.exports.addProposal = addProposal;
  * @param {Object} daoInstance DAO instance object
  * @param {string} proposalId Proposal Id
  * @param {string} proposalCreator Proposal creator address
+ * @returns {Promise}
  */
 const cancelProposal = async (
     daoInstance, 
@@ -77,10 +79,19 @@ const cancelProposal = async (
 };
 module.exports.cancelProposal = cancelProposal;
 
-
+/**
+ * Create new Vote or update existed one
+ * @param {Object} daoInstance DAO instance object
+ * @param {string} proposalId Proposal Id
+ * @param {number} voteType Type of the Vote VoteType.Yes|VoteType.No
+ * @param {string} voteValue Amount of service tokens to send as a vote
+ * @param {string} voterAddress Voter address
+ * @returns {Promise}
+ */
 const doVote = async (
     daoInstance,
     proposalId,
+    voteType,
     voteValue,
     voterAddress
 ) => {
@@ -93,10 +104,28 @@ const doVote = async (
     ).send({
         from: voterAddress
     });
+
     const tokensBalanceBefore = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
     const votingResultBefore = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
-    const result = await daoInstance.methods['vote(uint256,uint256)'](
+
+    let isUpdate = false;
+    let oldVoteType;
+    let oldValueOriginal;
+    let oldValueAccepted;
+
+    // Trying to fetch a vote from a proposal
+    // If success - then VoteRevoked event will be checked after the adding of a new vote
+    try {
+        const vote = await daoInstance.methods['getVote(uint256)'](proposalId).call();
+        oldVoteType = vote.voteType;
+        oldValueOriginal = vote.valueOriginal;
+        oldValueAccepted = vote.valueAccepted;
+        isUpdate = oldValueOriginal !== '0' && !vote.revoked;
+    } catch(err) {}// eslint-disable-line no-empty
+    
+    const result = await daoInstance.methods['vote(uint256,uint8,uint256)'](
         proposalId,
+        voteType,
         voteValue.toString()
     ).send({
         from: voterAddress
@@ -106,6 +135,10 @@ const doVote = async (
         [
             'proposalId',
             p => (p).should.equal(proposalId)
+        ],
+        [
+            'voteType',
+            p => (p).should.equal(voteType.toString())
         ],
         [
             'voter',
@@ -120,6 +153,33 @@ const doVote = async (
             p => (p).should.equal(votesAccepted.toString())
         ]
     ]);
+
+    if (isUpdate) {
+
+        assertEvent(result, 'VoteRevoked', [
+            [
+                'proposalId',
+                p => (p).should.equal(proposalId)
+            ],
+            [
+                'voteType',
+                p => (p).should.equal(oldVoteType)
+            ],
+            [
+                'voter',
+                p => (p).should.equal(voterAddress)
+            ],
+            [
+                'votes',
+                p => (p).should.equal(oldValueOriginal)
+            ],
+            [
+                'votesAccepted',
+                p => (p).should.equal(oldValueAccepted)
+            ]
+        ]);
+    }
+
     const tokensBalanceAfter = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
     
     // Validate locked tokens
@@ -127,6 +187,9 @@ const doVote = async (
 
     // Validate voting result
     const votingResultAfter = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
-    (toBN(votingResultAfter).sub(toBN(votingResultBefore))).should.eq.BN(votesAccepted);
+    (
+        toBN(votingResultAfter[VoteType[voteType]])
+            .sub(toBN(votingResultBefore[VoteType[voteType]]))
+    ).should.eq.BN(votesAccepted);
 };
 module.exports.doVote = doVote;

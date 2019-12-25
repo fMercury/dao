@@ -4,7 +4,8 @@ require('chai')
 
 const {
     zeroAddress, 
-    ProposalType
+    ProposalType,
+    VoteType
 } = require('./helpers/constants');
 const { assertRevert, assertEvent } = require('./helpers/assertions');
 const { buildCallData } = require('./helpers/transactions');
@@ -242,6 +243,8 @@ contract('DAO', accounts => {
             );
         });
 
+        it.skip('should fail if proposal not existed', async () => {});
+
         it('should fail if sender address not a proposer address', async () => {
             await assertRevert(dao.methods['cancelProposal'](proposalId).send({
                 from: voter1// Not a proposer
@@ -272,7 +275,7 @@ contract('DAO', accounts => {
         });
     });
 
-    describe('#vote(uint256,uint256)', () => {
+    describe('#vote(uint256,uint8,uint256)', () => {
         let proposalId;
 
         beforeEach(async () => {
@@ -293,6 +296,8 @@ contract('DAO', accounts => {
             );
         });
 
+        it.skip('should fail if proposal not existed', async () => {});
+
         it.skip('should fail if contract is paused', async () => {
             // @todo Implement this after whole DAO workflow will be implemented
         });
@@ -307,8 +312,9 @@ contract('DAO', accounts => {
                 proposalId,
                 proposalCreator1
             );
-            await assertRevert(dao.methods['vote(uint256,uint256)'](
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
                 proposalId,
+                VoteType.Yes,
                 toWeiBN('5').toString()
             ).send({
                 from: voter1
@@ -316,8 +322,9 @@ contract('DAO', accounts => {
         });
 
         it('should fail if sender tokens balance insufficient', async () => {
-            await assertRevert(dao.methods['vote(uint256,uint256)'](
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
                 proposalId,
+                VoteType.Yes,
                 toWeiBN('15').toString()
             ).send({
                 from: voter1
@@ -325,8 +332,9 @@ contract('DAO', accounts => {
         });
 
         it('should fail if tokens allowance for the DAO address insufficient', async () => {
-            await assertRevert(dao.methods['vote(uint256,uint256)'](
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
                 proposalId,
+                VoteType.Yes,
                 toWeiBN('5').toString()
             ).send({
                 from: voter1
@@ -341,6 +349,7 @@ contract('DAO', accounts => {
             await doVote(
                 dao,
                 proposalId,
+                VoteType.Yes,
                 '5',
                 voter1
             );
@@ -353,6 +362,8 @@ contract('DAO', accounts => {
             // Add proposal
             // Add a vote for proposal
         });
+
+        it('should fail if proposal not existed', async () => {});
 
         it('should fail if proposal in a passed state', async () => {});
 
@@ -371,6 +382,8 @@ contract('DAO', accounts => {
             });
 
             it('should fail if contract is paused', async () => {});
+
+            it('should fail if proposal not exists', async () => {});
     
             it('should fail if sender address not a proposer address', async () => {});
     
@@ -447,6 +460,13 @@ contract('DAO', accounts => {
         it('should fail if proposal not found', async () => {});
     
         it('should return a proposal', async () => {});
+    });
+
+    describe.skip('#getVote(uint256)', () => {
+
+        it('should fail if proposal not found', async () => {});
+    
+        it('should return a vote', async () => {});
     });
 
     describe.skip('#getActiveProposalsIds()', () => {
@@ -530,9 +550,12 @@ contract('DAO', accounts => {
             );
         });
 
-        it('should return 0 if no votes has beed added', async () => {
+        it.skip('should fail if proposal not found', async () => {});
+
+        it('should return 0 and 0 if no votes has beed added', async () => {
             const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
-            (votingResult).should.equal('0');
+            (votingResult.yes).should.equal('0');
+            (votingResult.no).should.equal('0');
         });
 
         it.skip('should return 0 if votes has been added and then revoked', async () => {});
@@ -542,11 +565,29 @@ contract('DAO', accounts => {
             await doVote(
                 dao,
                 proposalId,
+                VoteType.Yes,
                 votesToVote,
                 voter1
             );
             const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
-            (votingResult).should.equal(isqrt(toWeiBN(votesToVote)).toString());
+            (votingResult.yes).should.equal(isqrt(toWeiBN(votesToVote)).toString());
         });
+    });
+
+    describe.skip('#isVotingPassed(uint256)', () => {
+
+        beforeEach(async () => {
+            // Add proposal
+        });
+
+        it('should fail if proposal not found', async () => {});
+
+        it('should return true if proposal passed', async () => {});
+
+        it('should return false if proposal not passed (voting finished)', async () => {});
+
+        it('should return false if proposal cancelled', async () => {});
+
+        it('should return false if voting not finished yet', async () => {});
     });
 });

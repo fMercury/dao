@@ -30,6 +30,14 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
+     * @dev Acceptable vote types
+     */
+    enum VoteType {
+        Yes,
+        No
+    }
+
+    /**
      * @dev Proposal transaction
      * @param destination Transaction target address
      * @param value Ethers value to send with transaction
@@ -66,17 +74,33 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev Voting structure
-     * @param votes List of voters with their original votes
-     * @param balance Voting balance (sum of converted votes of all voters)
+     * @dev Vore structure
+     * @param voteType Type of the vote
+     * @param valueOriginal Original vote value (not converted)
+     * @param valueAccepted Accepted vote value (converted)
+     * @param revoked Revoked flag
      */
-    struct Voting {
-        mapping (address => uint256) votes;// voterAddress => votes
-        uint256 balance;
+    struct Vote {
+        VoteType voteType;
+        uint256 valueOriginal;
+        uint256 valueAccepted;
+        bool revoked;
     }
 
     /**
-     * @dev This event will be emitted when
+     * @dev Voting structure
+     * @param ids List of the voters votes Ids (indexes)
+     * @param votes List of votes
+     * @param votesCount Votes counter
+     */
+    struct Voting {
+        mapping (address => uint256) ids;// voterAddress => voteId
+        mapping (uint256 => Vote) votes;// voteId => Vote
+        uint256 votesCount;
+    }
+
+    /**
+     * @dev This event will be emitted when proposal has been added
      * @param proposer Proposer address
      * @param proposalId Proposal Id
      */
@@ -86,37 +110,43 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when proposal has been cancelled
      * @param proposalId Proposal Id
      */
     event ProposalCancelled(uint256 proposalId);
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when Vote is accepted
      * @param proposalId Proposal Id
+     * @param voteType Type of the vote
      * @param voter Voter address
      * @param votes Original votes sent
      * @param votesAccepted Accepted votes amount
      */
     event VoteAdded(
         uint256 proposalId,
+        VoteType voteType,
         address voter,
         uint256 votes,
         uint256 votesAccepted
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when existed Vote is revoked
+     * @param proposalId Proposal Id
+     * @param voteType Type of the vote
      * @param voter Voter address
      * @param votes Original votes revoked
      */
     event VoteRevoked(
+        uint256 proposalId,
+        VoteType voteType,
         address voter,
         uint256 votes
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when service tokens are locked
      * @param voter Voter address
      * @param value Locked tokens amount
      */
@@ -126,7 +156,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when service tokens are released
      * @param voter Voter address
      * @param value Released tokens amount
      */
@@ -136,13 +166,13 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when proposal moved to processed state
      * @param proposalId Proposal Id
      */
     event ProposalProcessed(uint256 proposalId);
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when proposal transaction has been sent
      * @param proposalId Proposal Id
      * @param proposalId Ether sent with transaction
      */
@@ -152,13 +182,13 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     );
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when sent proposal transaction has succeeded
      * @param proposalId Proposal Id
      */
     event TransactionSuccessed(uint256 proposalId);
 
     /**
-     * @dev This event will be emitted when
+     * @dev This event will be emitted when sent proposal transaction has failed
      * @param proposalId Proposal Id
      */
     event TransactionFailed(uint256 proposalId);
@@ -210,6 +240,27 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     modifier notCancelled(uint256 proposalId) {
         require(!proposals[proposalId].flags[2], "ALREADY_CANCELLED");
+        _;
+    }
+
+    /**
+     * @dev This modifier allows function execution if proposal exist only
+     * @param proposalId Proposal Id
+     */
+    modifier proposalExists(uint256 proposalId) {
+        require(proposals[proposalId].duration != 0, "PROPOSAL_NOT_FOUND");
+        _;
+    }
+
+    /**
+     * @dev This modifier allows function execution if sender vote exist only
+     * @param proposalId Proposal Id
+     */
+    modifier voteExists(uint256 proposalId) {
+        require(
+            votings[proposalId].votes[votings[proposalId].ids[msg.sender]].valueOriginal != 0, 
+            "VOTING_NOT_FOUND"
+        );
         _;
     }
 
@@ -285,6 +336,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Cancelling of the proposal
      *
      * Requirements:
+     *  - proposal should exists
      *  - sender address should be a proposer address
      *  - proposal should not be in a passed state
      *  - proposal should not be in a processed state
@@ -294,6 +346,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function cancelProposal(uint256 proposalId) 
         external 
+        proposalExists(proposalId)
         onlyProposer(proposalId)
         notPassed(proposalId) 
         notProcessed(proposalId) 
@@ -307,6 +360,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Vote for the proposal
      *
      * Requirements:
+     *  - proposal should exists
      *  - contract not paused
      *  - not a reentrant call
      *  - proposal should not be in a passed state
@@ -317,45 +371,72 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - voting not expired (does not exceed voting time frame)
      *
      * @param proposalId Proposal Id
+     * @param voteType Type of the vote (Yes/No)
      * @param votes Amount of service token to use in the vote
      */
     function vote(
-        uint256 proposalId, 
+        uint256 proposalId,
+        VoteType voteType, 
         uint256 votes
     ) 
         external 
         whenNotPaused
-        nonReentrant
+        nonReentrant 
+        proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
     {
         require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
         require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
 
-        // Transfer voters tokens to the DAO
+        // Transfer tokens to the DAO
         lockTokens(msg.sender, votes);
 
-        // Calculate acceptes value
-        uint256 votesAccepted = convertVotes(votes);
+        uint256 votesSent = votes;
+        uint256 votesAccepted;
 
-        if (votings[proposalId].balance == 0) {
+        if (votings[proposalId].votesCount == 0) {
             
-            // Create new Voting structure
-            votings[proposalId] = Voting({
-                balance: votesAccepted
-            });
-            votings[proposalId].votes[msg.sender] = votings[proposalId].votes[msg.sender].add(votes);
+            // Create new Vote
+            votings[proposalId].ids[msg.sender] = votings[proposalId].votesCount;
+            votesAccepted = convertVotes(votesSent);
+            votings[proposalId].votes[votings[proposalId].votesCount] = Vote(
+                voteType,
+                votesSent,
+                votesAccepted,
+                false
+            );
+
+            // Update votes counter
+            // @todo Add condition to avoid uint256 value restrictions
+            votings[proposalId].votesCount += 1;
         } else {
             
-            // Use existed Voting structure
-            votings[proposalId].balance = votings[proposalId].balance.add(votesAccepted);
-            votings[proposalId].votes[msg.sender] = votings[proposalId].votes[msg.sender].add(votes);
+            // Update existed Vote
+            Vote storage existedVote = votings[proposalId].votes[votings[proposalId].ids[msg.sender]];
+            
+            VoteType oldVoteType = existedVote.voteType;
+            uint256 oldVotes = existedVote.valueOriginal;
+
+            votesSent = existedVote.valueOriginal.add(votes);
+            votesAccepted = convertVotes(votesSent);
+            existedVote.valueOriginal = votesSent;            
+            existedVote.valueAccepted = votesAccepted;
+
+            // Emitting this event for consistency
+            emit VoteRevoked(
+                proposalId,
+                oldVoteType,
+                msg.sender,
+                oldVotes
+            );
         }
 
         emit VoteAdded(
             proposalId,
+            voteType,
             msg.sender,
-            votes,
+            votesSent,
             votesAccepted
         );
     }
@@ -364,6 +445,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Revoke of the placed vote
      *
      * Requirements:
+     *  - proposal should exists
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
      *
@@ -371,6 +453,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function revokeVote(uint256 proposalId) 
         external 
+        proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
     {}
@@ -379,6 +462,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Process proposal
      *
      * Requirements:
+     *  - proposal should exists
      *  - contract not paused
      *  - sender address should be a proposer address
      *  - proposal should not be processed
@@ -388,7 +472,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function processProposal(uint256 proposalId) 
         external 
-        whenNotPaused
+        whenNotPaused 
+        proposalExists(proposalId)
         onlyProposer(proposalId) 
         notProcessed(proposalId) 
         notCancelled(proposalId) 
@@ -431,6 +516,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function getProposal(uint256 proposalId) 
         external 
         view 
+        proposalExists(proposalId)
         returns (
             string memory details,
             ProposalType proposalType,
@@ -444,6 +530,39 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             bool txSuccess
         ) 
     {}
+
+    /**
+     * @dev Get own vote from proposal voting
+     * 
+     * Requirements:
+     *  - proposal should exists
+     *  - vote should be exist
+     * 
+     * @param proposalId Proposal Id
+     * @return VoteType Type of the vote
+     * @return uint256 Original vote value sent
+     * @return uint256 Acceptes vote value
+     * @return bool Reveked state of the vote
+     */
+    function getVote(uint256 proposalId) 
+        external 
+        view 
+        proposalExists(proposalId)
+        voteExists(proposalId)
+        returns(
+            VoteType voteType,
+            uint256 valueOriginal,
+            uint256 valueAccepted,
+            bool revoked
+        ) 
+    {
+        Vote storage senderVote = votings[proposalId]
+            .votes[votings[proposalId].ids[msg.sender]];
+        voteType = senderVote.voteType;
+        valueOriginal = senderVote.valueOriginal;
+        valueAccepted = senderVote.valueAccepted;
+        revoked = senderVote.revoked;
+    }
 
     /**
      * @dev Get all active proposals Ids
@@ -489,24 +608,69 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
     /**
      * @dev Get a result of the proposal voting
+     *
+     * Requirements:
+     *  - proposal should exists
+     *
      * @param proposalId Proposal Id
-     * @return uint256 Voting result
+     * @return uint256 'Yes' variant voting balance
+     * @return uint256 'No' variant voting balance
      */
-    function votingResult(uint256 proposalId) public view returns(uint256) {
-        return votings[proposalId].balance;
+    function votingResult(uint256 proposalId) 
+        public 
+        view 
+        proposalExists(proposalId)
+        returns(
+            uint256 yes, 
+            uint256 no
+        ) 
+    {
+        
+        for (uint256 i = 0; i < votings[proposalId].votesCount; i++) {
+            
+            if (!votings[proposalId].votes[i].revoked) {
+
+                if (votings[proposalId].votes[i].voteType == VoteType.Yes) {
+                    yes = yes.add(votings[proposalId].votes[i].valueAccepted);
+                }
+
+                if (votings[proposalId].votes[i].voteType == VoteType.No) {
+                    no = no.add(votings[proposalId].votes[i].valueAccepted);
+                }
+            }
+        }
     }
 
     /**
      * @dev Check is voting is passed 
+     *
+     * Requirements:
+     *  - proposal should exists
+     *
      * @param proposalId Proposal Id
      * @return uint256 Voting result
      */
-    function isVotingPassed(uint256 proposalId) public view returns(bool) {
-        uint256 totalSupply = serviceToken.totalSupply();
-        uint256 votingThreshold = convertVotes(totalSupply)
-            .div(totalSupply.div(2))
-            .add(1);
-        return votings[proposalId].balance >= votingThreshold;
+    function isVotingPassed(uint256 proposalId) 
+        public 
+        view 
+        proposalExists(proposalId)
+        returns(bool) 
+    {
+        
+        if (proposals[proposalId].flags[0]) {
+            // We already know result
+            return true;
+        } else if (proposals[proposalId].flags[2]) {
+            // Cancelled proposals are not passing
+            return false;
+        } else if (time() < proposals[proposalId].end) {
+            // Voting not finished yet
+            return false;
+        } else {
+
+            (uint256 yes, uint256 no) = votingResult(proposalId);
+            return yes > no;
+        }
     }
 
     /**
@@ -518,6 +682,10 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         address voter, 
         uint256 value
     ) internal {
+        emit TokensLocked(
+            voter,
+            value
+        );
         return serviceToken.safeTransferFrom(voter, address(this), value);
     }
 
