@@ -485,6 +485,20 @@ contract('DAO', accounts => {
             );
         });
 
+        it('should fail if vote has been revoked before', async () => {
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+            await assertRevert(
+                dao.methods['revokeVote(uint256)'](proposalId).send({
+                    from: voter1
+                }),
+                'VOTE_REVOKED'
+            );
+        });
+
         it('should revoke a vote', async () => {
             await revokeVote(
                 dao,

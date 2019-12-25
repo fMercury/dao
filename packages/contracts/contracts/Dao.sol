@@ -463,6 +463,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         Vote storage existedVote = votings[proposalId]
             .votes[votings[proposalId].ids[msg.sender]];
 
+        require(!existedVote.revoked, "VOTE_REVOKED");
+
         // Exclude vote from the voting results
         existedVote.revoked = true;
 
