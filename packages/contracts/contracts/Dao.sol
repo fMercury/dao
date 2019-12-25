@@ -221,7 +221,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @param proposalId Proposal Id
      */
     modifier notPassed(uint256 proposalId) {
-        require(!proposals[proposalId].flags[0], "ALREADY_PASSED");
+        require(!proposals[proposalId].flags[0], "PROPOSAL_PASSED");
         _;
     }
 
@@ -230,7 +230,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @param proposalId Proposal Id
      */
     modifier notProcessed(uint256 proposalId) {
-        require(!proposals[proposalId].flags[1], "ALREADY_PROCESSED");
+        require(!proposals[proposalId].flags[1], "PROPOSAL_PROCESSED");
         _;
     }
 
@@ -239,7 +239,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @param proposalId Proposal Id
      */
     modifier notCancelled(uint256 proposalId) {
-        require(!proposals[proposalId].flags[2], "ALREADY_CANCELLED");
+        require(!proposals[proposalId].flags[2], "PROPOSAL_CANCELLED");
         _;
     }
 
@@ -389,9 +389,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
         require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
 
-        // Transfer tokens to the DAO
-        lockTokens(msg.sender, votes);
-
         uint256 votesSent = votes;
         uint256 votesAccepted;
 
@@ -413,13 +410,15 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         } else {
             
             // Update existed Vote
-            Vote storage existedVote = votings[proposalId].votes[votings[proposalId].ids[msg.sender]];
+            Vote storage existedVote = votings[proposalId]
+                .votes[votings[proposalId].ids[msg.sender]];
             
             VoteType oldVoteType = existedVote.voteType;
             uint256 oldVotes = existedVote.valueOriginal;
 
             votesSent = existedVote.valueOriginal.add(votes);
             votesAccepted = convertVotes(votesSent);
+            existedVote.voteType = voteType;
             existedVote.valueOriginal = votesSent;            
             existedVote.valueAccepted = votesAccepted;
 
@@ -439,6 +438,9 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             votesSent,
             votesAccepted
         );
+
+        // Transfer tokens to the DAO
+        lockTokens(msg.sender, votes);
     }
 
     /**
@@ -456,7 +458,23 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
-    {}
+    {
+        Vote storage existedVote = votings[proposalId]
+            .votes[votings[proposalId].ids[msg.sender]];
+
+        // Exclude vote from the voting results
+        existedVote.revoked = true;
+
+        // Push tokens to the voter
+        releaseTokens(msg.sender, existedVote.valueOriginal);
+        
+        emit VoteRevoked(
+            proposalId,
+            existedVote.voteType,
+            msg.sender,
+            existedVote.valueOriginal
+        );
+    }
 
     /**
      * @dev Process proposal
@@ -682,22 +700,28 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         address voter, 
         uint256 value
     ) internal {
+        serviceToken.safeTransferFrom(voter, address(this), value);
         emit TokensLocked(
             voter,
             value
         );
-        return serviceToken.safeTransferFrom(voter, address(this), value);
     }
 
     /**
      * @dev Release locked tokens for the voter
-     * @param proposalId Proposal Id
      * @param voter Proposal voter
+     * @param value Amount of service tokens to transfer
      */
     function releaseTokens(
-        uint256 proposalId, 
-        address voter
-    ) internal {}
+        address voter,
+        uint256 value
+    ) internal {
+        serviceToken.safeTransfer(voter, value);
+        emit TokensReleased(
+            voter,
+            value
+        );
+    }
 
     /**
      * @dev Send a transaction for the proposal

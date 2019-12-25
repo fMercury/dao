@@ -19,7 +19,8 @@ const {
 const {
     addProposal,
     cancelProposal,
-    doVote
+    doVote,
+    revokeVote
 } = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
@@ -243,10 +244,14 @@ contract('DAO', accounts => {
             );
         });
 
-        it.skip('should fail if proposal not existed', async () => {});
+        it('should fail if proposal not existed', async () => {
+            await assertRevert(dao.methods['cancelProposal(uint256)'](web3.utils.asciiToHex('test')).send({
+                from: proposalCreator1
+            }), 'PROPOSAL_NOT_FOUND');
+        });
 
         it('should fail if sender address not a proposer address', async () => {
-            await assertRevert(dao.methods['cancelProposal'](proposalId).send({
+            await assertRevert(dao.methods['cancelProposal(uint256)'](proposalId).send({
                 from: voter1// Not a proposer
             }), 'NOT_A_PROPOSER');
         });
@@ -261,9 +266,9 @@ contract('DAO', accounts => {
                 proposalId,
                 proposalCreator1
             );
-            await assertRevert(dao.methods['cancelProposal'](proposalId).send({
+            await assertRevert(dao.methods['cancelProposal(uint256)'](proposalId).send({
                 from: proposalCreator1
-            }), 'ALREADY_CANCELLED');
+            }), 'PROPOSAL_CANCELLED');
         });
         
         it('should cancel proposal', async () => {
@@ -296,7 +301,22 @@ contract('DAO', accounts => {
             );
         });
 
-        it.skip('should fail if proposal not existed', async () => {});
+        it('should fail if proposal not existed', async () => {
+            const voteValue = toWeiBN('5').toString();
+            await token.methods['approve(address,uint256)'](
+                dao.address,
+                voteValue
+            ).send({
+                from: voter1
+            });
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
+                web3.utils.asciiToHex('test'),
+                VoteType.Yes,
+                voteValue
+            ).send({
+                from: voter1
+            }), 'PROPOSAL_NOT_FOUND');
+        });
 
         it.skip('should fail if contract is paused', async () => {
             // @todo Implement this after whole DAO workflow will be implemented
@@ -318,7 +338,7 @@ contract('DAO', accounts => {
                 toWeiBN('5').toString()
             ).send({
                 from: voter1
-            }), 'ALREADY_CANCELLED');
+            }), 'PROPOSAL_CANCELLED');
         });
 
         it('should fail if sender tokens balance insufficient', async () => {
@@ -354,22 +374,124 @@ contract('DAO', accounts => {
                 voter1
             );
         });
+
+        it('should update an existed vote with a same VoteType', async () => {
+            // Initial vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+
+            // Update to previous vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,// Same VoteType
+                '2',
+                voter1
+            );
+        });
+
+        it('should update an existed vote with different VoteType', async () => {
+            // Initial vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+
+            // Update to previous vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.No,// Different VoteType
+                '2',
+                voter1
+            );
+        });
     });
 
-    describe.skip('#revokeVote(uint256)', () => {
+    describe('#revokeVote(uint256)', () => {
+        let proposalId;
 
         beforeEach(async () => {
             // Add proposal
+            proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+
             // Add a vote for proposal
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
         });
 
-        it('should fail if proposal not existed', async () => {});
+        it('should fail if proposal not existed', async () => {
+            await assertRevert(
+                dao.methods['revokeVote(uint256)'](web3.utils.asciiToHex('test')).send({
+                    from: voter1
+                }),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
 
-        it('should fail if proposal in a passed state', async () => {});
+        it.skip('should fail if proposal in a passed state', async () => {});
 
-        it('should fail if proposal cancelled', async () => {});
+        it('should fail if proposal cancelled', async () => {
+            const proposalId = await addProposal(
+                dao,
+                target.address,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    methodName: 'transferOwnership(address)',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+            await cancelProposal(
+                dao,
+                proposalId,
+                proposalCreator1
+            );
+            await assertRevert(
+                dao.methods['revokeVote(uint256)'](proposalId).send({
+                    from: voter1
+                }),
+                'PROPOSAL_CANCELLED'
+            );
+        });
 
-        it('should revoke a vote', async () => {});
+        it('should revoke a vote', async () => {
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+        });
     });
 
     describe.skip('#processProposal(uint256)', () => {

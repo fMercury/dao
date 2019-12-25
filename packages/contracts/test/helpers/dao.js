@@ -111,18 +111,19 @@ const doVote = async (
     let isUpdate = false;
     let oldVoteType;
     let oldValueOriginal;
-    let oldValueAccepted;
 
     // Trying to fetch a vote from a proposal
     // If success - then VoteRevoked event will be checked after the adding of a new vote
     try {
-        const vote = await daoInstance.methods['getVote(uint256)'](proposalId).call();
+        const vote = await daoInstance.methods['getVote(uint256)'](proposalId).call({
+            from: voterAddress
+        });
         oldVoteType = vote.voteType;
         oldValueOriginal = vote.valueOriginal;
-        oldValueAccepted = vote.valueAccepted;
         isUpdate = oldValueOriginal !== '0' && !vote.revoked;
     } catch(err) {}// eslint-disable-line no-empty
     
+    // Add a vote
     const result = await daoInstance.methods['vote(uint256,uint8,uint256)'](
         proposalId,
         voteType,
@@ -130,7 +131,11 @@ const doVote = async (
     ).send({
         from: voterAddress
     });
-    const votesAccepted = isqrt(voteValue);
+
+    // If vote is updated - emitted votes value will be equal to cumulutive value
+    const trueVoteValue = !isUpdate ? voteValue.toString() : (voteValue.add(toBN(oldValueOriginal)));
+    const votesAccepted = isqrt(trueVoteValue);
+
     assertEvent(result, 'VoteAdded', [
         [
             'proposalId',
@@ -146,7 +151,7 @@ const doVote = async (
         ],
         [
             'votes',
-            p => (p).should.equal(voteValue.toString())
+            p => (p).should.equal(trueVoteValue.toString())
         ],
         [
             'votesAccepted',
@@ -172,10 +177,6 @@ const doVote = async (
             [
                 'votes',
                 p => (p).should.equal(oldValueOriginal)
-            ],
-            [
-                'votesAccepted',
-                p => (p).should.equal(oldValueAccepted)
             ]
         ]);
     }
@@ -187,9 +188,89 @@ const doVote = async (
 
     // Validate voting result
     const votingResultAfter = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
-    (
-        toBN(votingResultAfter[VoteType[voteType]])
-            .sub(toBN(votingResultBefore[VoteType[voteType]]))
-    ).should.eq.BN(votesAccepted);
+
+    if (isUpdate) {
+
+        // If a vote has been updated then we should take into account 'votesAccepted' changing
+        // Also we should take into account that VoteType can be changed during the update
+        if (voteType.toString() === oldVoteType) {
+
+            (toBN(votingResultAfter[VoteType[voteType]])).should.eq.BN(
+                toBN(votingResultBefore[VoteType[voteType]])
+                    .sub(isqrt(oldValueOriginal))
+                    .add(votesAccepted)
+            );            
+        } else {
+
+            (toBN(votingResultAfter[oldVoteType])).should.eq.BN(
+                toBN(votingResultBefore[oldVoteType]).sub(isqrt(oldValueOriginal))
+            );
+
+            (toBN(votingResultAfter[VoteType[voteType]])).should.eq.BN(
+                toBN(votingResultBefore[VoteType[voteType]]).add(votesAccepted)
+            );
+        }
+    } else {
+
+        // If a vote just added then voting result simply increases by a new value
+        (toBN(votingResultAfter[VoteType[voteType]])).should.eq.BN(
+            toBN(votingResultBefore[VoteType[voteType]]).add(votesAccepted)
+        );
+    }
 };
 module.exports.doVote = doVote;
+
+/**
+ * Revoke a vote
+ * @param {Object} daoInstance DAO instance object
+ * @param {string} proposalId Proposal Id
+ * @param {string} voterAddress Voter address
+ * @returns {Promise}
+ */
+const revokeVote = async (daoInstance, proposalId, voterAddress) => {
+    const serviceTokenAddress = await daoInstance.methods['serviceToken()']().call();
+    const serviceTokenInstance = await Erc20Token.at(serviceTokenAddress);
+    const tokensBalanceBefore = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
+    const votingResultBefore = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
+
+    // Get original vote
+    const vote = await daoInstance.methods['getVote(uint256)'](proposalId).call({
+        from: voterAddress
+    });
+
+    // Revoke this vote
+    const result = await daoInstance.methods['revokeVote(uint256)'](proposalId).send({
+        from: voterAddress
+    });
+
+    assertEvent(result, 'VoteRevoked', [
+        [
+            'proposalId',
+            p => (p).should.equal(proposalId)
+        ],
+        [
+            'voteType',
+            p => (p).should.equal(vote.voteType)
+        ],
+        [
+            'voter',
+            p => (p).should.equal(voterAddress)
+        ],
+        [
+            'votes',
+            p => (p).should.equal(vote.valueOriginal)
+        ]
+    ]);
+
+    // Validate released tokens
+    const tokensBalanceAfter = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
+    (toBN(tokensBalanceAfter).sub(toBN(tokensBalanceBefore)).toString()).should.equal(vote.valueOriginal);
+
+    // Validate voting result
+    const votingResultAfter = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
+    (
+        toBN(votingResultAfter[VoteType[Number(vote.voteType)]])
+            .add(toBN(votingResultBefore[VoteType[Number(vote.voteType)]]))
+    ).should.eq.BN(vote.valueAccepted);
+};
+module.exports.revokeVote = revokeVote;
