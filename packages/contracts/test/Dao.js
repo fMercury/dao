@@ -414,6 +414,33 @@ contract('DAO', accounts => {
                 voter1
             );
         });
+
+        it('should add a vote if previous has been revoked', async () => {
+            // Initial vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+            
+            // Revoke this vote
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+
+            // Add vote again
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '7',
+                voter1
+            );
+        });
     });
 
     describe('#revokeVote(uint256)', () => {

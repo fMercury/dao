@@ -409,26 +409,35 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             votings[proposalId].votesCount += 1;
         } else {
             
-            // Update existed Vote
+            // Re-use existed Vote
             Vote storage existedVote = votings[proposalId]
                 .votes[votings[proposalId].ids[msg.sender]];
             
-            VoteType oldVoteType = existedVote.voteType;
-            uint256 oldVotes = existedVote.valueOriginal;
+            if (existedVote.revoked) {
 
-            votesSent = existedVote.valueOriginal.add(votes);
-            votesAccepted = convertVotes(votesSent);
+                // Enable revoked vote status
+                existedVote.revoked = false;
+                votesAccepted = convertVotes(votesSent);
+            } else {
+
+                // For now allowed adding new value only
+                // @todo Implement conditional update: if votesSent less then previous value then do partial withdraw
+                votesSent = existedVote.valueOriginal.add(votes);
+                votesAccepted = convertVotes(votesSent);
+
+                // Emitting this event for consistency
+                emit VoteRevoked(
+                    proposalId,
+                    existedVote.voteType,
+                    msg.sender,
+                    existedVote.valueOriginal
+                );
+            }
+
+            // Update existed Vote
             existedVote.voteType = voteType;
             existedVote.valueOriginal = votesSent;            
             existedVote.valueAccepted = votesAccepted;
-
-            // Emitting this event for consistency
-            emit VoteRevoked(
-                proposalId,
-                oldVoteType,
-                msg.sender,
-                oldVotes
-            );
         }
 
         emit VoteAdded(
