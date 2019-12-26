@@ -11,23 +11,21 @@ const Erc20Token = Contracts.getFromLocal('Erc20Token');
 /**
  * Add new proposal and assert result
  * @param {Object} daoInstance DAO instance object
- * @param {string} targetAddress Target contract address
  * @param {string} proposalCreator Proposal creator address
  * @param {Object} proposalOptions Proposal options object
  * @returns {Promise<{string}>} Proposal Id (stringified integer value)
  */
 const addProposal = async (
     daoInstance, 
-    targetAddress, 
     proposalCreator,
     proposalOptions
 ) => {
-    const bnValue = toWeiBN(proposalOptions.value);
+    const bnValue = toWeiBN(proposalOptions.value);    
     const result = await daoInstance.methods['addProposal(string,uint8,uint256,address,uint256,bytes)'](
         proposalOptions.details,
         proposalOptions.proposalType,
         proposalOptions.duration,
-        targetAddress,
+        proposalOptions.destination,
         bnValue.toString(),
         buildCallData(
             proposalOptions.methodName, 
@@ -335,7 +333,8 @@ const processProposal = async (
         yes: toBN(0),
         no: toBN(0)
     });
-    
+
+    // Process proposal
     const result = await daoInstance.methods['processProposal(uint256)'](proposalId).send({
         from: proposalCreator
     });
@@ -356,14 +355,6 @@ const processProposal = async (
         [
             'passed',
             p => (p).should.equal(isPassed)
-        ],
-        [
-            'yes',
-            p => (p).should.equal(calculatedCampaign.yes.toString())
-        ],
-        [
-            'no',
-            p => (p).should.equal(calculatedCampaign.no.toString())
         ]
     ]);
 
@@ -374,17 +365,6 @@ const processProposal = async (
     if (isPassed) {
 
         (proposal.flags[0]).should.be.true;
-
-        assertEvent(result, 'TransactionSent', [
-            [
-                'proposalId',
-                p => (p).should.equal(proposalId)
-            ],
-            [
-                'value',
-                p => (p).should.equal(proposal.txValue.toString())
-            ]
-        ]);
 
         if (!brokenTx) {
             

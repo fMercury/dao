@@ -1,0 +1,399 @@
+{
+  "contractName": "Test",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "aaa",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "a",
+          "type": "bool"
+        }
+      ],
+      "name": "setA",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"aaa\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bool\",\"name\":\"a\",\"type\":\"bool\"}],\"name\":\"setA\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/Test.sol\":\"Test\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/test/Test.sol\":{\"keccak256\":\"0x4f8ddc925f406a155d998a9ff5dbf476288ccebada0b60586b64e9d50b991d1d\",\"urls\":[\"bzz-raw://1ce285c109927bfc84a02ba38be4e67b96e59078032b5059cf32a4fbf023bf19\",\"dweb:/ipfs/QmPbbFmw36SLkd2vPYh8hZ9U2iBAuK2GANcC2K6PdVQLwq\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060c08061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c8063749524f4146037578063937c0d0a146055575b600080fd5b605360048036036020811015604b57600080fd5b50351515606f565b005b605b6082565b604080519115158252519081900360200190f35b6000805460ff1916911515919091179055565b60005460ff168156fea265627a7a723158204ed03d8e5f2fc560b88813be0cabdd8aba006c3ced908850fd6463f9c6abd52464736f6c634300050e0032",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c8063749524f4146037578063937c0d0a146055575b600080fd5b605360048036036020811015604b57600080fd5b50351515606f565b005b605b6082565b604080519115158252519081900360200190f35b6000805460ff1916911515919091179055565b60005460ff168156fea265627a7a723158204ed03d8e5f2fc560b88813be0cabdd8aba006c3ced908850fd6463f9c6abd52464736f6c634300050e0032",
+  "sourceMap": "25:100:7:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:100:7;;;;;;;",
+  "deployedSourceMap": "25:100:7:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:100:7;;;;;;;;;;;;;;;;;;;;;;;;68:55;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;68:55:7;;;;:::i;:::-;;46:15;;;:::i;:::-;;;;;;;;;;;;;;;;;;68:55;109:3;:7;;-1:-1:-1;;109:7:7;;;;;;;;;;68:55::o;46:15::-;;;;;;:::o",
+  "source": "pragma solidity 0.5.14;\n\ncontract Test {\n\n    bool public aaa;\n\n    function setA(bool a) external {\n        aaa = a;\n    }\n}",
+  "sourcePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/Test.sol",
+  "ast": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/Test.sol",
+    "exportedSymbols": {
+      "Test": [
+        1524
+      ]
+    },
+    "id": 1525,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1511,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:7"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1524,
+        "linearizedBaseContracts": [
+          1524
+        ],
+        "name": "Test",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 1513,
+            "name": "aaa",
+            "nodeType": "VariableDeclaration",
+            "scope": 1524,
+            "src": "46:15:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 1512,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "46:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1522,
+              "nodeType": "Block",
+              "src": "99:24:7",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1520,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1518,
+                      "name": "aaa",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1513,
+                      "src": "109:3:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1519,
+                      "name": "a",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1515,
+                      "src": "115:1:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "109:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 1521,
+                  "nodeType": "ExpressionStatement",
+                  "src": "109:7:7"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 1523,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setA",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1516,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1515,
+                  "name": "a",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1523,
+                  "src": "82:6:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 1514,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "82:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "81:8:7"
+            },
+            "returnParameters": {
+              "id": 1517,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "99:0:7"
+            },
+            "scope": 1524,
+            "src": "68:55:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1525,
+        "src": "25:100:7"
+      }
+    ],
+    "src": "0:125:7"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/Test.sol",
+    "exportedSymbols": {
+      "Test": [
+        1524
+      ]
+    },
+    "id": 1525,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1511,
+        "literals": [
+          "solidity",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:7"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1524,
+        "linearizedBaseContracts": [
+          1524
+        ],
+        "name": "Test",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "id": 1513,
+            "name": "aaa",
+            "nodeType": "VariableDeclaration",
+            "scope": 1524,
+            "src": "46:15:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 1512,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "46:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1522,
+              "nodeType": "Block",
+              "src": "99:24:7",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1520,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1518,
+                      "name": "aaa",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1513,
+                      "src": "109:3:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1519,
+                      "name": "a",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1515,
+                      "src": "115:1:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "src": "109:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 1521,
+                  "nodeType": "ExpressionStatement",
+                  "src": "109:7:7"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 1523,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setA",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1516,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1515,
+                  "name": "a",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1523,
+                  "src": "82:6:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 1514,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "82:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "81:8:7"
+            },
+            "returnParameters": {
+              "id": 1517,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "99:0:7"
+            },
+            "scope": 1524,
+            "src": "68:55:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 1525,
+        "src": "25:100:7"
+      }
+    ],
+    "src": "0:125:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-26T17:09:45.709Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

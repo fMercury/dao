@@ -39,6 +39,7 @@ ZWeb3.initialize(web3.currentProvider);
 const Erc20Token = Contracts.getFromLocal('Erc20Token');
 const Dao = Contracts.getFromLocal('DaoWithTimeMachine');
 const ContractForDaoTestsV1 = Contracts.getFromLocal('ContractForDaoTestsV1');
+const ContractForDaoTestsV2 = Contracts.getFromLocal('ContractForDaoTestsV2');
 
 contract('DAO', accounts => {
     const tokenOwner = accounts[1];
@@ -73,6 +74,26 @@ contract('DAO', accounts => {
         // voter5 will still with empty balance
     ];
 
+    // Voting campaign template
+    const campaign = [
+        {
+            voter: voter1,
+            votes: '5'
+        },
+        {
+            voter: voter2,
+            votes: '3'
+        },
+        {
+            voter: voter3,
+            votes: '20'
+        },
+        {
+            voter: voter4,
+            votes: '5'
+        }
+    ];
+
     let token;
     let project;
     let dao;
@@ -102,7 +123,7 @@ contract('DAO', accounts => {
             [proposalCreator1]
         );
 
-        // DAO instance
+        // paused instance
         daoPaused = await createDaoContract(
             project,
             Dao,
@@ -119,7 +140,67 @@ contract('DAO', accounts => {
             ContractForDaoTestsV1,
             dao,
             initialTargetOwner
-        );        
+        );
+
+        // Grant ability to upgrade all implementations via Dao only
+        await project.transferAdminOwnership(dao.address);
+    });
+
+    describe('Ownership and upgradeability', () => {
+
+        describe('Proxy admin', () => {
+
+            it('should be owned by the Dao', async () => {
+                (await project.proxyAdmin.getOwner()).should.equal(dao.address);
+            });
+        });
+
+        describe('Dao governance', () => {
+
+            describe('Upgradeability', () => {
+
+                it('should fail if trying to upgrade not by Dao', async () => {
+                    await assertRevert(project.upgradeProxy(dao.address, Dao, {
+                        from: initialProxyOwner// Not a proxyAdmin owner after setup
+                    }));
+                });
+            });
+
+            describe('Whitelisting', () => {
+
+                it('should be administrated by the Dao', async () => {
+                    (await dao.methods['isWhitelistAdmin(address)'](dao.address).call()).should.be.true;
+                    (await dao.methods['isWhitelistAdmin(address)'](initialProxyOwner).call()).should.be.false;
+                });
+            });
+
+            describe('Pausable behaviour', () => {
+
+                it('should be administrated by the Dao', async () => {
+                    (await dao.methods['isPauser(address)'](dao.address).call()).should.be.true;
+                    (await dao.methods['isPauser(address)'](initialProxyOwner).call()).should.be.false;
+                });
+            });
+        });
+
+        describe('Governed (target) contract', () => {
+
+            describe('Upgradeability', () => {
+
+                it('should fail if trying to upgrade not by Dao', async () => {
+                    await assertRevert(project.upgradeProxy(target.address, ContractForDaoTestsV2, {
+                        from: initialProxyOwner// Not a proxyAdmin owner after setup
+                    }));
+                });
+            });
+
+            describe('Ownable behaviour', () => {
+
+                it('should be administrated by the Dao', async () => {
+                    (await target.methods['owner()']().call()).should.equal(dao.address);
+                });
+            });
+        });
     });
 
     describe('#addProposal(string,uint8,uint256,address,uint256,bytes)', () => {
@@ -193,14 +274,14 @@ contract('DAO', accounts => {
         it('should add new proposal (without sent ether value)', async () => {
             await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -210,14 +291,14 @@ contract('DAO', accounts => {
         it('should add new proposal (with sent ether value)', async () => {
             await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '1',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -232,14 +313,14 @@ contract('DAO', accounts => {
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -303,14 +384,14 @@ contract('DAO', accounts => {
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: proposalDuration.toString(),
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -474,14 +555,14 @@ contract('DAO', accounts => {
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -511,14 +592,14 @@ contract('DAO', accounts => {
         it('should fail if proposal cancelled', async () => {
             const proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -560,42 +641,26 @@ contract('DAO', accounts => {
     });
 
     describe('#processProposal(uint256)', () => {
-        const proposalConfig = {
-            details: 'Change target contract owner',
-            proposalType: ProposalType.MethodCall,
-            duration: '10',
-            value: '0',
-            methodName: 'transferOwnership(address)',
-            methodParamTypes: ['address'],
-            methodParams: [voter1]
-        };
-        const campaign = [
-            {
-                voter: voter1,
-                votes: '5'
-            },
-            {
-                voter: voter2,
-                votes: '3'
-            },
-            {
-                voter: voter3,
-                votes: '20'
-            },
-            {
-                voter: voter4,
-                votes: '5'
-            }
-        ];
-
+                
         describe('In a case of the voting success', () => {
             let proposalId;
-
+            let proposalConfig;
+                        
             beforeEach(async () => {
+                proposalConfig = {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                };
+                
                 // Add proposal
                 proposalId = await addProposal(
                     dao,
-                    target.address,
                     proposalCreator1,
                     proposalConfig
                 );
@@ -603,7 +668,7 @@ contract('DAO', accounts => {
                 // Fulfill voting (to success result)
                 await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
 
-                // Rewind Dao time to the end of voting
+                // Rewind Dao time to the end of a voting
                 const endDate = dateTimeFromDuration(Number(proposalConfig.duration)) + 1;
                 await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
@@ -634,7 +699,6 @@ contract('DAO', accounts => {
                 // Add proposal 
                 const proposalId = await addProposal(
                     dao,
-                    target.address,
                     proposalCreator1,
                     proposalConfig
                 );
@@ -658,7 +722,6 @@ contract('DAO', accounts => {
                 // Add proposal 
                 const proposalId = await addProposal(
                     dao,
-                    target.address,
                     proposalCreator1,
                     proposalConfig
                 );
@@ -672,6 +735,9 @@ contract('DAO', accounts => {
             });
     
             it('should process a proposal', async () => {
+                // Owner of target contract before the process
+                (await target.methods['owner()']().call()).should.equal(dao.address);
+
                 await processProposal(
                     dao,
                     proposalId,
@@ -679,18 +745,31 @@ contract('DAO', accounts => {
                     VoteType.Yes, 
                     campaign
                 );
-
+                
+                // And new owner according to the proposal
+                (await target.methods['owner()']().call()).should.equal(voter1);
             });
         });
         
         describe.skip('In a case of the voting failure', () => {
             let proposalId;
+            let proposalConfig;
 
             beforeEach(async () => {
+                proposalConfig = {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    destination: target.address,
+                    methodName: 'setA',
+                    methodParamTypes: ['bool'],
+                    methodParams: [true]
+                };
+
                 // Add proposal
                 proposalId = await addProposal(
                     dao,
-                    target.address,
                     proposalCreator1,
                     proposalConfig
                 );
@@ -759,21 +838,23 @@ contract('DAO', accounts => {
 
     describe('#getProposal(uint256)', () => {
         let proposalId;
-        const proposalConfig = {
-            details: 'Change target contract owner',
-            proposalType: ProposalType.MethodCall,
-            duration: '10',
-            value: '0',
-            methodName: 'transferOwnership(address)',
-            methodParamTypes: ['address'],
-            methodParams: [voter1]
-        };
+        let proposalConfig;
 
         beforeEach(async () => {
+            proposalConfig = {
+                details: 'Change target contract owner',
+                proposalType: ProposalType.MethodCall,
+                duration: '10',
+                value: '0',
+                destination: target.address,
+                methodName: 'transferOwnership',
+                methodParamTypes: ['address'],
+                methodParams: [voter1]
+            };
+
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 proposalConfig
             );
@@ -816,14 +897,14 @@ contract('DAO', accounts => {
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }
@@ -937,14 +1018,14 @@ contract('DAO', accounts => {
             // Add proposal
             proposalId = await addProposal(
                 dao,
-                target.address,
                 proposalCreator1,
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
                     duration: '10',
                     value: '0',
-                    methodName: 'transferOwnership(address)',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
                     methodParamTypes: ['address'],
                     methodParams: [voter1]
                 }

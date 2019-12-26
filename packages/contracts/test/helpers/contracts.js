@@ -57,6 +57,10 @@ const createDaoContract = async (
         initArgs: [tokenAddress]
     });
 
+    // console.log('initialProxyOwner !!!', await project.proxyAdmin.getOwner());
+    // console.log('adminAddress !!!', await project.getAdminAddress());
+    // console.log('proxy address !!!', dao.address);
+
     // Add proposals creator address to white-list
     await Promise.all(proposalCreators.map(p => dao.methods['addWhitelisted(address)'](p).send({
         from: initialProxyOwner
@@ -81,9 +85,6 @@ const createDaoContract = async (
         await dao.methods['replacePauser(address)'](dao.address).send({
             from: initialProxyOwner
         });
-
-        // Grant ability to upgrade DAO contract to DAO itself only
-        await project.changeProxyAdmin(dao.address, dao.address);
     }
 
     return dao;
@@ -113,9 +114,6 @@ const createTargetContract = async (
     await target.methods['transferOwnership(address)'](daoContract.address).send({
         from: initialTargetOwner
     });
-
-    // Grant ability to upgrade target contract to the DAO
-    await project.changeProxyAdmin(target.address, daoContract.address);
 
     return target;
 };

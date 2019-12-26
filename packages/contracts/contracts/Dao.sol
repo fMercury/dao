@@ -171,24 +171,10 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev This event will be emitted when proposal moved to processed state
      * @param proposalId Proposal Id
      * @param passed Voting result
-     * @param yes YES votes
-     * @param no NO votes
      */
     event ProposalProcessed(
         uint256 proposalId,
-        bool passed,
-        uint256 yes,
-        uint256 no
-    );
-
-    /**
-     * @dev This event will be emitted when proposal transaction has been sent
-     * @param proposalId Proposal Id
-     * @param proposalId Ether sent with transaction
-     */
-    event TransactionSent(
-        uint256 proposalId,
-        uint256 value
+        bool passed
     );
 
     /**
@@ -528,7 +514,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - sender address should be a proposer address
      *  - proposal should not be processed
      *  - proposal should not be cancelled
-     *  - proposal finished
+     *  - proposal is finished
      *
      * @param proposalId Proposal Id
      */
@@ -540,7 +526,35 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         notProcessed(proposalId) 
         notCancelled(proposalId) 
         onlyFinished(proposalId)
-    {}
+    {
+        Proposal storage proposal = proposals[proposalId];
+        proposal.flags[1] = true; // 'processed' state
+
+        bool isPassed = isVotingPassed(proposalId);
+        emit ProposalProcessed(proposalId, isPassed);
+
+        if (isPassed) {
+
+            proposal.flags[0] = true; // 'passed' state
+            
+            bool success = executeTransaction(
+                proposal.transaction.destination,
+                proposal.transaction.value,
+                proposal.transaction.data
+            );
+
+            proposal.transaction.executed = true;
+
+            if (success) {
+
+                proposal.transaction.success = true;
+                emit TransactionSuccessed(proposalId);
+            } else {
+
+                emit TransactionFailed(proposalId);
+            }
+        }
+    }
 
     /**
      * @dev Withdraw released tokens
@@ -555,8 +569,13 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - sender has positive released tokens balance
      *  - call not reentrant
      *
+     * @param proposalId Proposal Id
      */
-    function withdrawTokens() external nonReentrant {}
+    function withdrawTokens(uint256 proposalId) 
+        external 
+        nonReentrant 
+        onlyFinished(proposalId)
+    {}
 
     /**
      * @dev Get proposal by Id (index)
@@ -782,9 +801,30 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
     /**
      * @dev Send a transaction for the proposal
-     * @param proposalId Proposal Id
+     * @param destination Target address to send transaction
+     * @param value Ether value to send
+     * @param data Call data
+     * @return bool Transaction execution status
      */
-    function sendTransaction(uint256 proposalId) internal {}
+    function executeTransaction(
+        address destination,
+        uint256 value,
+        bytes memory data
+    ) internal returns (bool success) {
+        
+        // solium-disable-next-line security/no-inline-assembly
+        assembly {
+            success := call(
+                sub(gas, 34710), 
+                destination, 
+                value, 
+                add(data, 0x20), 
+                mload(data), 
+                0, 
+                0
+            )
+        }
+    }
 
     /**
      * @dev Convert votes using defined formula
