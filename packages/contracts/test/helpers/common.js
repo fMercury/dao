@@ -21,3 +21,11 @@ module.exports.toWeiEther = toWeiEther;
  */
 const toWeiBN = x => web3.utils.toBN(toWeiEther(x));
 module.exports.toWeiBN = toWeiBN;
+
+/**
+ * Calculate a date in seconds from Now() by the given duration
+ * @param {string} duration
+ * @returns {number}
+ */
+const dateTimeFromDuration = duration => Math.ceil(Date.now() / 1000) + 60*60*24 * duration;
+module.exports.dateTimeFromDuration = dateTimeFromDuration;

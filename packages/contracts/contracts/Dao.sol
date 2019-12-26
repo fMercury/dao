@@ -206,6 +206,15 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     /// @dev Proposals votings 
     mapping (uint256 => Voting) internal votings;// proposalId => Voting
 
+
+    /**
+     * @dev This modifier allows function execution if proposal exist only
+     * @param proposalId Proposal Id
+     */
+    modifier proposalExists(uint256 proposalId) {
+        require(proposals[proposalId].duration != 0, "PROPOSAL_NOT_FOUND");
+        _;
+    }
     
     /**
      * @dev This modifier allows function execution for the proposer only
@@ -244,11 +253,20 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev This modifier allows function execution if proposal exist only
+     * @dev This modifier allows function execution if proposal not finished
      * @param proposalId Proposal Id
      */
-    modifier proposalExists(uint256 proposalId) {
-        require(proposals[proposalId].duration != 0, "PROPOSAL_NOT_FOUND");
+    modifier notFinished(uint256 proposalId) {
+        require(time() < proposals[proposalId].end, "PROPOSAL_FINISHED");
+        _;
+    }
+
+    /**
+     * @dev This modifier allows function execution if proposal finished only
+     * @param proposalId Proposal Id
+     */
+    modifier onlyFinished(uint256 proposalId) {
+        require(time() >= proposals[proposalId].end, "PROPOSAL_NOT_FINISHED");
         _;
     }
 
@@ -341,6 +359,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - proposal should not be in a passed state
      *  - proposal should not be in a processed state
      *  - proposal should not be cancelled
+     *  - proposal has no votes
      *
      * @param proposalId Proposal Id
      */
@@ -352,6 +371,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         notProcessed(proposalId) 
         notCancelled(proposalId)
     {
+        (uint256 yes, uint256 no) = votingResult(proposalId);
+        require(yes == 0 && no == 0, "PROPOSAL_HAS_VOTES");
         proposals[proposalId].flags[2] = true;
         emit ProposalCancelled(proposalId);
     }
@@ -367,7 +388,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - proposal should not be cancelled
      *  - sender tokens balance should be sufficient
      *  - tokens allowance for the DAO address should be sufficient
-     *  - not yet enough votes in voting
      *  - voting not expired (does not exceed voting time frame)
      *
      * @param proposalId Proposal Id
@@ -385,10 +405,11 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
+        notFinished(proposalId)
     {
         require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
         require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
-
+        
         uint256 votesSent = votes;
         uint256 votesAccepted;
 
@@ -497,6 +518,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - sender address should be a proposer address
      *  - proposal should not be processed
      *  - proposal should not be cancelled
+     *  - proposal finished
      *
      * @param proposalId Proposal Id
      */
@@ -507,6 +529,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         onlyProposer(proposalId) 
         notProcessed(proposalId) 
         notCancelled(proposalId) 
+        onlyFinished(proposalId)
     {}
 
     /**

@@ -9,7 +9,7 @@ const {
 } = require('./helpers/constants');
 const { assertRevert, assertEvent } = require('./helpers/assertions');
 const { buildCallData } = require('./helpers/transactions');
-const { toBN, toWeiBN } = require('./helpers/common');
+const { toBN, toWeiBN, dateTimeFromDuration } = require('./helpers/common');
 const { isqrt } = require('./helpers/bnmath');
 const {
     createTokenAndDistribute,
@@ -35,7 +35,7 @@ Contracts.setArtifactsDefaults({
 ZWeb3.initialize(web3.currentProvider);
 
 const Erc20Token = Contracts.getFromLocal('Erc20Token');
-const Dao = Contracts.getFromLocal('Dao');
+const Dao = Contracts.getFromLocal('DaoWithTimeMachine');
 const ContractForDaoTestsV1 = Contracts.getFromLocal('ContractForDaoTestsV1');
 
 contract('DAO', accounts => {
@@ -91,7 +91,7 @@ contract('DAO', accounts => {
             from: initialProxyOwner
         });
 
-        // DAO instance
+        // DAO instances
         dao = await createDaoContract(
             project,
             Dao,
@@ -270,6 +270,19 @@ contract('DAO', accounts => {
                 from: proposalCreator1
             }), 'PROPOSAL_CANCELLED');
         });
+
+        it('should fail if proposal already has votes', async () => {
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+            await assertRevert(dao.methods['cancelProposal(uint256)'](proposalId).send({
+                from: proposalCreator1
+            }), 'PROPOSAL_HAS_VOTES');
+        });
         
         it('should cancel proposal', async () => {
             await cancelProposal(
@@ -282,6 +295,7 @@ contract('DAO', accounts => {
 
     describe('#vote(uint256,uint8,uint256)', () => {
         let proposalId;
+        const proposalDuration = 10;// Days
 
         beforeEach(async () => {
             // Add proposal
@@ -292,7 +306,7 @@ contract('DAO', accounts => {
                 {
                     details: 'Change target contract owner',
                     proposalType: ProposalType.MethodCall,
-                    duration: '10',
+                    duration: proposalDuration.toString(),
                     value: '0',
                     methodName: 'transferOwnership(address)',
                     methodParamTypes: ['address'],
@@ -361,9 +375,17 @@ contract('DAO', accounts => {
             }), 'INSUFFICIENT_TOKENS_ALLOWANCE');
         });
 
-        it.skip('should fail if already enough votes in voting', async () => {});
-
-        it.skip('should fail if voting is expired', async () => {});
+        it('should fail if voting is expired', async () => {
+            const expiredDate = dateTimeFromDuration(proposalDuration) + 1;
+            await dao.methods['setCurrentTime(uint256)'](expiredDate.toString()).send();
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
+                proposalId,
+                VoteType.Yes,
+                toWeiBN('5').toString()
+            ).send({
+                from: voter1
+            }), 'PROPOSAL_FINISHED');
+        });
 
         it('should accept a vote', async () => {
             await doVote(
@@ -553,6 +575,8 @@ contract('DAO', accounts => {
             it('should fail if proposal processed', async () => {});
     
             it('should fail if proposal cancelled', async () => {});
+
+            it('should fail if proposal not finished', async () => {});
     
             it('should process a proposal', async () => {});
         });
@@ -689,8 +713,6 @@ contract('DAO', accounts => {
                     methodParams: [voter1]
                 }
             );
-
-            
         });
 
         it('should fail if proposal not found', async () => {
