@@ -5,7 +5,8 @@ require('chai')
 const {
     zeroAddress, 
     ProposalType,
-    VoteType
+    VoteType,
+    unknownId
 } = require('./helpers/constants');
 const { assertRevert, assertEvent } = require('./helpers/assertions');
 const { buildCallData } = require('./helpers/transactions');
@@ -328,7 +329,7 @@ contract('DAO', accounts => {
         });
 
         it('should fail if proposal not existed', async () => {
-            await assertRevert(dao.methods['cancelProposal(uint256)'](web3.utils.asciiToHex('test')).send({
+            await assertRevert(dao.methods['cancelProposal(uint256)'](unknownId()).send({
                 from: proposalCreator1
             }), 'PROPOSAL_NOT_FOUND');
         });
@@ -407,7 +408,7 @@ contract('DAO', accounts => {
                 from: voter1
             });
             await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
-                web3.utils.asciiToHex('test'),
+                unknownId(),
                 VoteType.Yes,
                 voteValue
             ).send({
@@ -580,7 +581,7 @@ contract('DAO', accounts => {
 
         it('should fail if proposal not existed', async () => {
             await assertRevert(
-                dao.methods['revokeVote(uint256)'](web3.utils.asciiToHex('test')).send({
+                dao.methods['revokeVote(uint256)'](unknownId()).send({
                     from: voter1
                 }),
                 'PROPOSAL_NOT_FOUND'
@@ -677,7 +678,7 @@ contract('DAO', accounts => {
 
             it('should fail if proposal not exists', async () => {
                 await assertRevert(
-                    dao.methods['processProposal(uint256)'](web3.utils.asciiToHex('test')).send({
+                    dao.methods['processProposal(uint256)'](unknownId()).send({
                         from: proposalCreator1
                     }),
                     'PROPOSAL_NOT_FOUND'
@@ -862,7 +863,7 @@ contract('DAO', accounts => {
 
         it('should fail if proposal not existed', async () => {
             await assertRevert(
-                dao.methods['getProposal(uint256)'](web3.utils.asciiToHex('test')).call({
+                dao.methods['getProposal(uint256)'](unknownId()).call({
                     from: voter1
                 }),
                 'PROPOSAL_NOT_FOUND'
@@ -913,7 +914,7 @@ contract('DAO', accounts => {
 
         it('should fail if proposal not found', async () => {
             await assertRevert(
-                dao.methods['getVote(uint256)'](web3.utils.asciiToHex('test')).call({
+                dao.methods['getVote(uint256)'](unknownId()).call({
                     from: voter1
                 }),
                 'PROPOSAL_NOT_FOUND'
@@ -1056,20 +1057,87 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#isVotingPassed(uint256)', () => {
+    describe('#isVotingPassed(uint256)', () => {
+        let proposalId;
 
         beforeEach(async () => {
             // Add proposal
+            proposalId = await addProposal(
+                dao,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
         });
 
-        it('should fail if proposal not found', async () => {});
+        it('should fail if proposal not found', async () => {
+            await assertRevert(
+                dao.methods['isVotingPassed(uint256)'](unknownId()).call(),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
 
-        it('should return true if proposal passed', async () => {});
+        it('should return true if proposal passed', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
 
-        it('should return false if proposal not passed (voting finished)', async () => {});
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(10) + 1;
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
 
-        it('should return false if proposal cancelled', async () => {});
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.Yes, 
+                campaign
+            );
 
-        it('should return false if voting not finished yet', async () => {});
+            // 'passed' state
+            (await dao.methods['isVotingPassed(uint256)'](proposalId).call()).should.be.true;
+        });
+
+        it('should return false if proposal not passed after voting finished', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.No, campaign);
+
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(10) + 1;
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.No, 
+                campaign
+            );
+
+            // Not 'passed' state
+            (await dao.methods['isVotingPassed(uint256)'](proposalId).call()).should.be.false;
+        });
+
+        it('should return false if proposal cancelled', async () => {
+            await cancelProposal(
+                dao,
+                proposalId,
+                proposalCreator1
+            );
+            (await dao.methods['isVotingPassed(uint256)'](proposalId).call()).should.be.false;
+        });
+
+        it('should return false if voting not finished yet', async () => {
+            (await dao.methods['isVotingPassed(uint256)'](proposalId).call()).should.be.false;
+        });
     });
 });
