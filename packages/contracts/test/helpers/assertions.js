@@ -36,6 +36,7 @@ module.exports.assertEvent = (result, eventName, validationConfig) => {
     validationConfig.forEach(c => {
         assert(typeof c[0] === 'string', 'Property name has not a string type');
         assert(typeof c[1] === 'function', 'Property validator is not a function');
+        assert(event.returnValues[c[0]] !== undefined, `Property '${c[0]}' not found in the event object`);
         c[1](event.returnValues[c[0]]);
     });
 };

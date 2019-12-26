@@ -133,7 +133,7 @@ const doVote = async (
     });
 
     // If vote is updated - emitted votes value will be equal to cumulutive value
-    const trueVoteValue = !isUpdate ? voteValue.toString() : (voteValue.add(toBN(oldValueOriginal)));
+    const trueVoteValue = !isUpdate ? voteValue : voteValue.add(toBN(oldValueOriginal));
     const votesAccepted = isqrt(trueVoteValue);
 
     assertEvent(result, 'VoteAdded', [
@@ -221,6 +221,28 @@ const doVote = async (
 module.exports.doVote = doVote;
 
 /**
+ * Voting campaign
+ * @param {Object} daoInstance DAO instance object
+ * @param {string} proposalId Proposal Id
+ * @param {number} voteType Type of the vote
+ * @param {Object[{voter:{string},vote:{string}}]} campaign Array of votes
+ * @returns {Promise}
+ */
+const votingCampaign = async (daoInstance, proposalId, voteType, campaign = []) => {
+
+    for (let v of campaign) {
+        await doVote(
+            daoInstance,
+            proposalId,
+            voteType,
+            v.votes,
+            v.voter
+        );
+    }
+};
+module.exports.votingCampaign = votingCampaign;
+
+/**
  * Revoke a vote
  * @param {Object} daoInstance DAO instance object
  * @param {string} proposalId Proposal Id
@@ -262,6 +284,17 @@ const revokeVote = async (daoInstance, proposalId, voterAddress) => {
         ]
     ]);
 
+    assertEvent(result, 'TokensReleased', [
+        [
+            'voter',
+            p => (p).should.equal(voterAddress)
+        ],
+        [
+            'value',
+            p => (p).should.equal(vote.valueOriginal)
+        ]
+    ]);
+
     // Validate released tokens
     const tokensBalanceAfter = await serviceTokenInstance.methods['balanceOf'](voterAddress).call();
     (toBN(tokensBalanceAfter).sub(toBN(tokensBalanceBefore)).toString()).should.equal(vote.valueOriginal);
@@ -274,3 +307,102 @@ const revokeVote = async (daoInstance, proposalId, voterAddress) => {
     ).should.eq.BN(vote.valueAccepted);
 };
 module.exports.revokeVote = revokeVote;
+
+/**
+ * Process proposal
+ * @param {Object} daoInstance DAO instance object
+ * @param {string} proposalId Proposal Id
+ * @param {string} proposalCreator Creator of the proposal address
+ * @param {number} voteType Type of votes in campaign
+ * @param {Object[{voter:{string},vote:{string}}]} campaign Array of votes
+ * @param {bool} brokenTx Is proposal contains broken transaction 
+ * @returns {Promise}
+ */
+const processProposal = async (
+    daoInstance, 
+    proposalId, 
+    proposalCreator, 
+    voteType, 
+    campaign = [], 
+    brokenTx = false
+) => {
+    // Calculate local results
+    const calculatedCampaign = campaign.reduce((a, c) => {
+        const target = VoteType[Number(voteType)];
+        a[target] = a[target].add(isqrt(toWeiBN(c.votes)));
+        return a;
+    }, {
+        yes: toBN(0),
+        no: toBN(0)
+    });
+    
+    const result = await daoInstance.methods['processProposal(uint256)'](proposalId).send({
+        from: proposalCreator
+    });
+
+    // Validate voting result
+    const votingResult = await daoInstance.methods['votingResult(uint256)'](proposalId).call();
+    (votingResult.yes).should.eq.BN(calculatedCampaign.yes);
+    (votingResult.no).should.eq.BN(calculatedCampaign.no);
+
+    const isPassed = calculatedCampaign.yes.gt(calculatedCampaign.no);
+
+    // Validate ProposalProcessed event
+    assertEvent(result, 'ProposalProcessed', [
+        [
+            'proposalId',
+            p => (p).should.equal(proposalId)
+        ],
+        [
+            'passed',
+            p => (p).should.equal(isPassed)
+        ],
+        [
+            'yes',
+            p => (p).should.equal(calculatedCampaign.yes.toString())
+        ],
+        [
+            'no',
+            p => (p).should.equal(calculatedCampaign.no.toString())
+        ]
+    ]);
+
+    // Validate state changing
+    const proposal = await daoInstance.methods['getProposal(uint256)'](proposalId).call();
+    (proposal.flags[1]).should.be.true;
+
+    if (isPassed) {
+
+        (proposal.flags[0]).should.be.true;
+
+        assertEvent(result, 'TransactionSent', [
+            [
+                'proposalId',
+                p => (p).should.equal(proposalId)
+            ],
+            [
+                'value',
+                p => (p).should.equal(proposal.txValue.toString())
+            ]
+        ]);
+
+        if (!brokenTx) {
+            
+            assertEvent(result, 'TransactionSuccessed', [
+                [
+                    'proposalId',
+                    p => (p).should.equal(proposalId)
+                ]
+            ]);
+        } else {
+
+            assertEvent(result, 'TransactionFailed', [
+                [
+                    'proposalId',
+                    p => (p).should.equal(proposalId)
+                ]
+            ]);
+        }
+    }
+};
+module.exports.processProposal = processProposal;

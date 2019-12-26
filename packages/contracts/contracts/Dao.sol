@@ -74,7 +74,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev Vore structure
+     * @dev Vote structure
      * @param voteType Type of the vote
      * @param valueOriginal Original vote value (not converted)
      * @param valueAccepted Accepted vote value (converted)
@@ -90,11 +90,13 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     /**
      * @dev Voting structure
      * @param ids List of the voters votes Ids (indexes)
+     * @param voted List voted voters
      * @param votes List of votes
      * @param votesCount Votes counter
      */
     struct Voting {
         mapping (address => uint256) ids;// voterAddress => voteId
+        mapping (address => bool) voted;// voterAddress => bool
         mapping (uint256 => Vote) votes;// voteId => Vote
         uint256 votesCount;
     }
@@ -168,8 +170,16 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     /**
      * @dev This event will be emitted when proposal moved to processed state
      * @param proposalId Proposal Id
+     * @param passed Voting result
+     * @param yes YES votes
+     * @param no NO votes
      */
-    event ProposalProcessed(uint256 proposalId);
+    event ProposalProcessed(
+        uint256 proposalId,
+        bool passed,
+        uint256 yes,
+        uint256 no
+    );
 
     /**
      * @dev This event will be emitted when proposal transaction has been sent
@@ -271,14 +281,11 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev This modifier allows function execution if sender vote exist only
+     * @dev This modifier allows function execution if sender already voted for proposal
      * @param proposalId Proposal Id
      */
     modifier voteExists(uint256 proposalId) {
-        require(
-            votings[proposalId].votes[votings[proposalId].ids[msg.sender]].valueOriginal != 0, 
-            "VOTE_NOT_FOUND"
-        );
+        require(votings[proposalId].voted[msg.sender], "VOTE_NOT_FOUND");
         _;
     }
 
@@ -412,18 +419,21 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         
         uint256 votesSent = votes;
         uint256 votesAccepted;
-
-        if (votings[proposalId].votesCount == 0) {
+        uint256 voteId;
+        
+        if (!votings[proposalId].voted[msg.sender]) {
             
             // Create new Vote
-            votings[proposalId].ids[msg.sender] = votings[proposalId].votesCount;
+            voteId = votings[proposalId].votesCount;
+            votings[proposalId].ids[msg.sender] = voteId;
             votesAccepted = convertVotes(votesSent);
-            votings[proposalId].votes[votings[proposalId].votesCount] = Vote(
+            votings[proposalId].votes[voteId] = Vote(
                 voteType,
                 votesSent,
                 votesAccepted,
                 false
             );
+            votings[proposalId].voted[msg.sender] = true;
 
             // Update votes counter
             // @todo Add condition to avoid uint256 value restrictions
@@ -431,8 +441,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         } else {
             
             // Re-use existed Vote
-            Vote storage existedVote = votings[proposalId]
-                .votes[votings[proposalId].ids[msg.sender]];
+            voteId = votings[proposalId].ids[msg.sender];
+            Vote storage existedVote = votings[proposalId].votes[voteId];
             
             if (existedVote.revoked) {
 

@@ -20,7 +20,9 @@ const {
     addProposal,
     cancelProposal,
     doVote,
-    revokeVote
+    revokeVote,
+    votingCampaign,
+    processProposal
 } = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
@@ -557,35 +559,148 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#processProposal(uint256)', () => {
+    describe('#processProposal(uint256)', () => {
+        const proposalConfig = {
+            details: 'Change target contract owner',
+            proposalType: ProposalType.MethodCall,
+            duration: '10',
+            value: '0',
+            methodName: 'transferOwnership(address)',
+            methodParamTypes: ['address'],
+            methodParams: [voter1]
+        };
+        const campaign = [
+            {
+                voter: voter1,
+                votes: '5'
+            },
+            {
+                voter: voter2,
+                votes: '3'
+            },
+            {
+                voter: voter3,
+                votes: '20'
+            },
+            {
+                voter: voter4,
+                votes: '5'
+            }
+        ];
 
         describe('In a case of the voting success', () => {
+            let proposalId;
 
             beforeEach(async () => {
                 // Add proposal
-                // Fulfil voting (to success result)
+                proposalId = await addProposal(
+                    dao,
+                    target.address,
+                    proposalCreator1,
+                    proposalConfig
+                );
+
+                // Fulfill voting (to success result)
+                await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+                // Rewind Dao time to the end of voting
+                const endDate = dateTimeFromDuration(Number(proposalConfig.duration)) + 1;
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
 
-            it('should fail if contract is paused', async () => {});
+            it.skip('should fail if contract is paused', async () => {});
 
-            it('should fail if proposal not exists', async () => {});
+            it('should fail if proposal not exists', async () => {
+                await assertRevert(
+                    dao.methods['processProposal(uint256)'](web3.utils.asciiToHex('test')).send({
+                        from: proposalCreator1
+                    }),
+                    'PROPOSAL_NOT_FOUND'
+                );
+            });
     
-            it('should fail if sender address not a proposer address', async () => {});
+            it('should fail if sender address not a proposer address', async () => {
+                await assertRevert(
+                    dao.methods['processProposal(uint256)'](proposalId).send({
+                        from: voter1
+                    }),
+                    'NOT_A_PROPOSER'
+                );
+            });
     
-            it('should fail if proposal processed', async () => {});
+            it.skip('should fail if proposal processed', async () => {});
     
-            it('should fail if proposal cancelled', async () => {});
+            it('should fail if proposal cancelled', async () => {
+                // Add proposal 
+                const proposalId = await addProposal(
+                    dao,
+                    target.address,
+                    proposalCreator1,
+                    proposalConfig
+                );
 
-            it('should fail if proposal not finished', async () => {});
+                // and cancel it
+                await cancelProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1
+                );
+
+                await assertRevert(
+                    dao.methods['processProposal(uint256)'](proposalId).send({
+                        from: proposalCreator1
+                    }),
+                    'PROPOSAL_CANCELLED'
+                );
+            });
+
+            it('should fail if proposal not finished', async () => {
+                // Add proposal 
+                const proposalId = await addProposal(
+                    dao,
+                    target.address,
+                    proposalCreator1,
+                    proposalConfig
+                );
+
+                await assertRevert(
+                    dao.methods['processProposal(uint256)'](proposalId).send({
+                        from: proposalCreator1
+                    }),
+                    'PROPOSAL_NOT_FINISHED'
+                );
+            });
     
-            it('should process a proposal', async () => {});
+            it('should process a proposal', async () => {
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign
+                );
+
+            });
         });
         
-        describe('In a case of the voting failure', () => {
+        describe.skip('In a case of the voting failure', () => {
+            let proposalId;
 
             beforeEach(async () => {
                 // Add proposal
-                // Fulfil voting (to failure result)
+                proposalId = await addProposal(
+                    dao,
+                    target.address,
+                    proposalCreator1,
+                    proposalConfig
+                );
+
+                // Fulfill voting (to success result)
+                await votingCampaign(dao, proposalId, VoteType.No, campaign);
+
+                // Rewind Dao time to the end of voting
+                const endDate = dateTimeFromDuration(Number(proposalConfig.duration)) + 1;
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
 
             it('should fail if contract is paused', async () => {});
@@ -615,7 +730,7 @@ contract('DAO', accounts => {
 
             beforeEach(async () => {
                 // Add proposal
-                // Fulfil voting (to success result)
+                // Fulfill voting (to success result)
             });
 
             it('should widthdraw released tokens', async () => {});
@@ -625,7 +740,7 @@ contract('DAO', accounts => {
 
             beforeEach(async () => {
                 // Add proposal
-                // Fulfil voting (to failure result)
+                // Fulfill voting (to failure result)
             });
             
             it('should widthdraw released tokens', async () => {});
@@ -769,8 +884,8 @@ contract('DAO', accounts => {
             });
 
             it('should return empty array if all proposals in a passed state', async () => {            
-                // Fulfil first voting to success result
-                // Fulfil second voting to failure result
+                // Fulfill first voting to success result
+                // Fulfill second voting to failure result
             });
     
             it('should return a proposals Ids array', async () => {}); 
@@ -793,8 +908,8 @@ contract('DAO', accounts => {
             });
 
             it('should return empty array if all proposals in a passed state', async () => {            
-                // Fulfil first voting to success result
-                // Fulfil second  voting to failure result
+                // Fulfill first voting to success result
+                // Fulfill second  voting to failure result
             });
     
             it('should return a proposals Ids array', async () => {}); 
