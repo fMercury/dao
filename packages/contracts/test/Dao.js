@@ -1001,7 +1001,6 @@ contract('DAO', accounts => {
 
             it('should return empty array if all proposals in a passed state', async () => {            
                 // Fulfill first voting to success result
-                // Fulfill voting (to success result)
                 await votingCampaign(dao, proposalId1, VoteType.Yes, campaign);
 
                 // Fulfill second voting to failure result
@@ -1038,27 +1037,101 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#getActiveProposalsIds(uint8)', () => {
+    describe('#getActiveProposalsIds(uint8)', () => {
 
-        it('should fail if unknown proposal type has been provided', async () => {});
+        it('should fail if unknown proposal type has been provided', async () => {
+            await assertRevert(dao.methods['getActiveProposalsIds(uint8)'](3).call());
+        });
 
         describe('If proposals has not been added at all', () => {
 
-            it('should return empty array', async () => {});
+            it('should return empty array', async () => {
+                ((await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.ContractUpgrade).call()).length).should.equal(0);
+                ((await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.MethodCall).call()).length).should.equal(0);
+            });
         });
 
         describe('If registered proposals are exists', () => {
+            let proposalId1;
+            let proposalId2;
+            let newTarget;
 
             beforeEach(async () => {
                 // Add 2 proposals with two different types
+                // Add proposal #1
+                proposalId1 = await addProposal(
+                    dao,
+                    proposalCreator1,
+                    {
+                        details: 'Change target contract owner',
+                        proposalType: ProposalType.MethodCall,
+                        duration: '10',
+                        value: '0',
+                        destination: target.address,
+                        methodName: 'transferOwnership',
+                        methodParamTypes: ['address'],
+                        methodParams: [voter1]
+                    }
+                );
+
+                newTarget = await ContractForDaoTestsV2.new({
+                    from: initialTargetOwner
+                });
+
+                // Add proposal #2
+                proposalId2 = await addProposal(
+                    dao,
+                    proposalCreator1,
+                    {
+                        details: 'Upgrade target to the new version',
+                        proposalType: ProposalType.ContractUpgrade,
+                        duration: '10',
+                        value: '0',
+                        destination: target.address,
+                        methodName: 'upgradeTo',
+                        methodParamTypes: ['address'],
+                        methodParams: [newTarget.address]
+                    }
+                );
             });
 
             it('should return empty array if all proposals in a passed state', async () => {            
                 // Fulfill first voting to success result
-                // Fulfill second  voting to failure result
+                await votingCampaign(dao, proposalId1, VoteType.Yes, campaign);
+
+                // Fulfill second voting to failure result
+                await votingCampaign(dao, proposalId2, VoteType.No, campaign);
+
+                // Rewind Dao time to the end of a voting
+                const endDate = dateTimeFromDuration(10) + 1;
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+                // Process #1
+                await processProposal(
+                    dao,
+                    proposalId1,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign
+                );
+
+                // Process #2
+                await processProposal(
+                    dao,
+                    proposalId2,
+                    proposalCreator1,
+                    VoteType.No, 
+                    campaign
+                );
+
+                ((await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.MethodCall).call()).length).should.equal(0);
+                ((await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.ContractUpgrade).call()).length).should.equal(0);
             });
     
-            it('should return a proposals Ids array', async () => {}); 
+            it('should return a proposals Ids array', async () => {
+                (await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.MethodCall).call()).should.deep.equal(['0']);
+                (await dao.methods['getActiveProposalsIds(uint8)'](ProposalType.ContractUpgrade).call()).should.deep.equal(['1']);
+            }); 
         });
     });
 

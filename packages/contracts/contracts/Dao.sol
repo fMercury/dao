@@ -693,7 +693,31 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * 
      * @return uint256[] List of proposals Ids
      */
-    function getActiveProposalsIds(ProposalType proposalType) external view returns (uint256[] memory) {}
+    function getActiveProposalsIds(ProposalType proposalType) 
+        external 
+        view 
+        returns (uint256[] memory) 
+    {
+        assertProposalType(proposalType);// Throws an Invalid opcode if proposalType not valid
+
+        uint256[] memory ids = new uint256[](activeProposalsCount(proposalType));
+        uint256 index;
+
+        for (uint256 i = 0; i < proposalCount; i++) {
+
+            if (!proposals[i].flags[0] && 
+                !proposals[i].flags[1] &&
+                !proposals[i].flags[2] &&
+                time() < proposals[i].end &&
+                proposals[i].proposalType == proposalType) {
+                
+                ids[index] = i;
+                index += 1;
+            }
+        }
+
+        return ids;
+    }
 
     /**
      * @dev Replace pauser to the new one
@@ -792,7 +816,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Return active proposals count
      * @return uint256
      */
-    function activeProposalsCount() public view returns (uint256) {
+    function activeProposalsCount() internal view returns (uint256) {
         uint256 count;
 
         for (uint256 i = 0; i < proposalCount; i++) {
@@ -801,6 +825,33 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
                 !proposals[i].flags[1] &&
                 !proposals[i].flags[2] &&
                 time() < proposals[i].end) {
+                
+                count = count.add(1);
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * @dev Return active proposals count
+     * @param proposalType Type of proposal
+     * @return uint256
+     */
+    function activeProposalsCount(ProposalType proposalType) 
+        internal 
+        view 
+        returns (uint256) 
+    {
+        uint256 count;
+
+        for (uint256 i = 0; i < proposalCount; i++) {
+
+            if (!proposals[i].flags[0] && 
+                !proposals[i].flags[1] &&
+                !proposals[i].flags[2] &&
+                time() < proposals[i].end &&
+                proposals[i].proposalType == proposalType) {
                 
                 count = count.add(1);
             }
