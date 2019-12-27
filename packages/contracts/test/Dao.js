@@ -192,7 +192,7 @@ contract('DAO', accounts => {
                             dao,
                             proposalCreator1,
                             {
-                                details: 'Change target contract owner',
+                                details: 'Replace Dao whitelist admin',
                                 proposalType: ProposalType.MethodCall,
                                 duration: '10',
                                 value: '0',
@@ -232,11 +232,54 @@ contract('DAO', accounts => {
                     (await dao.methods['isPauser(address)'](initialProxyOwner).call()).should.be.false;
                 });
 
-                describe.skip('#replacePauser(address)', () => {
+                describe('#replacePauser(address)', () => {
 
-                    it('should fail if sender not a pauser', async () => {});
+                    it('should fail if sender not a pauser', async () => {
+                        await assertRevert(
+                            dao.methods['replacePauser(address)'](voter1).send({
+                                from: voter1
+                            }),
+                            'PauserRole: caller does not have the Pauser role'
+                        );
+                    });
             
-                    it('should replace existed pauser to the new one', async () => {}); 
+                    it('should replace existed pauser to the new one', async () => {
+                        // We can do this via Dao workflow 
+                        // Add proposal
+                        const proposalId = await addProposal(
+                            dao,
+                            proposalCreator1,
+                            {
+                                details: 'Replace Dao pauser account',
+                                proposalType: ProposalType.MethodCall,
+                                duration: '10',
+                                value: '0',
+                                destination: dao.address,
+                                methodName: 'replacePauser',
+                                methodParamTypes: ['address'],
+                                methodParams: [voter1]
+                            }
+                        );
+
+                        // Fulfill voting (to success result)
+                        await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+                        // Rewind Dao time to the end of a voting
+                        const endDate = dateTimeFromDuration(10) + 1;
+                        await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+                        // Process
+                        await processProposal(
+                            dao,
+                            proposalId,
+                            proposalCreator1,
+                            VoteType.Yes, 
+                            campaign
+                        );
+                        
+                        // Check result
+                        (await dao.methods['isPauser(address)'](voter1).call()).should.be.true;
+                    }); 
                 });
             });
         });
