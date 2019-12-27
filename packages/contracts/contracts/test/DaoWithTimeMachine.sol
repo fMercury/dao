@@ -33,7 +33,7 @@ contract DaoWithTimeMachine is Dao {
      * @param time New time value
      */
     function setCurrentTime(uint256 time) external {
-        emit TimeMachine(_currentTime, time);
+        emit TimeMachine(currentTime(), time);
         _currentTime = time;
     }
 

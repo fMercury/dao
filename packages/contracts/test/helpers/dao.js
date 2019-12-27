@@ -446,3 +446,58 @@ const pauseDao = async (daoInstance, proposalCreator, campaign) => {
     (await daoInstance.methods['paused()']().call()).should.be.true;
 };
 module.exports.pauseDao = pauseDao;
+
+/**
+ * Withdraw locked tokens from the Dao
+ * @param {Object} daoInstance DAO instance object
+ * @param {Object} tokenInstance Governance tokens instance object
+ * @param {string} proposalId If of the proposal
+ * @param {string} voterAddress Address of the voter
+ * @param {string|number} controlBalance Balance to check with withdrawn value
+ * @returns {Promise}
+ */
+const withdrawTokens = async (
+    daoInstance, 
+    tokenInstance,
+    proposalId, 
+    voterAddress,
+    controlBalance
+) => {
+    // Validate tokens balance
+    controlBalance = toWeiBN(controlBalance).toString();
+    const balance = await daoInstance.methods['tokensBalance(uint256)'](proposalId).call({
+        from: voterAddress
+    });
+    (balance.toString()).should.equal(controlBalance, 'Tokens balance not equal control balance');
+
+    const voterBalanceBefore = await tokenInstance.methods['balanceOf(address)'](voterAddress).call({
+        from: voterAddress
+    });
+    
+    // Do withdraw
+    const result = await daoInstance.methods['withdrawTokens(uint256)'](proposalId).send({
+        from: voterAddress
+    });
+
+    // Validate emitted event
+    assertEvent(result, 'TokensReleased', [
+        [
+            'voter',
+            p => (p).should.equal(voterAddress)
+        ],
+        [
+            'value',
+            p => (p).should.equal(controlBalance)
+        ]
+    ]);
+
+    // Validate voter balance
+    const voterBalanceAfter = await tokenInstance.methods['balanceOf(address)'](voterAddress).call({
+        from: voterAddress
+    });
+    (
+        toBN(voterBalanceAfter)
+            .sub(toBN(voterBalanceBefore))
+    ).should.eq.BN(toBN(controlBalance));
+};
+module.exports.withdrawTokens = withdrawTokens;

@@ -24,7 +24,8 @@ const {
     revokeVote,
     votingCampaign,
     processProposal,
-    pauseDao
+    pauseDao,
+    withdrawTokens
 } = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
@@ -886,6 +887,8 @@ contract('DAO', accounts => {
                 await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
 
+            it.skip('should fail if reentrant call detected', async () => {});
+
             it('should fail if contract is paused', async () => {
                 await pauseDao(dao, proposalCreator1, campaign);
                 await assertRevert(processProposal(
@@ -1118,44 +1121,188 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#withdrawTokens(uint256)', () => {
+    describe('#withdrawTokens(uint256)', () => {
+        let proposalId;
+        const duration = '10';
 
-        it('should fail if proposal not found', async () => {
-            
+        beforeEach(async () => {
+            // Add proposal
+            proposalId = await addProposal(
+                dao,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: duration,
+                    value: '0',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
         });
 
-        it('should fail if sender has empty released tokens balance', async () => {});
+        it('should fail if proposal not found', async () => {
+            await assertRevert(
+                dao.methods['withdrawTokens(uint256)'](unknownId()).call({
+                    from: voter1
+                }),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
 
-        it('should fail if reentrant call detected', async () => {});
+        it('should fail if sender not voted for proposal', async () => {
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(Number(duration)+1);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            await assertRevert(
+                withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    '0'
+                ),
+                'INSUFFICIENT_TOKENS_BALANCE'
+            );
+        });
+
+        it('should fail if sender voted but revoked his vote', async () => {
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(Number(duration)+1);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            await assertRevert(
+                withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    '0'
+                ),
+                'INSUFFICIENT_TOKENS_BALANCE'
+            );
+        });
+
+        it('should fail if proposal not finished', async () => {
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+            await assertRevert(
+                withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    '5'
+                ),
+                'PROPOSAL_NOT_FINISHED'
+            );
+        });
+
+        it.skip('should fail if reentrant call detected', async () => {});
 
         describe('In a case of the voting success', () => {
 
             beforeEach(async () => {
-                // Add proposal
                 // Fulfill voting (to success result)
+                await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+                // Rewind Dao time to the end of a voting
+                const endDate = dateTimeFromDuration(Number(duration)+1);
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+                // Process
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign
+                );
             });
 
-            it('should widthdraw released tokens', async () => {});
+            it('should widthdraw released tokens', async () => {
+                await withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    campaign.filter(v => v.voter === voter1)[0].votes
+                );
+            });
         });
 
         describe('In a case of the voting failure', () => {
 
             beforeEach(async () => {
-                // Add proposal
                 // Fulfill voting (to failure result)
+                await votingCampaign(dao, proposalId, VoteType.No, campaign);
+
+                // Rewind Dao time to the end of a voting
+                const endDate = dateTimeFromDuration(Number(duration+1));
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+                // Process
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.No, 
+                    campaign
+                );
             });
             
-            it('should widthdraw released tokens', async () => {});
+            it('should widthdraw released tokens', async () => {
+                await withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    campaign.filter(v => v.voter === voter1)[0].votes
+                );
+            });
         });
 
-        describe('In a case of expired voting', () => {
+        describe('In a case of expired (not processed) voting', () => {
 
             beforeEach(async () => {
-                // Add proposal
-                // rewind time out of frame
+                // Fulfill voting (to failure result)
+                await votingCampaign(dao, proposalId, VoteType.No, campaign);
+
+                // Rewind Dao time to the end of a voting
+                const endDate = dateTimeFromDuration(Number(duration+1));
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
             
-            it('should widthdraw released tokens', async () => {});
+            it('should widthdraw released tokens', async () => {
+                await withdrawTokens(
+                    dao,
+                    token,
+                    proposalId,
+                    voter1,
+                    campaign.filter(v => v.voter === voter1)[0].votes
+                );
+            });
         });        
     });
 

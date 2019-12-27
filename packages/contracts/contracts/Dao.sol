@@ -560,41 +560,12 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev Balance of locked tokens
-     * @param proposalId Proposal Id
-     * @return uint256 Balance of tokens that available to withdraw
-     */
-    function tokensBalance(uint256 proposalId) 
-        external 
-        view 
-        proposalExists(proposalId) 
-        returns (uint256) 
-    {
-        uint256 lockedTokens;
-
-        for (uint256 i = 0; i < proposalCount; i++) {
-
-            // Proposal not cancelled
-            // Voter has voted
-            // Voter nas not withdrawn his locked tokens
-            if (!proposals[i].flags[2] &&
-                votings[i].voted[msg.sender] &&
-                !votings[i].votes[votings[i].ids[msg.sender]].withdrawn) {
-                
-                lockedTokens = lockedTokens.add(
-                    votings[i].votes[votings[i].ids[msg.sender]].valueOriginal
-                );
-            }
-        }
-
-        return lockedTokens;
-    }
-
-    /**
      * @dev Withdraw released tokens
      *
      * Requirements:
-     *  - sender has positive released tokens balance
+     *  - proposal should exists
+     *  - proposal should be finished
+     *  - sender has positive locked tokens balance
      *  - call not reentrant
      *
      * @param proposalId Proposal Id
@@ -604,7 +575,17 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         nonReentrant 
         proposalExists(proposalId) 
         onlyFinished(proposalId)
-    {}
+    {
+        uint256 tokensBalance = tokensBalance(proposalId);
+        require(tokensBalance > 0, "INSUFFICIENT_TOKENS_BALANCE");
+
+        Vote storage existedVote = votings[proposalId]
+            .votes[votings[proposalId].ids[msg.sender]];
+
+        // Push tokens to the voter
+        releaseTokens(msg.sender, existedVote.valueOriginal);
+        existedVote.withdrawn = true;
+    }
 
     /**
      * @dev Get proposal by Id (index)
@@ -772,6 +753,36 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function replaceWhitelistAdmin(address account) external onlyWhitelistAdmin {
         _addWhitelistAdmin(account);
         _removeWhitelistAdmin(msg.sender);
+    }
+
+    /**
+     * @dev Balance of locked tokens
+     * @param proposalId Proposal Id
+     * @return uint256 Balance of tokens that available to withdraw
+     */
+    function tokensBalance(uint256 proposalId) 
+        public 
+        view 
+        proposalExists(proposalId) 
+        returns (uint256) 
+    {
+        uint256 lockedTokens;
+
+        // Proposal not cancelled
+        // Voter has voted
+        // Voter nas not withdrawn locked tokens
+        if (!proposals[proposalId].flags[2] &&
+            votings[proposalId].voted[msg.sender] &&
+            !votings[proposalId]
+                .votes[votings[proposalId].ids[msg.sender]]
+                .withdrawn) {
+            
+            lockedTokens = votings[proposalId]
+                .votes[votings[proposalId].ids[msg.sender]]
+                .valueOriginal;
+        }
+
+        return lockedTokens;
     }
 
     /**
