@@ -32,3 +32,4 @@ npm run lint
 ## Docs
 - [Use-cases diagrams](./docs/usecase/README.md)
 - [Activity diagrams](./docs/activity/README.md)
+- [Dao.sol: generated docs](./docs/Dao.md)

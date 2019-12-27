@@ -3,7 +3,6 @@ pragma solidity 0.5.14;
 import "@openzeppelin/upgrades/contracts/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "openzeppelin-solidity/contracts/access/roles/WhitelistedRole.sol";
-import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -15,7 +14,7 @@ import "./libraries/VotingLib.sol";
  * @dev This contract holds main DAO logic and storages
  * @author Kostiantyn Smyrnov <kostysh@gmail.com>
  */
-contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
+contract Dao is Initializable, Pausable, WhitelistedRole {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;

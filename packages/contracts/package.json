@@ -21,7 +21,8 @@
     "lint": "npx solhint --max-warnings 0 \"contracts/**/*.sol\"",
     "test": "./test/runner.sh",
     "test:coverage": "SOLIDITY_COVERAGE=true ./test/runner.sh",
-    "clean": "rm -rf ./artifacts/*"
+    "clean": "rm -rf ./artifacts/*",
+    "docs": "./scripts/soldoc.sh"
   },
   "devDependencies": {
     "@openzeppelin/cli": "2.6.0",
@@ -35,6 +36,8 @@
     "bn-chai": "1.0.1",
     "openzeppelin-solidity": "2.4.0",
     "solidity-coverage": "0.7.0-beta.3",
-    "eth-gas-reporter": "0.2.14"
+    "eth-gas-reporter": "0.2.14",
+    "truffle-flattener": "1.4.2",
+    "solmd": "0.4.0"
   }
 }
