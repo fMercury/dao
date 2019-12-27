@@ -166,14 +166,14 @@
     "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol",
     "exportedSymbols": {
       "ContractForDaoTestsV2": [
-        1713
+        1826
       ]
     },
-    "id": 1714,
+    "id": 1827,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1687,
+        "id": 1800,
         "literals": [
           "solidity",
           "0.5",
@@ -185,10 +185,10 @@
       {
         "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
         "file": "./ContractForDaoTestsV1.sol",
-        "id": 1688,
+        "id": 1801,
         "nodeType": "ImportDirective",
-        "scope": 1714,
-        "sourceUnit": 1686,
+        "scope": 1827,
+        "sourceUnit": 1799,
         "src": "25:37:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -199,44 +199,44 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1689,
+              "id": 1802,
               "name": "ContractForDaoTestsV1",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1685,
+              "referencedDeclaration": 1798,
               "src": "99:21:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$1685",
+                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$1798",
                 "typeString": "contract ContractForDaoTestsV1"
               }
             },
-            "id": 1690,
+            "id": 1803,
             "nodeType": "InheritanceSpecifier",
             "src": "99:21:4"
           }
         ],
         "contractDependencies": [
-          1685,
-          1849,
-          1876,
-          2780
+          1798,
+          1983,
+          2010,
+          2914
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1713,
+        "id": 1826,
         "linearizedBaseContracts": [
-          1713,
-          1685,
-          2780,
-          1876,
-          1849
+          1826,
+          1798,
+          2914,
+          2010,
+          1983
         ],
         "name": "ContractForDaoTestsV2",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1699,
+              "id": 1812,
               "nodeType": "Block",
               "src": "171:45:4",
               "statements": [
@@ -246,11 +246,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1696,
+                        "id": 1809,
                         "name": "_manager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1692,
+                        "referencedDeclaration": 1805,
                         "src": "200:8:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -265,18 +265,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1695,
+                      "id": 1808,
                       "name": "_transferOwnership",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2779,
+                      "referencedDeclaration": 2913,
                       "src": "181:18:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1697,
+                    "id": 1810,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -290,29 +290,29 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1698,
+                  "id": 1811,
                   "nodeType": "ExpressionStatement",
                   "src": "181:28:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 1700,
+            "id": 1813,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "setOwner",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1693,
+              "id": 1806,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1692,
+                  "id": 1805,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1700,
+                  "scope": 1813,
                   "src": "146:16:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -321,7 +321,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1691,
+                    "id": 1804,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "146:7:4",
@@ -338,12 +338,12 @@
               "src": "145:18:4"
             },
             "returnParameters": {
-              "id": 1694,
+              "id": 1807,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "171:0:4"
             },
-            "scope": 1713,
+            "scope": 1826,
             "src": "128:88:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -351,25 +351,25 @@
           },
           {
             "body": {
-              "id": 1711,
+              "id": 1824,
               "nodeType": "Block",
               "src": "295:27:4",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1709,
+                    "id": 1822,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1707,
+                      "id": 1820,
                       "name": "val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1658,
+                      "referencedDeclaration": 1771,
                       "src": "305:3:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -380,11 +380,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1708,
+                      "id": 1821,
                       "name": "_val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1702,
+                      "referencedDeclaration": 1815,
                       "src": "311:4:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -397,27 +397,27 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 1710,
+                  "id": 1823,
                   "nodeType": "ExpressionStatement",
                   "src": "305:10:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 1712,
+            "id": 1825,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1705,
+                "id": 1818,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1704,
+                  "id": 1817,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2713,
+                  "referencedDeclaration": 2847,
                   "src": "285:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -431,15 +431,15 @@
             "name": "setVal",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1703,
+              "id": 1816,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1702,
+                  "id": 1815,
                   "name": "_val",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1712,
+                  "scope": 1825,
                   "src": "264:12:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -448,7 +448,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1701,
+                    "id": 1814,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "264:7:4",
@@ -464,19 +464,19 @@
               "src": "263:14:4"
             },
             "returnParameters": {
-              "id": 1706,
+              "id": 1819,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "295:0:4"
             },
-            "scope": 1713,
+            "scope": 1826,
             "src": "248:74:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1714,
+        "scope": 1827,
         "src": "65:259:4"
       }
     ],
@@ -486,14 +486,14 @@
     "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV2.sol",
     "exportedSymbols": {
       "ContractForDaoTestsV2": [
-        1713
+        1826
       ]
     },
-    "id": 1714,
+    "id": 1827,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1687,
+        "id": 1800,
         "literals": [
           "solidity",
           "0.5",
@@ -505,10 +505,10 @@
       {
         "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
         "file": "./ContractForDaoTestsV1.sol",
-        "id": 1688,
+        "id": 1801,
         "nodeType": "ImportDirective",
-        "scope": 1714,
-        "sourceUnit": 1686,
+        "scope": 1827,
+        "sourceUnit": 1799,
         "src": "25:37:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -519,44 +519,44 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1689,
+              "id": 1802,
               "name": "ContractForDaoTestsV1",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1685,
+              "referencedDeclaration": 1798,
               "src": "99:21:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$1685",
+                "typeIdentifier": "t_contract$_ContractForDaoTestsV1_$1798",
                 "typeString": "contract ContractForDaoTestsV1"
               }
             },
-            "id": 1690,
+            "id": 1803,
             "nodeType": "InheritanceSpecifier",
             "src": "99:21:4"
           }
         ],
         "contractDependencies": [
-          1685,
-          1849,
-          1876,
-          2780
+          1798,
+          1983,
+          2010,
+          2914
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1713,
+        "id": 1826,
         "linearizedBaseContracts": [
-          1713,
-          1685,
-          2780,
-          1876,
-          1849
+          1826,
+          1798,
+          2914,
+          2010,
+          1983
         ],
         "name": "ContractForDaoTestsV2",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1699,
+              "id": 1812,
               "nodeType": "Block",
               "src": "171:45:4",
               "statements": [
@@ -566,11 +566,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1696,
+                        "id": 1809,
                         "name": "_manager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1692,
+                        "referencedDeclaration": 1805,
                         "src": "200:8:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -585,18 +585,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1695,
+                      "id": 1808,
                       "name": "_transferOwnership",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2779,
+                      "referencedDeclaration": 2913,
                       "src": "181:18:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1697,
+                    "id": 1810,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -610,29 +610,29 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1698,
+                  "id": 1811,
                   "nodeType": "ExpressionStatement",
                   "src": "181:28:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 1700,
+            "id": 1813,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "setOwner",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1693,
+              "id": 1806,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1692,
+                  "id": 1805,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1700,
+                  "scope": 1813,
                   "src": "146:16:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -641,7 +641,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1691,
+                    "id": 1804,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "146:7:4",
@@ -658,12 +658,12 @@
               "src": "145:18:4"
             },
             "returnParameters": {
-              "id": 1694,
+              "id": 1807,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "171:0:4"
             },
-            "scope": 1713,
+            "scope": 1826,
             "src": "128:88:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -671,25 +671,25 @@
           },
           {
             "body": {
-              "id": 1711,
+              "id": 1824,
               "nodeType": "Block",
               "src": "295:27:4",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1709,
+                    "id": 1822,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1707,
+                      "id": 1820,
                       "name": "val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1658,
+                      "referencedDeclaration": 1771,
                       "src": "305:3:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -700,11 +700,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1708,
+                      "id": 1821,
                       "name": "_val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1702,
+                      "referencedDeclaration": 1815,
                       "src": "311:4:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -717,27 +717,27 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 1710,
+                  "id": 1823,
                   "nodeType": "ExpressionStatement",
                   "src": "305:10:4"
                 }
               ]
             },
             "documentation": null,
-            "id": 1712,
+            "id": 1825,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1705,
+                "id": 1818,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1704,
+                  "id": 1817,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 2713,
+                  "referencedDeclaration": 2847,
                   "src": "285:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -751,15 +751,15 @@
             "name": "setVal",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1703,
+              "id": 1816,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1702,
+                  "id": 1815,
                   "name": "_val",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1712,
+                  "scope": 1825,
                   "src": "264:12:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -768,7 +768,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1701,
+                    "id": 1814,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "264:7:4",
@@ -784,19 +784,19 @@
               "src": "263:14:4"
             },
             "returnParameters": {
-              "id": 1706,
+              "id": 1819,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "295:0:4"
             },
-            "scope": 1713,
+            "scope": 1826,
             "src": "248:74:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 1714,
+        "scope": 1827,
         "src": "65:259:4"
       }
     ],
@@ -808,7 +808,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.19",
-  "updatedAt": "2019-12-27T01:12:35.988Z",
+  "updatedAt": "2019-12-27T19:31:26.013Z",
   "devdoc": {
     "methods": {
       "isOwner()": {

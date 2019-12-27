@@ -44921,7 +44921,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.19",
-  "updatedAt": "2019-12-27T19:27:40.475Z",
+  "updatedAt": "2019-12-27T19:31:25.993Z",
   "devdoc": {
     "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
     "details": "This contract holds main DAO logic and storages",
