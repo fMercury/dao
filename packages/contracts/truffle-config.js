@@ -43,7 +43,13 @@ module.exports = {
     },
 
     mocha: {
-        enableTimeouts: false
+        enableTimeouts: false,
+        // reporter: 'eth-gas-reporter',
+        // reporterOptions : {
+        //     excludeContracts: [
+        //         'Migrations'
+        //     ]
+        // }
         // timeout: 100000
     },
 

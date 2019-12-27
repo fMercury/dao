@@ -320,7 +320,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         // @todo Add conditions and test for proposal `duration` (s.l. min and max value)
         require(destination != address(0), "INVALID_DESTINATION");
         require(value == 0 || (value > 0 && msg.value >= value), "INSUFFICIENT_ETHER_VALUE");
-        // @todo Add Condition to avoid proposal queue maximum length (uint256 restriction)
 
         emit ProposalAdded(msg.sender, proposalCount);
 
@@ -341,7 +340,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             flags
         );
         
-        proposalCount += 1;
+        proposalCount = proposalCount.add(1);
     }
 
     /**
