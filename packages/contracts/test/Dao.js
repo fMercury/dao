@@ -1033,7 +1033,12 @@ contract('DAO', accounts => {
             );
         });
 
-        it.skip('should fail if proposal not found', async () => {});
+        it('should fail if proposal not found', async () => {
+            await assertRevert(
+                dao.methods['votingResult(uint256)'](unknownId()).call(),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
 
         it('should return 0 and 0 if no votes has beed added', async () => {
             const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
@@ -1041,7 +1046,27 @@ contract('DAO', accounts => {
             (votingResult.no).should.equal('0');
         });
 
-        it.skip('should return 0 if votes has been added and then revoked', async () => {});
+        it('should return 0 if votes has been added and then revoked', async () => {
+            // Add vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+
+            // Revoke previous vote
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+
+            const votingResult = await dao.methods['votingResult(uint256)'](proposalId).call();
+            (votingResult.yes).should.equal('0');
+            (votingResult.no).should.equal('0');
+        });
 
         it('should return a voting result', async () => {
             const votesToVote = '5';
