@@ -1,4 +1,7 @@
 # DAO Smart contracts
+> Development envirnoment is optimized for using with VS Code  
+> Related workspace config is placed in the file: [./contracts.code-workspace](./contracts.code-workspace).  
+> Please use this configuration by `Open Workspace` menu 
 
 ## Initial setup  
 
@@ -25,3 +28,7 @@ npm run test ./<path_to_test_file>.js
 ```bash
 npm run lint
 ```
+
+## Docs
+- [Use-cases diagrams](./docs/usecase/README.md)
+- [Activity diagrams](./docs/activity/README.md)
