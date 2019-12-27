@@ -517,13 +517,46 @@ contract('DAO', accounts => {
             }), 'PROPOSAL_NOT_FOUND');
         });
 
-        it.skip('should fail if contract is paused', async () => {
-            // @todo Implement this after whole DAO workflow will be implemented
+        it('should fail if contract is paused', async () => {
+            await pauseDao(dao, proposalCreator1, campaign);
+            await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
+                proposalId,
+                VoteType.Yes,
+                toWeiBN('5').toString()
+            ).send({
+                from: voter1
+            }), 'Pausable: paused');
         });
 
         it.skip('should fail if reentrant call detected', async () => {});
 
-        it.skip('should fail if proposal in a passed state', async () => {});
+        it('should fail if proposal in a passed state', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(11);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.Yes, 
+                campaign            );
+
+            await assertRevert(
+                dao.methods['vote(uint256,uint8,uint256)'](
+                    proposalId,
+                    VoteType.Yes,
+                    toWeiBN('5').toString()
+                ).send({
+                    from: voter1
+                }),
+                'PROPOSAL_PASSED'
+            );
+        });
 
         it('should fail if proposal cancelled', async () => {
             await cancelProposal(

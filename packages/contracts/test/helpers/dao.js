@@ -430,9 +430,9 @@ const pauseDao = async (daoInstance, proposalCreator, campaign) => {
     await votingCampaign(daoInstance, proposalId, VoteType.Yes, campaign);
 
     // Rewind Dao time to the end of a voting
-    const endDate = dateTimeFromDuration(2, Number(currentTimeBefore));
+    const endDate = dateTimeFromDuration(2, Number(currentTimeBefore.toString()));
     await daoInstance.methods['setCurrentTime(uint256)'](endDate.toString()).send();
-    
+
     // Process
     await processProposal(
         daoInstance,
