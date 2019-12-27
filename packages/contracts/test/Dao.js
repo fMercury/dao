@@ -441,9 +441,55 @@ contract('DAO', accounts => {
             }), 'NOT_A_PROPOSER');
         });
 
-        it.skip('should fail if proposal in a passed state', async () => {});
+        it('should fail if proposal in a passed state', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
 
-        it.skip('should fail if proposal in a processed state', async () => {});
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(11);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.Yes, 
+                campaign
+            );
+
+            await assertRevert(
+                dao.methods['cancelProposal(uint256)'](proposalId).send({
+                    from: proposalCreator1
+                }),
+                'PROPOSAL_PASSED'
+            );
+        });
+
+        it('should fail if proposal in a processed state', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.No, campaign);
+
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(11);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.No, 
+                campaign
+            );
+
+            await assertRevert(
+                dao.methods['cancelProposal(uint256)'](proposalId).send({
+                    from: proposalCreator1
+                }),
+                'PROPOSAL_PROCESSED'
+            );
+        });
 
         it('should fail if proposal cancelled', async () => {
             await cancelProposal(
