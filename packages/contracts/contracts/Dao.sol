@@ -662,7 +662,28 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Get all active proposals Ids
      * @return uint256[] List of proposals Ids
      */
-    function getActiveProposalsIds() external view returns (uint256[] memory) {}
+    function getActiveProposalsIds() 
+        external 
+        view 
+        returns (uint256[] memory) 
+    {
+        uint256[] memory ids = new uint256[](activeProposalsCount());
+        uint256 index;
+
+        for (uint256 i = 0; i < proposalCount; i++) {
+
+            if (!proposals[i].flags[0] && 
+                !proposals[i].flags[1] &&
+                !proposals[i].flags[2] &&
+                time() < proposals[i].end) {
+                
+                ids[index] = i;
+                index += 1;
+            }
+        }
+
+        return ids;
+    }
 
     /**
      * @dev Get all active proposals Ids filtered by proposal type
@@ -765,6 +786,27 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             (uint256 yes, uint256 no) = votingResult(proposalId);
             return yes > no;
         }
+    }
+
+    /**
+     * @dev Return active proposals count
+     * @return uint256
+     */
+    function activeProposalsCount() public view returns (uint256) {
+        uint256 count;
+
+        for (uint256 i = 0; i < proposalCount; i++) {
+
+            if (!proposals[i].flags[0] && 
+                !proposals[i].flags[1] &&
+                !proposals[i].flags[2] &&
+                time() < proposals[i].end) {
+                
+                count = count.add(1);
+            }
+        }
+
+        return count;
     }
 
     /**
