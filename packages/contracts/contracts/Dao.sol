@@ -377,7 +377,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * Requirements:
      *  - proposal should exists
      *  - contract not paused
-     *  - not a reentrant call
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
      *  - sender tokens balance should be sufficient
@@ -394,8 +393,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         uint256 votes
     ) 
         external 
-        whenNotPaused
-        nonReentrant 
+        whenNotPaused  
         proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
@@ -472,7 +470,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      * @dev Revoke of the placed vote
      *
      * Requirements:
-     *  - should not be a reentrant call
      *  - proposal should exists
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
@@ -482,7 +479,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function revokeVote(uint256 proposalId) 
         external 
-        nonReentrant 
         proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
@@ -494,11 +490,11 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
         // Exclude vote from the voting results
         existedVote.revoked = true;
+        existedVote.withdrawn = true;
         
         // Push tokens to the voter
         releaseTokens(msg.sender, existedVote.valueOriginal);
-        existedVote.withdrawn = true;
-        
+                
         emit VoteRevoked(
             proposalId,
             existedVote.voteType,
@@ -523,7 +519,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function processProposal(uint256 proposalId) 
         external 
         whenNotPaused 
-        nonReentrant
         proposalExists(proposalId)
         onlyProposer(proposalId) 
         notProcessed(proposalId) 
@@ -534,19 +529,17 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         proposal.flags[1] = true; // 'processed' state
 
         bool isPassed = isVotingPassed(proposalId);
-        emit ProposalProcessed(proposalId, isPassed);
-
-        if (isPassed) {
+        
+        if (isPassed && !proposal.transaction.executed) {
 
             proposal.flags[0] = true; // 'passed' state
+            proposal.transaction.executed = true;
             
             bool success = executeTransaction(
                 proposal.transaction.destination,
                 proposal.transaction.value,
                 proposal.transaction.data
             );
-
-            proposal.transaction.executed = true;
 
             if (success) {
 
@@ -557,6 +550,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
                 emit TransactionFailed(proposalId);
             }
         }
+
+        emit ProposalProcessed(proposalId, isPassed);
     }
 
     /**
@@ -566,13 +561,11 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      *  - proposal should exists
      *  - proposal should be finished
      *  - sender has positive locked tokens balance
-     *  - call not reentrant
      *
      * @param proposalId Proposal Id
      */
     function withdrawTokens(uint256 proposalId) 
         external 
-        nonReentrant 
         proposalExists(proposalId) 
         onlyFinished(proposalId)
     {
@@ -583,8 +576,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             .votes[votings[proposalId].ids[msg.sender]];
 
         // Push tokens to the voter
-        releaseTokens(msg.sender, existedVote.valueOriginal);
         existedVote.withdrawn = true;
+        releaseTokens(msg.sender, existedVote.valueOriginal);
     }
 
     /**

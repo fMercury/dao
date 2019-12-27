@@ -49,12 +49,10 @@ contract('DAO', accounts => {
     const initialProxyOwner = accounts[2];
     const initialTargetOwner = accounts[3];
     const proposalCreator1 = accounts[4];
-    const proposalCreator2 = accounts[5];
     const voter1 = accounts[6];
     const voter2 = accounts[7];
     const voter3 = accounts[8];
     const voter4 = accounts[9];
-    const voter5 = accounts[10];
 
     // values in ether
     const tokensDistribution = [
@@ -575,8 +573,6 @@ contract('DAO', accounts => {
             }), 'Pausable: paused');
         });
 
-        it.skip('should fail if reentrant call detected', async () => {});
-
         it('should fail if proposal in a passed state', async () => {
             // Fulfill voting (to success result)
             await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
@@ -760,8 +756,6 @@ contract('DAO', accounts => {
             );
         });
 
-        it.skip('should fail if reentrant call detected', async () => {});
-
         it('should fail if proposal not existed', async () => {
             await assertRevert(
                 dao.methods['revokeVote(uint256)'](unknownId()).send({
@@ -886,8 +880,6 @@ contract('DAO', accounts => {
                 const endDate = dateTimeFromDuration(Number(proposalConfig.duration)) + 1;
                 await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
-
-            it.skip('should fail if reentrant call detected', async () => {});
 
             it('should fail if contract is paused', async () => {
                 await pauseDao(dao, proposalCreator1, campaign);
@@ -1218,8 +1210,6 @@ contract('DAO', accounts => {
                 'PROPOSAL_NOT_FINISHED'
             );
         });
-
-        it.skip('should fail if reentrant call detected', async () => {});
 
         describe('In a case of the voting success', () => {
 
