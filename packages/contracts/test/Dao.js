@@ -59,19 +59,19 @@ contract('DAO', accounts => {
     const tokensDistribution = [
         {
             owner: voter1,
-            value: '10'
+            value: '100'
         },
         {
             owner: voter2,
-            value: '20'
+            value: '200'
         },
         {
             owner: voter3,
-            value: '50'
+            value: '500'
         },
         {
             owner: voter4,
-            value: '10'
+            value: '100'
         },
         // voter5 will still with empty balance
     ];
@@ -544,7 +544,7 @@ contract('DAO', accounts => {
             await assertRevert(dao.methods['vote(uint256,uint8,uint256)'](
                 proposalId,
                 VoteType.Yes,
-                toWeiBN('15').toString()
+                toWeiBN('150').toString()
             ).send({
                 from: voter1
             }), 'INSUFFICIENT_TOKENS_BALANCE');
@@ -680,6 +680,8 @@ contract('DAO', accounts => {
             );
         });
 
+        it.skip('should fail if reentrant call detected', async () => {});
+
         it('should fail if proposal not existed', async () => {
             await assertRevert(
                 dao.methods['revokeVote(uint256)'](unknownId()).send({
@@ -689,7 +691,37 @@ contract('DAO', accounts => {
             );
         });
 
-        it.skip('should fail if proposal in a passed state', async () => {});
+        it('should fail if proposal in a passed state', async () => {
+            // Fulfill voting (to success result)
+            await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+            // Rewind Dao time to the end of a voting
+            const endDate = dateTimeFromDuration(11);
+            await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+            // Process
+            await processProposal(
+                dao,
+                proposalId,
+                proposalCreator1,
+                VoteType.Yes, 
+                campaign,
+                false,
+                [// we need to count an initial vote also
+                    {
+                        voter: voter1,
+                        votes: '5'
+                    }
+                ]
+            );
+
+            await assertRevert(
+                dao.methods['revokeVote(uint256)'](proposalId).send({
+                    from: voter1
+                }),
+                'PROPOSAL_PASSED'
+            );
+        });
 
         it('should fail if proposal cancelled', async () => {
             const proposalId = await addProposal(

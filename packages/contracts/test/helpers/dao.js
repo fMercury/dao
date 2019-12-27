@@ -322,11 +322,25 @@ const processProposal = async (
     proposalCreator, 
     voteType, 
     campaign = [], 
-    brokenTx = false
+    brokenTx = false,
+    preCampaign = []
 ) => {
+    // Join campaigns
+    if (preCampaign.length > 0 ) {
+        campaign = campaign.map(v => {
+            const voters = preCampaign.filter(p => p.voter === v.voter);
+            v = voters.length === 0 ? v : voters.reduce((a, c) => {
+                a.votes = (Number(a.votes) + Number(c.votes)).toString();
+                return a;
+            }, v);
+            return v;
+        });
+    }
+
     // Calculate local results
-    const calculatedCampaign = campaign.reduce((a, c) => {
-        const target = VoteType[Number(voteType)];
+    const target = VoteType[Number(voteType)];
+
+    const calculatedCampaign = campaign.reduce((a, c) => {        
         a[target] = a[target].add(isqrt(toWeiBN(c.votes)));
         return a;
     }, {

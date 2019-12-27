@@ -402,45 +402,44 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     {
         require(serviceToken.balanceOf(msg.sender) >= votes, "INSUFFICIENT_TOKENS_BALANCE");
         require(serviceToken.allowance(msg.sender, address(this)) >= votes, "INSUFFICIENT_TOKENS_ALLOWANCE");
+
+        // Transfer tokens to the DAO
+        lockTokens(msg.sender, votes);
         
-        uint256 votesSent = votes;
         uint256 votesAccepted;
-        uint256 voteId;
         
         if (!votings[proposalId].voted[msg.sender]) {
             
             // Create new Vote
-            voteId = votings[proposalId].votesCount;
+            votings[proposalId].voted[msg.sender] = true;
+            uint256 voteId = votings[proposalId].votesCount;
             votings[proposalId].ids[msg.sender] = voteId;
-            votesAccepted = convertVotes(votesSent);
+            votesAccepted = convertVotes(votes);
             votings[proposalId].votes[voteId] = Vote(
                 voteType,
-                votesSent,
+                votes,
                 votesAccepted,
                 false
             );
-            votings[proposalId].voted[msg.sender] = true;
-
+            
             // Update votes counter
-            // @todo Add condition to avoid uint256 value restrictions
-            votings[proposalId].votesCount += 1;
+            votings[proposalId].votesCount = votings[proposalId].votesCount.add(1);
         } else {
             
             // Re-use existed Vote
-            voteId = votings[proposalId].ids[msg.sender];
-            Vote storage existedVote = votings[proposalId].votes[voteId];
+            Vote storage existedVote = votings[proposalId].votes[votings[proposalId].ids[msg.sender]];
             
             if (existedVote.revoked) {
 
                 // Enable revoked vote status
                 existedVote.revoked = false;
-                votesAccepted = convertVotes(votesSent);
+                votesAccepted = convertVotes(votes);
             } else {
 
                 // For now allowed adding new value only
                 // @todo Implement conditional update: if votesSent less then previous value then do partial withdraw
-                votesSent = existedVote.valueOriginal.add(votes);
-                votesAccepted = convertVotes(votesSent);
+                votes = existedVote.valueOriginal.add(votes);
+                votesAccepted = convertVotes(votes);
 
                 // Emitting this event for consistency
                 emit VoteRevoked(
@@ -453,7 +452,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
             // Update existed Vote
             existedVote.voteType = voteType;
-            existedVote.valueOriginal = votesSent;            
+            existedVote.valueOriginal = votes;            
             existedVote.valueAccepted = votesAccepted;
         }
 
@@ -461,18 +460,16 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
             proposalId,
             voteType,
             msg.sender,
-            votesSent,
+            votes,
             votesAccepted
         );
-
-        // Transfer tokens to the DAO
-        lockTokens(msg.sender, votes);
     }
 
     /**
      * @dev Revoke of the placed vote
      *
      * Requirements:
+     *  - should not be a reentrant call
      *  - proposal should exists
      *  - proposal should not be in a passed state
      *  - proposal should not be cancelled
@@ -482,6 +479,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
      */
     function revokeVote(uint256 proposalId) 
         external 
+        nonReentrant 
         proposalExists(proposalId)
         notPassed(proposalId) 
         notCancelled(proposalId)
