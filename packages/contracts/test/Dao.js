@@ -10,7 +10,7 @@ const {
 } = require('./helpers/constants');
 const { assertRevert, assertEvent } = require('./helpers/assertions');
 const { buildCallData } = require('./helpers/transactions');
-const { toBN, toWeiBN, dateTimeFromDuration } = require('./helpers/common');
+const { toBN, toWeiBN, toWeiEther, dateTimeFromDuration } = require('./helpers/common');
 const { isqrt } = require('./helpers/bnmath');
 const {
     createTokenAndDistribute,
@@ -1045,18 +1045,84 @@ contract('DAO', accounts => {
         });
     });
 
-    describe.skip('#tokensBalance()', () => {
+    describe('#tokensBalance(uint256)', () => {
+        let proposalId;
 
-        it('should return 0 if votes are not been placed', async () => {});
-
-        it('should return released tokens balance', async () => {
+        beforeEach(async () => {
             // Add proposal
+            proposalId = await addProposal(
+                dao,
+                proposalCreator1,
+                {
+                    details: 'Change target contract owner',
+                    proposalType: ProposalType.MethodCall,
+                    duration: '10',
+                    value: '0',
+                    destination: target.address,
+                    methodName: 'transferOwnership',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
+                }
+            );
+        });
+
+        it('should fail if proposal not found', async () => {
+            await assertRevert(
+                dao.methods['tokensBalance(uint256)'](unknownId()).call({
+                    from: voter1
+                }),
+                'PROPOSAL_NOT_FOUND'
+            );
+        });
+
+        it('should return 0 if votes are not been placed', async () => {
+            ((await dao.methods['tokensBalance(uint256)'](proposalId).call({
+                from: voter1
+            })).toString()).should.equal('0');
+        });
+
+        it('should return 0 if votes are been placed but been revoked then', async () => {
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                '5',
+                voter1
+            );
+            await revokeVote(
+                dao,
+                proposalId,
+                voter1
+            );
+            ((await dao.methods['tokensBalance(uint256)'](proposalId).call({
+                from: voter1
+            })).toString()).should.equal('0');
+        });
+
+        it('should return a balance of tokens available to withdraw', async () => {
+            const voteValue = '5';
+
             // Vote for proposal
-            // Revoke a vote
+            await doVote(
+                dao,
+                proposalId,
+                VoteType.Yes,
+                voteValue,
+                voter1
+            );
+
+            // Get tokens balance
+            ((await dao.methods['tokensBalance(uint256)'](proposalId).call({
+                from: voter1
+            })).toString()).should.equal(toWeiEther(voteValue));
         });
     });
 
-    describe.skip('#withdrawTokens()', () => {
+    describe.skip('#withdrawTokens(uint256)', () => {
+
+        it('should fail if proposal not found', async () => {
+            
+        });
 
         it('should fail if sender has empty released tokens balance', async () => {});
 

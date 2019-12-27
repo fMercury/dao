@@ -84,7 +84,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
         VoteType voteType;
         uint256 valueOriginal;
         uint256 valueAccepted;
-        bool revoked;
+        bool revoked;        
+        bool withdrawn;
     }
 
     /**
@@ -419,6 +420,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
                 voteType,
                 votes,
                 votesAccepted,
+                false,
                 false
             );
             
@@ -433,6 +435,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
                 // Enable revoked vote status
                 existedVote.revoked = false;
+                existedVote.withdrawn = false;
                 votesAccepted = convertVotes(votes);
             } else {
 
@@ -491,9 +494,10 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
 
         // Exclude vote from the voting results
         existedVote.revoked = true;
-
+        
         // Push tokens to the voter
         releaseTokens(msg.sender, existedVote.valueOriginal);
+        existedVote.withdrawn = true;
         
         emit VoteRevoked(
             proposalId,
@@ -519,6 +523,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function processProposal(uint256 proposalId) 
         external 
         whenNotPaused 
+        nonReentrant
         proposalExists(proposalId)
         onlyProposer(proposalId) 
         notProcessed(proposalId) 
@@ -555,10 +560,35 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     }
 
     /**
-     * @dev Withdraw released tokens
+     * @dev Balance of locked tokens
+     * @param proposalId Proposal Id
      * @return uint256 Balance of tokens that available to withdraw
      */
-    function tokensBalance() external view returns (uint256) {}
+    function tokensBalance(uint256 proposalId) 
+        external 
+        view 
+        proposalExists(proposalId) 
+        returns (uint256) 
+    {
+        uint256 lockedTokens;
+
+        for (uint256 i = 0; i < proposalCount; i++) {
+
+            // Proposal not cancelled
+            // Voter has voted
+            // Voter nas not withdrawn his locked tokens
+            if (!proposals[i].flags[2] &&
+                votings[i].voted[msg.sender] &&
+                !votings[i].votes[votings[i].ids[msg.sender]].withdrawn) {
+                
+                lockedTokens = lockedTokens.add(
+                    votings[i].votes[votings[i].ids[msg.sender]].valueOriginal
+                );
+            }
+        }
+
+        return lockedTokens;
+    }
 
     /**
      * @dev Withdraw released tokens
@@ -572,6 +602,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole, ReentrancyGuard {
     function withdrawTokens(uint256 proposalId) 
         external 
         nonReentrant 
+        proposalExists(proposalId) 
         onlyFinished(proposalId)
     {}
 
