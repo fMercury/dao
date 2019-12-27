@@ -1,7 +1,7 @@
-const { VoteType } = require('./constants');
+const { VoteType, ProposalType } = require('./constants');
 const { assertEvent } = require('./assertions');
 const { buildCallData } = require('./transactions');
-const { toBN, toWeiBN } = require('./common');
+const { toBN, toWeiBN, dateTimeFromDuration } = require('./common');
 const { isqrt } = require('./bnmath');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
 Contracts.setLocalBuildDir('./artifacts');
@@ -386,3 +386,49 @@ const processProposal = async (
     }
 };
 module.exports.processProposal = processProposal;
+
+/**
+ * Move Dao to the paused state
+ * @param {Object} daoInstance DAO instance object
+ * @param {string} proposalCreator Creator of the proposal address
+ * @param {Object[{voter:{string},vote:{string}}]} campaign Array of votes
+ * @returns {Promise}
+ */
+const pauseDao = async (daoInstance, proposalCreator, campaign) => {
+    const currentTimeBefore = await daoInstance.methods['currentTime()']().call(); 
+    // Add proposal
+    const proposalId = await addProposal(
+        daoInstance,
+        proposalCreator,
+        {
+            details: 'Replace Dao pauser account',
+            proposalType: ProposalType.MethodCall,
+            duration: '1',
+            value: '0',
+            destination: daoInstance.address,
+            methodName: 'pause',
+            methodParamTypes: [],
+            methodParams: []
+        }
+    );
+
+    // Fulfill voting (to success result)
+    await votingCampaign(daoInstance, proposalId, VoteType.Yes, campaign);
+
+    // Rewind Dao time to the end of a voting
+    const endDate = dateTimeFromDuration(2, Number(currentTimeBefore));
+    await daoInstance.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+    
+    // Process
+    await processProposal(
+        daoInstance,
+        proposalId,
+        proposalCreator,
+        VoteType.Yes, 
+        campaign
+    );
+    
+    // Check result
+    (await daoInstance.methods['paused()']().call()).should.be.true;
+};
+module.exports.pauseDao = pauseDao;

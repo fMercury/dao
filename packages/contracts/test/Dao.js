@@ -23,7 +23,8 @@ const {
     doVote,
     revokeVote,
     votingCampaign,
-    processProposal
+    processProposal,
+    pauseDao
 } = require('./helpers/dao');
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
@@ -774,7 +775,16 @@ contract('DAO', accounts => {
                 await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
 
-            it.skip('should fail if contract is paused', async () => {});
+            it('should fail if contract is paused', async () => {
+                await pauseDao(dao, proposalCreator1, campaign);
+                await assertRevert(processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign
+                ), 'Pausable: paused');
+            });
 
             it('should fail if proposal not exists', async () => {
                 await assertRevert(
@@ -794,7 +804,25 @@ contract('DAO', accounts => {
                 );
             });
     
-            it.skip('should fail if proposal processed', async () => {});
+            it('should fail if proposal has been processed before', async () => {
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign
+                );
+                await assertRevert(
+                    processProposal(
+                        dao,
+                        proposalId,
+                        proposalCreator1,
+                        VoteType.Yes, 
+                        campaign
+                    ),
+                    'PROPOSAL_PROCESSED'
+                );
+            });
     
             it('should fail if proposal cancelled', async () => {
                 // Add proposal 
@@ -847,12 +875,12 @@ contract('DAO', accounts => {
                     campaign
                 );
                 
-                // And new owner according to the proposal
+                // And check a new owner according to the proposal
                 (await target.methods['owner()']().call()).should.equal(voter1);
             });
         });
         
-        describe.skip('In a case of the voting failure', () => {
+        describe('In a case of the voting failure', () => {
             let proposalId;
             let proposalConfig;
 
@@ -863,9 +891,9 @@ contract('DAO', accounts => {
                     duration: '10',
                     value: '0',
                     destination: target.address,
-                    methodName: 'setA',
-                    methodParamTypes: ['bool'],
-                    methodParams: [true]
+                    methodName: 'transferOwnership',
+                    methodParamTypes: ['address'],
+                    methodParams: [voter1]
                 };
 
                 // Add proposal
@@ -875,17 +903,34 @@ contract('DAO', accounts => {
                     proposalConfig
                 );
 
-                // Fulfill voting (to success result)
+                // Fulfill voting (to failure result)
                 await votingCampaign(dao, proposalId, VoteType.No, campaign);
 
                 // Rewind Dao time to the end of voting
-                const endDate = dateTimeFromDuration(Number(proposalConfig.duration)) + 1;
+                const endDate = dateTimeFromDuration(Number(proposalConfig.duration) + 1);
                 await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
             });
 
-            it('should fail if contract is paused', async () => {});
+            it('should fail if contract is paused', async () => {
+                await pauseDao(dao, proposalCreator1, campaign);
+                await assertRevert(processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.No, 
+                    campaign
+                ), 'Pausable: paused');
+            });
     
-            it('should process a proposal', async () => {});
+            it('should process a proposal', async () => {
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.No, 
+                    campaign
+                );
+            });
         });
     });
 

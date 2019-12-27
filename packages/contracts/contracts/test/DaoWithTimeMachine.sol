@@ -4,7 +4,7 @@ import "../Dao.sol";
 
 
 contract DaoWithTimeMachine is Dao {
-    uint256 private currentTime;
+    uint256 public currentTime;
 
     function setCurrentTime(uint256 time) external {
         currentTime = time;

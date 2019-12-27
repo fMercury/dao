@@ -27,5 +27,5 @@ module.exports.toWeiBN = toWeiBN;
  * @param {string} duration
  * @returns {number}
  */
-const dateTimeFromDuration = duration => Math.ceil(Date.now() / 1000) + 60*60*24 * duration;
+const dateTimeFromDuration = (duration, fromTime = Math.ceil(Date.now() / 1000)) => fromTime + 60*60*24 * duration;
 module.exports.dateTimeFromDuration = dateTimeFromDuration;
