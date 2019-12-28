@@ -25,6 +25,12 @@ npm run bootstrap
 npm run test
 ```
 
+## Packages code coverage  
+
+```bash
+npm run coverage
+```
+
 ## Packages building
 
 ```bash

@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - '10'
+branches:
+  only:
+    - master
+install:
+    - npm i
+    - npm run bootstrap
+jobs:
+  include:
+    - stage: lint contracts
+      if: branch = master
+      script:
+        - set -e
+        - npm link
+        - npm run lint
+        - set +e
+    - stage: coverage contracts
+      if: branch = master
+      script:
+        - set -e
+        - npm run coverage
+        - npm run coveralls
+        - set +e
+        
