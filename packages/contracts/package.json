@@ -10,7 +10,7 @@
   ],
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
   "homepage": "https://github.com/windingtree/dao/packages/contracts#README",
-  "license": "GPL-3.0-only",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:windingtree/dao.git"
