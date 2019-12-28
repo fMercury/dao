@@ -1,10 +1,10 @@
-# oz-dao
-Monorepo of the universal DAO for projects based on [Openzeppelin SDK](https://openzeppelin.com/) 
+# dao
+Monorepo of the universal DAO for smart contracts governance
 
 
 ## Documentation
 
-Will be here later   
+See the documentation for each package separately  
 
 ## Initial setup  
 
@@ -12,7 +12,8 @@ Will be here later
 npm i
 ```
 
-## Dependencies setup/update for packages
+## Dependencies setup/update for packages  
+> Please prefer to run this command instead of updating packages dependencies directly
 
 ```bash
 npm run bootstrap
