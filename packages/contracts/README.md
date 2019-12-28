@@ -36,12 +36,6 @@ npm run test:coverage
 npm run lint
 ```
 
-## Building of artifacts
-
-```bash
-npm run build
-```
-
 ## Docs
 - [Use-cases diagrams](./docs/usecase/README.md)
 - [Activity diagrams](./docs/activity/README.md)
