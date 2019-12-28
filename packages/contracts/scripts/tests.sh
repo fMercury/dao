@@ -47,7 +47,7 @@ fi
 npx truffle version
 
 if [ "$SOLIDITY_COVERAGE" = true ]; then
-  npx truffle run coverage
+  npx truffle run coverage && cat coverage/lcov.info | coveralls
 else
 
   # using of `npx truffle compile` is work around for the Openzeppelin SDK issue 

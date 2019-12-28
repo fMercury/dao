@@ -1,5 +1,7 @@
 # DAO Smart contracts repository
 
+[![Coverage Status](https://coveralls.io/repos/github/windingtree/dao/badge.svg?branch=master)](https://coveralls.io/github/windingtree/dao?branch=master)
+
 > Development envirnoment is optimized for using with VS Code IDE   
 > Related workspace configuration is placed in the file: [./contracts.code-workspace](./contracts.code-workspace).  
 > Please use this configuration by `Open Workspace` menu 
@@ -27,7 +29,7 @@ npm run test ./<path_to_test_file>.js
 ## Tests coverage  
 
 ```bash
-npm run test:coverage
+npm run coverage
 ``` 
 
 ## Linting
