@@ -1,32 +1,32 @@
 {
   "contractName": "VotingLib",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Kostiantyn Smyrnov <kostysh@gmail.com>\",\"details\":\"This library holds voting utilities\",\"methods\":{},\"title\":\"Voting utilities\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/libraries/VotingLib.sol\":\"VotingLib\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/dao/packages/contracts/contracts/libraries/VotingLib.sol\":{\"keccak256\":\"0x1e07e3ff967f48bdf046e18fc54c7bf3253a8c6d69075e2706b86b435a85a0dd\",\"urls\":[\"bzz-raw://377278749ddf5e7674c12858a5dd2670e08bbd70619d1c8c59b0fe56a952328a\",\"dweb:/ipfs/Qmf9nNh4sbCeEzQN6wU6mZegB4jpfQXabgsHF7YgTJwVCL\"]}},\"version\":1}",
-  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a7231582041916b7380880a2c0f960a5bb1ae6009aa85bff4dcd8d11b73ae1cff629a293664736f6c634300050e0032",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a7231582041916b7380880a2c0f960a5bb1ae6009aa85bff4dcd8d11b73ae1cff629a293664736f6c634300050e0032",
-  "sourceMap": "155:494:2:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
-  "deployedSourceMap": "155:494:2:-;;;;;;;;",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Kostiantyn Smyrnov <kostysh@gmail.com>\",\"details\":\"This library holds voting utilities\",\"methods\":{},\"title\":\"Voting utilities\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/kostysh/dev/wtdao/packages/contracts/contracts/libraries/VotingLib.sol\":\"VotingLib\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/kostysh/dev/wtdao/packages/contracts/contracts/libraries/VotingLib.sol\":{\"keccak256\":\"0x1e07e3ff967f48bdf046e18fc54c7bf3253a8c6d69075e2706b86b435a85a0dd\",\"urls\":[\"bzz-raw://377278749ddf5e7674c12858a5dd2670e08bbd70619d1c8c59b0fe56a952328a\",\"dweb:/ipfs/Qmf9nNh4sbCeEzQN6wU6mZegB4jpfQXabgsHF7YgTJwVCL\"]}},\"version\":1}",
+  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158206a8c57688935c2f15bd046b83fc37e4d6c7a66aac206323cc4172cc01f376cad64736f6c634300050e0032",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158206a8c57688935c2f15bd046b83fc37e4d6c7a66aac206323cc4172cc01f376cad64736f6c634300050e0032",
+  "sourceMap": "155:494:4:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "155:494:4:-;;;;;;;;",
   "source": "pragma solidity 0.5.14;\n\n\n/**\n * @title Voting utilities\n * @dev This library holds voting utilities\n * @author Kostiantyn Smyrnov <kostysh@gmail.com>\n */\nlibrary VotingLib {\n\n    /**\n     * @dev Returns a square root\n     * @param x Source\n     * @return square root from the x\n     */\n    function sqrt(uint256 x) internal pure returns (uint256 y) {\n        \n        // solhint-disable-next-line no-inline-assembly\n        assembly {\n            let z := div(add(x, 1), 2)\n            y := x\n            for { } lt(z, y) { } {\n                y := z\n                z := div(add(div(x, z), z), 2)\n            }\n        }\n\n        return y;\n    }\n}",
-  "sourcePath": "/home/kostysh/dev/dao/packages/contracts/contracts/libraries/VotingLib.sol",
+  "sourcePath": "/home/kostysh/dev/wtdao/packages/contracts/contracts/libraries/VotingLib.sol",
   "ast": {
-    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/libraries/VotingLib.sol",
+    "absolutePath": "/home/kostysh/dev/wtdao/packages/contracts/contracts/libraries/VotingLib.sol",
     "exportedSymbols": {
       "VotingLib": [
-        1761
+        3466
       ]
     },
-    "id": 1762,
+    "id": 3467,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1749,
+        "id": 3454,
         "literals": [
           "solidity",
           "0.5",
           ".14"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:2"
+        "src": "0:23:4"
       },
       {
         "baseContracts": [],
@@ -34,120 +34,120 @@
         "contractKind": "library",
         "documentation": "@title Voting utilities\n@dev This library holds voting utilities\n@author Kostiantyn Smyrnov <kostysh@gmail.com>",
         "fullyImplemented": true,
-        "id": 1761,
+        "id": 3466,
         "linearizedBaseContracts": [
-          1761
+          3466
         ],
         "name": "VotingLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1759,
+              "id": 3464,
               "nodeType": "Block",
-              "src": "350:297:2",
+              "src": "350:297:4",
               "statements": [
                 {
                   "externalReferences": [
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "465:1:2",
+                        "src": "465:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "545:1:2",
+                        "src": "545:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "487:1:2",
+                        "src": "487:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "492:1:2",
+                        "src": "492:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "520:1:2",
+                        "src": "520:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "585:1:2",
+                        "src": "585:1:4",
                         "valueSize": 1
                       }
                     }
                   ],
-                  "id": 1756,
+                  "id": 3461,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let z := div(add(x, 1), 2)\n    y := x\n    for { } lt(z, y) { }\n    {\n        y := z\n        z := div(add(div(x, z), z), 2)\n    }\n}",
-                  "src": "425:197:2"
+                  "src": "425:197:4"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1757,
+                    "id": 3462,
                     "name": "y",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1754,
-                    "src": "639:1:2",
+                    "referencedDeclaration": 3459,
+                    "src": "639:1:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1755,
-                  "id": 1758,
+                  "functionReturnParameters": 3460,
+                  "id": 3463,
                   "nodeType": "Return",
-                  "src": "632:8:2"
+                  "src": "632:8:4"
                 }
               ]
             },
             "documentation": "@dev Returns a square root\n@param x Source\n@return square root from the x",
-            "id": 1760,
+            "id": 3465,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "sqrt",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1752,
+              "id": 3457,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1751,
+                  "id": 3456,
                   "name": "x",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1760,
-                  "src": "305:9:2",
+                  "scope": 3465,
+                  "src": "305:9:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -155,10 +155,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1750,
+                    "id": 3455,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "305:7:2",
+                    "src": "305:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -168,19 +168,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "304:11:2"
+              "src": "304:11:4"
             },
             "returnParameters": {
-              "id": 1755,
+              "id": 3460,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1754,
+                  "id": 3459,
                   "name": "y",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1760,
-                  "src": "339:9:2",
+                  "scope": 3465,
+                  "src": "339:9:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -188,10 +188,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1753,
+                    "id": 3458,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "339:7:2",
+                    "src": "339:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -201,40 +201,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "338:11:2"
+              "src": "338:11:4"
             },
-            "scope": 1761,
-            "src": "291:356:2",
+            "scope": 3466,
+            "src": "291:356:4",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 1762,
-        "src": "155:494:2"
+        "scope": 3467,
+        "src": "155:494:4"
       }
     ],
-    "src": "0:649:2"
+    "src": "0:649:4"
   },
   "legacyAST": {
-    "absolutePath": "/home/kostysh/dev/dao/packages/contracts/contracts/libraries/VotingLib.sol",
+    "absolutePath": "/home/kostysh/dev/wtdao/packages/contracts/contracts/libraries/VotingLib.sol",
     "exportedSymbols": {
       "VotingLib": [
-        1761
+        3466
       ]
     },
-    "id": 1762,
+    "id": 3467,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1749,
+        "id": 3454,
         "literals": [
           "solidity",
           "0.5",
           ".14"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:2"
+        "src": "0:23:4"
       },
       {
         "baseContracts": [],
@@ -242,120 +242,120 @@
         "contractKind": "library",
         "documentation": "@title Voting utilities\n@dev This library holds voting utilities\n@author Kostiantyn Smyrnov <kostysh@gmail.com>",
         "fullyImplemented": true,
-        "id": 1761,
+        "id": 3466,
         "linearizedBaseContracts": [
-          1761
+          3466
         ],
         "name": "VotingLib",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 1759,
+              "id": 3464,
               "nodeType": "Block",
-              "src": "350:297:2",
+              "src": "350:297:4",
               "statements": [
                 {
                   "externalReferences": [
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "465:1:2",
+                        "src": "465:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "545:1:2",
+                        "src": "545:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "487:1:2",
+                        "src": "487:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "492:1:2",
+                        "src": "492:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "y": {
-                        "declaration": 1754,
+                        "declaration": 3459,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "520:1:2",
+                        "src": "520:1:4",
                         "valueSize": 1
                       }
                     },
                     {
                       "x": {
-                        "declaration": 1751,
+                        "declaration": 3456,
                         "isOffset": false,
                         "isSlot": false,
-                        "src": "585:1:2",
+                        "src": "585:1:4",
                         "valueSize": 1
                       }
                     }
                   ],
-                  "id": 1756,
+                  "id": 3461,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let z := div(add(x, 1), 2)\n    y := x\n    for { } lt(z, y) { }\n    {\n        y := z\n        z := div(add(div(x, z), z), 2)\n    }\n}",
-                  "src": "425:197:2"
+                  "src": "425:197:4"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1757,
+                    "id": 3462,
                     "name": "y",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1754,
-                    "src": "639:1:2",
+                    "referencedDeclaration": 3459,
+                    "src": "639:1:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1755,
-                  "id": 1758,
+                  "functionReturnParameters": 3460,
+                  "id": 3463,
                   "nodeType": "Return",
-                  "src": "632:8:2"
+                  "src": "632:8:4"
                 }
               ]
             },
             "documentation": "@dev Returns a square root\n@param x Source\n@return square root from the x",
-            "id": 1760,
+            "id": 3465,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "sqrt",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1752,
+              "id": 3457,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1751,
+                  "id": 3456,
                   "name": "x",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1760,
-                  "src": "305:9:2",
+                  "scope": 3465,
+                  "src": "305:9:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -363,10 +363,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1750,
+                    "id": 3455,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "305:7:2",
+                    "src": "305:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -376,19 +376,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "304:11:2"
+              "src": "304:11:4"
             },
             "returnParameters": {
-              "id": 1755,
+              "id": 3460,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1754,
+                  "id": 3459,
                   "name": "y",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1760,
-                  "src": "339:9:2",
+                  "scope": 3465,
+                  "src": "339:9:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -396,10 +396,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1753,
+                    "id": 3458,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "339:7:2",
+                    "src": "339:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -409,28 +409,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "338:11:2"
+              "src": "338:11:4"
             },
-            "scope": 1761,
-            "src": "291:356:2",
+            "scope": 3466,
+            "src": "291:356:4",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "internal"
           }
         ],
-        "scope": 1762,
-        "src": "155:494:2"
+        "scope": 3467,
+        "src": "155:494:4"
       }
     ],
-    "src": "0:649:2"
+    "src": "0:649:4"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.19",
-  "updatedAt": "2019-12-27T19:31:26.011Z",
+  "schemaVersion": "3.0.20",
+  "updatedAt": "2019-12-28T14:05:45.490Z",
   "devdoc": {
     "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
     "details": "This library holds voting utilities",

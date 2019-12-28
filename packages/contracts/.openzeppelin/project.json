@@ -1,12 +1,13 @@
 {
   "manifestVersion": "2.2",
   "contracts": {
+    "Dao": "Dao",
     "ContractForDaoTestsV1": "ContractForDaoTestsV1",
     "ContractForDaoTestsV2": "ContractForDaoTestsV2"
   },
   "dependencies": {},
-  "name": "@oz-dao/contracts",
-  "version": "0.0.1",
+  "name": "@dao/contracts",
+  "version": "0.1.0",
   "compiler": {
     "manager": "openzeppelin",
     "compilerSettings": {

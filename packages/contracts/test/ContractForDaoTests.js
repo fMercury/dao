@@ -3,11 +3,16 @@ require('chai').should();
 const { TestHelper } = require('@openzeppelin/cli');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
 
-Contracts.setLocalBuildDir('./artifacts');
+let gasLimit = 8000000;// Like actual to the Ropsten
+
+if (process.env.SOLIDITY_COVERAGE) {
+    gasLimit = 0xfffffffffff;
+    Contracts.setLocalBuildDir('./.coverage_artifacts/contracts');
+}
 
 // workaround for https://github.com/zeppelinos/zos/issues/704
 Contracts.setArtifactsDefaults({
-    gas: 8000000,
+    gas: gasLimit,
 });
 
 ZWeb3.initialize(web3.currentProvider);

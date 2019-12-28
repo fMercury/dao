@@ -1,7 +1,7 @@
 {
-  "name": "@oz-dao/contracts",
-  "version": "0.0.1",
-  "description": "Smart contracts for the oz-dao",
+  "name": "@dao/contracts",
+  "version": "0.1.0",
+  "description": "Smart contracts for the dao",
   "keywords": [
     "ethereum",
     "solidity",
@@ -9,18 +9,19 @@
     "winding-tree"
   ],
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
-  "homepage": "https://github.com/kostysh/oz-dao/packages/contracts#readme",
+  "homepage": "https://github.com/windingtree/dao/packages/contracts#README",
   "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/kostysh/oz-dao.git"
+    "url": "git@github.com:windingtree/dao.git"
   },
   "scripts": {
     "prebuild": "npm run clean",
-    "build": "npx truffle compile --all",
+    "build": "npx truffle compile --all --config ./truffle-config.artifacts.js",
     "lint": "npx solhint --max-warnings 0 \"contracts/**/*.sol\"",
-    "test": "./test/runner.sh",
-    "test:coverage": "SOLIDITY_COVERAGE=true ./test/runner.sh",
+    "test": "TESTING=true ./scripts/tests.sh",
+    "test:gas": "ETH_GAS_REPORTER=true ./scripts/tests.sh",
+    "test:coverage": "SOLIDITY_COVERAGE=true ./scripts/tests.sh",
     "clean": "rm -rf ./artifacts/*",
     "docs": "./scripts/soldoc.sh"
   },

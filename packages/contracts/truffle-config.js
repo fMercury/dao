@@ -3,13 +3,17 @@ const NonceTrackerSubprovider = require('web3-provider-engine/subproviders/nonce
 
 let pkey = process.env.ETH_PRIVATE_KEY;
 let apiKey = process.env.INFURA_API_KEY;
+let keys;
 
-try {
-    const keys = require('./localkeys.json');
-    pkey = keys.pkey;
-    apiKey = keys.infuraApiKey;
-} catch (e) {
-    console.log('Keys not found or localkeys.json file is corrupt');// eslint-disable-line no-console
+if (!process.env.SOLIDITY_COVERAGE && !process.env.TESTING) {
+
+    try {
+        keys = require('./localkeys.json');
+        pkey = keys.pkey;
+        apiKey = keys.infuraApiKey;
+    } catch (e) {
+        console.log('Keys not found or localkeys.json file is corrupt');// eslint-disable-line no-console
+    }
 }
 
 module.exports = {
@@ -17,8 +21,6 @@ module.exports = {
     plugins: [
         'solidity-coverage'
     ],
-
-    contracts_build_directory: './artifacts',
 
     networks: {
         ganache: {

@@ -1,6 +1,7 @@
-# DAO Smart contracts
-> Development envirnoment is optimized for using with VS Code  
-> Related workspace config is placed in the file: [./contracts.code-workspace](./contracts.code-workspace).  
+# DAO Smart contracts repository
+
+> Development envirnoment is optimized for using with VS Code IDE   
+> Related workspace configuration is placed in the file: [./contracts.code-workspace](./contracts.code-workspace).  
 > Please use this configuration by `Open Workspace` menu 
 
 ## Initial setup  
@@ -14,19 +15,31 @@ npm i
 ```bash
 npm run build
 ```
-Artifacts will be placed in `./artifacts` folder.
+Artifacts for using in the external projects will be placed in `./artifacts` folder.
 
 ## Tests
 
 ```bash
 npm run test
 npm run test ./<path_to_test_file>.js
-```
+```  
+
+## Tests coverage  
+
+```bash
+npm run test:coverage
+``` 
 
 ## Linting
 
 ```bash
 npm run lint
+```
+
+## Building of artifacts
+
+```bash
+npm run build
 ```
 
 ## Docs
