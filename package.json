@@ -6,6 +6,7 @@
     "bootstrap": "npx lerna bootstrap",
     "test": "npx lerna run test",
     "build": "npx lerna run build",
+    "lint": "npx lerna run lint",
     "coverage": "npx lerna run coverage",
     "coveralls": "npx lerna run coveralls"
   },
