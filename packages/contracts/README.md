@@ -1,6 +1,6 @@
-# DAO Smart contracts repository
+# DAO Smart contracts repository  
 
-[![Coverage Status](https://coveralls.io/repos/github/windingtree/dao/badge.svg?branch=master)](https://coveralls.io/github/windingtree/dao?branch=master)
+[![Build Status](https://travis-ci.org/windingtree/dao.svg?branch=master)](https://travis-ci.org/windingtree/dao) [![Coverage Status](https://coveralls.io/repos/github/windingtree/dao/badge.svg?branch=master)](https://coveralls.io/github/windingtree/dao?branch=master)
 
 > Development envirnoment is optimized for using with VS Code IDE   
 > Related workspace configuration is placed in the file: [./contracts.code-workspace](./contracts.code-workspace).  
