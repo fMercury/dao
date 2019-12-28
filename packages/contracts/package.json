@@ -22,6 +22,7 @@
     "test": "TESTING=true ./scripts/tests.sh",
     "test:gas": "ETH_GAS_REPORTER=true ./scripts/tests.sh",
     "coverage": "SOLIDITY_COVERAGE=true ./scripts/tests.sh",
+    "coveralls": "./scripts/coveralls.sh",
     "clean": "rm -rf ./artifacts/*",
     "docs": "./scripts/soldoc.sh"
   },
