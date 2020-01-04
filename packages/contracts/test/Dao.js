@@ -972,6 +972,41 @@ contract('DAO', accounts => {
                     'PROPOSAL_NOT_FINISHED'
                 );
             });
+
+            it('should process proposal with broken Tx properly', async () => {
+                // Add proposal with broken Tx
+                const duration = '10';
+                const proposalId = await addProposal(
+                    dao,
+                    proposalCreator1,
+                    {
+                        details: 'Proposal with broken transaction',
+                        proposalType: ProposalType.MethodCall,
+                        duration: duration,
+                        value: '0',
+                        destination: target.address,
+                        methodName: 'transferOwnership',
+                        methodParamTypes: ['string'],// Wrong type
+                        methodParams: ['blablabla']
+                    }
+                );
+                // Fulfill voting (to success result)
+                await votingCampaign(dao, proposalId, VoteType.Yes, campaign);
+
+                // Rewind Dao time to the end of a voting
+                const currentTimeBefore = await dao.methods['currentTime()']().call(); 
+                const endDate = dateTimeFromDuration(Number(duration), Number(currentTimeBefore.toString()));
+                await dao.methods['setCurrentTime(uint256)'](endDate.toString()).send();
+
+                await processProposal(
+                    dao,
+                    proposalId,
+                    proposalCreator1,
+                    VoteType.Yes, 
+                    campaign,
+                    true
+                );
+            });
     
             it('should process a proposal', async () => {
                 // Owner of target contract before the process
