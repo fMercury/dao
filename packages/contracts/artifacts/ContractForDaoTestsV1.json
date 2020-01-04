@@ -136,14 +136,14 @@
     "absolutePath": "/home/kostysh/dev/wtdao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
     "exportedSymbols": {
       "ContractForDaoTestsV1": [
-        1798
+        1802
       ]
     },
-    "id": 1799,
+    "id": 1803,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1763,
+        "id": 1767,
         "literals": [
           "solidity",
           "0.5",
@@ -155,10 +155,10 @@
       {
         "absolutePath": "@openzeppelin/upgrades/contracts/Initializable.sol",
         "file": "@openzeppelin/upgrades/contracts/Initializable.sol",
-        "id": 1764,
+        "id": 1768,
         "nodeType": "ImportDirective",
-        "scope": 1799,
-        "sourceUnit": 1984,
+        "scope": 1803,
+        "sourceUnit": 1988,
         "src": "25:60:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -166,10 +166,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 1765,
+        "id": 1769,
         "nodeType": "ImportDirective",
-        "scope": 1799,
-        "sourceUnit": 2915,
+        "scope": 1803,
+        "sourceUnit": 2919,
         "src": "86:63:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -180,17 +180,17 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1766,
+              "id": 1770,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1983,
+              "referencedDeclaration": 1987,
               "src": "186:13:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$1983",
+                "typeIdentifier": "t_contract$_Initializable_$1987",
                 "typeString": "contract Initializable"
               }
             },
-            "id": 1767,
+            "id": 1771,
             "nodeType": "InheritanceSpecifier",
             "src": "186:13:3"
           },
@@ -198,45 +198,45 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1768,
+              "id": 1772,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2914,
+              "referencedDeclaration": 2918,
               "src": "201:7:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2914",
+                "typeIdentifier": "t_contract$_Ownable_$2918",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 1769,
+            "id": 1773,
             "nodeType": "InheritanceSpecifier",
             "src": "201:7:3"
           }
         ],
         "contractDependencies": [
-          1983,
-          2010,
-          2914
+          1987,
+          2014,
+          2918
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1798,
+        "id": 1802,
         "linearizedBaseContracts": [
-          1798,
-          2914,
-          2010,
-          1983
+          1802,
+          2918,
+          2014,
+          1987
         ],
         "name": "ContractForDaoTestsV1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1771,
+            "id": 1775,
             "name": "val",
             "nodeType": "VariableDeclaration",
-            "scope": 1798,
+            "scope": 1802,
             "src": "216:18:3",
             "stateVariable": true,
             "storageLocation": "default",
@@ -245,7 +245,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 1770,
+              "id": 1774,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "216:7:3",
@@ -259,25 +259,25 @@
           },
           {
             "body": {
-              "id": 1788,
+              "id": 1792,
               "nodeType": "Block",
               "src": "335:65:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1782,
+                    "id": 1786,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1780,
+                      "id": 1784,
                       "name": "val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1771,
+                      "referencedDeclaration": 1775,
                       "src": "345:3:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -288,11 +288,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1781,
+                      "id": 1785,
                       "name": "_val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1773,
+                      "referencedDeclaration": 1777,
                       "src": "351:4:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -305,7 +305,7 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 1783,
+                  "id": 1787,
                   "nodeType": "ExpressionStatement",
                   "src": "345:10:3"
                 },
@@ -315,11 +315,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1785,
+                        "id": 1789,
                         "name": "_manager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1775,
+                        "referencedDeclaration": 1779,
                         "src": "384:8:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -334,18 +334,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1784,
+                      "id": 1788,
                       "name": "_transferOwnership",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2913,
+                      "referencedDeclaration": 2917,
                       "src": "365:18:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1786,
+                    "id": 1790,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -359,27 +359,27 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1787,
+                  "id": 1791,
                   "nodeType": "ExpressionStatement",
                   "src": "365:28:3"
                 }
               ]
             },
             "documentation": null,
-            "id": 1789,
+            "id": 1793,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1778,
+                "id": 1782,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1777,
+                  "id": 1781,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1964,
+                  "referencedDeclaration": 1968,
                   "src": "316:11:3",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -393,15 +393,15 @@
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1776,
+              "id": 1780,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1773,
+                  "id": 1777,
                   "name": "_val",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1789,
+                  "scope": 1793,
                   "src": "270:12:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -410,7 +410,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1772,
+                    "id": 1776,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "270:7:3",
@@ -424,10 +424,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 1775,
+                  "id": 1779,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1789,
+                  "scope": 1793,
                   "src": "293:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -436,7 +436,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1774,
+                    "id": 1778,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "293:7:3",
@@ -453,12 +453,12 @@
               "src": "260:55:3"
             },
             "returnParameters": {
-              "id": 1779,
+              "id": 1783,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "335:0:3"
             },
-            "scope": 1798,
+            "scope": 1802,
             "src": "241:159:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -466,54 +466,54 @@
           },
           {
             "body": {
-              "id": 1796,
+              "id": 1800,
               "nodeType": "Block",
               "src": "462:27:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1794,
+                    "id": 1798,
                     "name": "val",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1771,
+                    "referencedDeclaration": 1775,
                     "src": "479:3:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1793,
-                  "id": 1795,
+                  "functionReturnParameters": 1797,
+                  "id": 1799,
                   "nodeType": "Return",
                   "src": "472:10:3"
                 }
               ]
             },
             "documentation": null,
-            "id": 1797,
+            "id": 1801,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getValue",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1790,
+              "id": 1794,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "427:2:3"
             },
             "returnParameters": {
-              "id": 1793,
+              "id": 1797,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1792,
+                  "id": 1796,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1797,
+                  "scope": 1801,
                   "src": "453:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -522,7 +522,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1791,
+                    "id": 1795,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "453:7:3",
@@ -537,14 +537,14 @@
               ],
               "src": "452:9:3"
             },
-            "scope": 1798,
+            "scope": 1802,
             "src": "410:79:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1799,
+        "scope": 1803,
         "src": "152:339:3"
       }
     ],
@@ -554,14 +554,14 @@
     "absolutePath": "/home/kostysh/dev/wtdao/packages/contracts/contracts/test/ContractForDaoTestsV1.sol",
     "exportedSymbols": {
       "ContractForDaoTestsV1": [
-        1798
+        1802
       ]
     },
-    "id": 1799,
+    "id": 1803,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1763,
+        "id": 1767,
         "literals": [
           "solidity",
           "0.5",
@@ -573,10 +573,10 @@
       {
         "absolutePath": "@openzeppelin/upgrades/contracts/Initializable.sol",
         "file": "@openzeppelin/upgrades/contracts/Initializable.sol",
-        "id": 1764,
+        "id": 1768,
         "nodeType": "ImportDirective",
-        "scope": 1799,
-        "sourceUnit": 1984,
+        "scope": 1803,
+        "sourceUnit": 1988,
         "src": "25:60:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -584,10 +584,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 1765,
+        "id": 1769,
         "nodeType": "ImportDirective",
-        "scope": 1799,
-        "sourceUnit": 2915,
+        "scope": 1803,
+        "sourceUnit": 2919,
         "src": "86:63:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -598,17 +598,17 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1766,
+              "id": 1770,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1983,
+              "referencedDeclaration": 1987,
               "src": "186:13:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$1983",
+                "typeIdentifier": "t_contract$_Initializable_$1987",
                 "typeString": "contract Initializable"
               }
             },
-            "id": 1767,
+            "id": 1771,
             "nodeType": "InheritanceSpecifier",
             "src": "186:13:3"
           },
@@ -616,45 +616,45 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 1768,
+              "id": 1772,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2914,
+              "referencedDeclaration": 2918,
               "src": "201:7:3",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$2914",
+                "typeIdentifier": "t_contract$_Ownable_$2918",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 1769,
+            "id": 1773,
             "nodeType": "InheritanceSpecifier",
             "src": "201:7:3"
           }
         ],
         "contractDependencies": [
-          1983,
-          2010,
-          2914
+          1987,
+          2014,
+          2918
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 1798,
+        "id": 1802,
         "linearizedBaseContracts": [
-          1798,
-          2914,
-          2010,
-          1983
+          1802,
+          2918,
+          2014,
+          1987
         ],
         "name": "ContractForDaoTestsV1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 1771,
+            "id": 1775,
             "name": "val",
             "nodeType": "VariableDeclaration",
-            "scope": 1798,
+            "scope": 1802,
             "src": "216:18:3",
             "stateVariable": true,
             "storageLocation": "default",
@@ -663,7 +663,7 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 1770,
+              "id": 1774,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
               "src": "216:7:3",
@@ -677,25 +677,25 @@
           },
           {
             "body": {
-              "id": 1788,
+              "id": 1792,
               "nodeType": "Block",
               "src": "335:65:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1782,
+                    "id": 1786,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 1780,
+                      "id": 1784,
                       "name": "val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1771,
+                      "referencedDeclaration": 1775,
                       "src": "345:3:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -706,11 +706,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 1781,
+                      "id": 1785,
                       "name": "_val",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1773,
+                      "referencedDeclaration": 1777,
                       "src": "351:4:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -723,7 +723,7 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 1783,
+                  "id": 1787,
                   "nodeType": "ExpressionStatement",
                   "src": "345:10:3"
                 },
@@ -733,11 +733,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 1785,
+                        "id": 1789,
                         "name": "_manager",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1775,
+                        "referencedDeclaration": 1779,
                         "src": "384:8:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -752,18 +752,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 1784,
+                      "id": 1788,
                       "name": "_transferOwnership",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2913,
+                      "referencedDeclaration": 2917,
                       "src": "365:18:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 1786,
+                    "id": 1790,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -777,27 +777,27 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1787,
+                  "id": 1791,
                   "nodeType": "ExpressionStatement",
                   "src": "365:28:3"
                 }
               ]
             },
             "documentation": null,
-            "id": 1789,
+            "id": 1793,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 1778,
+                "id": 1782,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 1777,
+                  "id": 1781,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 1964,
+                  "referencedDeclaration": 1968,
                   "src": "316:11:3",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -811,15 +811,15 @@
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1776,
+              "id": 1780,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1773,
+                  "id": 1777,
                   "name": "_val",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1789,
+                  "scope": 1793,
                   "src": "270:12:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -828,7 +828,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1772,
+                    "id": 1776,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "270:7:3",
@@ -842,10 +842,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 1775,
+                  "id": 1779,
                   "name": "_manager",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1789,
+                  "scope": 1793,
                   "src": "293:16:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -854,7 +854,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1774,
+                    "id": 1778,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "293:7:3",
@@ -871,12 +871,12 @@
               "src": "260:55:3"
             },
             "returnParameters": {
-              "id": 1779,
+              "id": 1783,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "335:0:3"
             },
-            "scope": 1798,
+            "scope": 1802,
             "src": "241:159:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -884,54 +884,54 @@
           },
           {
             "body": {
-              "id": 1796,
+              "id": 1800,
               "nodeType": "Block",
               "src": "462:27:3",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 1794,
+                    "id": 1798,
                     "name": "val",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1771,
+                    "referencedDeclaration": 1775,
                     "src": "479:3:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1793,
-                  "id": 1795,
+                  "functionReturnParameters": 1797,
+                  "id": 1799,
                   "nodeType": "Return",
                   "src": "472:10:3"
                 }
               ]
             },
             "documentation": null,
-            "id": 1797,
+            "id": 1801,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getValue",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1790,
+              "id": 1794,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "427:2:3"
             },
             "returnParameters": {
-              "id": 1793,
+              "id": 1797,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1792,
+                  "id": 1796,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1797,
+                  "scope": 1801,
                   "src": "453:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -940,7 +940,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1791,
+                    "id": 1795,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "453:7:3",
@@ -955,14 +955,14 @@
               ],
               "src": "452:9:3"
             },
-            "scope": 1798,
+            "scope": 1802,
             "src": "410:79:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 1799,
+        "scope": 1803,
         "src": "152:339:3"
       }
     ],
@@ -974,7 +974,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2019-12-28T14:35:33.329Z",
+  "updatedAt": "2020-01-04T23:34:13.453Z",
   "devdoc": {
     "methods": {
       "isOwner()": {
