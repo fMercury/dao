@@ -170,10 +170,12 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     /**
      * @dev This event will be emitted when proposal moved to processed state
      * @param proposalId Proposal Id
+     * @param executor Address of proposal executor
      * @param passed Voting result
      */
     event ProposalProcessed(
         uint256 proposalId,
+        address executor,
         bool passed
     );
 
@@ -549,7 +551,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
             }
         }
 
-        emit ProposalProcessed(proposalId, isPassed);
+        emit ProposalProcessed(proposalId, msg.sender, isPassed);
     }
 
     /**

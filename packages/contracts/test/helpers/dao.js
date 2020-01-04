@@ -366,6 +366,10 @@ const processProposal = async (
             p => (p).should.equal(proposalId)
         ],
         [
+            'executor',
+            p => (p).should.equal(proposalCreator)
+        ],
+        [
             'passed',
             p => (p).should.equal(isPassed)
         ]
