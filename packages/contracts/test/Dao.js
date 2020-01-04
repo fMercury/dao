@@ -2,6 +2,7 @@ require('chai')
     .use(require('bn-chai')(web3.utils.BN))
     .should();
 
+const packageJson = require('../package.json');
 const {
     zeroAddress, 
     ProposalType,
@@ -306,6 +307,13 @@ contract('DAO', accounts => {
                     (await target.methods['owner()']().call()).should.equal(dao.address);
                 });
             });
+        });
+    });
+
+    describe('#version()', () => {
+
+        it('should return actual package version', async () => {
+            (await dao.methods['version()']().call()).should.equal(packageJson.version);
         });
     });
 
@@ -906,15 +914,6 @@ contract('DAO', accounts => {
                 );
             });
     
-            it('should fail if sender address not a proposer address', async () => {
-                await assertRevert(
-                    dao.methods['processProposal(uint256)'](proposalId).send({
-                        from: voter1
-                    }),
-                    'NOT_A_PROPOSER'
-                );
-            });
-    
             it('should fail if proposal has been processed before', async () => {
                 await processProposal(
                     dao,
@@ -1038,6 +1037,16 @@ contract('DAO', accounts => {
                     dao,
                     proposalId,
                     proposalCreator1,
+                    VoteType.No, 
+                    campaign
+                );
+            });
+
+            it('should process a proposal if called by not a proposer', async () => {
+                await processProposal(
+                    dao,
+                    proposalId,
+                    voter1,
                     VoteType.No, 
                     campaign
                 );

@@ -6,11 +6,11 @@
 
 ## Proposals
 
-- Make `#processProposal` available to anyone
+- [Done] Make `#processProposal` available to anyone
 - Add feature: Proposal TTL (time to live) - a time frame for sending `#processProposal`
-- Add tests for broken transaction in the proposal  
+- [Done] Add tests for broken transaction in the proposal  
 - Add feature: automatically return (send back) overpaid ether sent with the proposal
-- Add feature: withdraw ether sent with proposal in the case of proposal voting failure
+- [Done] Add feature: withdraw ether sent with proposal in the case of proposal voting failure
 
 ## Votings
 

@@ -189,6 +189,8 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      */
     event TransactionFailed(uint256 proposalId);
 
+    /// @dev Contract version number
+    string public constant version = "0.1.1";
 
     /// @dev Token that using in voting process
     IERC20 public serviceToken;
@@ -507,7 +509,6 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
      * Requirements:
      *  - proposal should exists
      *  - contract not paused
-     *  - sender address should be a proposer address
      *  - proposal should not be processed
      *  - proposal should not be cancelled
      *  - proposal is finished
@@ -517,8 +518,7 @@ contract Dao is Initializable, Pausable, WhitelistedRole {
     function processProposal(uint256 proposalId) 
         external 
         whenNotPaused 
-        proposalExists(proposalId)
-        onlyProposer(proposalId) 
+        proposalExists(proposalId) 
         notProcessed(proposalId) 
         notCancelled(proposalId) 
         onlyFinished(proposalId)

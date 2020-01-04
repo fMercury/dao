@@ -4,7 +4,6 @@ const { buildCallData } = require('./transactions');
 const { toBN, toWeiBN, dateTimeFromDuration } = require('./common');
 const { isqrt } = require('./bnmath');
 const { Contracts, ZWeb3 } = require('@openzeppelin/upgrades');
-Contracts.setLocalBuildDir('./artifacts');
 ZWeb3.initialize(web3.currentProvider);
 const Erc20Token = Contracts.getFromLocal('Erc20Token');
 

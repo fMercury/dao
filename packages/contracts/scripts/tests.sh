@@ -52,7 +52,7 @@ else
 
   # using of `npx truffle compile` is work around for the Openzeppelin SDK issue 
   # https://github.com/OpenZeppelin/openzeppelin-sdk/issues/1246
-  npx truffle compile 
+  npx truffle compile --all
 
   if [ "$ETH_GAS_REPORTER" = true ]; then 
     npx truffle test --config ./truffle-config.gas-reporter.js --network ganache $1 

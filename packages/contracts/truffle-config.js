@@ -37,7 +37,7 @@ module.exports = {
                 return provider;
             },
             network_id: 3,
-            gas: 5500000,
+            gas: 8000000,
             confirmations: 2,
             timeoutBlocks: 200,
             skipDryRun: true
