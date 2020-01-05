@@ -1,7 +1,7 @@
 {
-  "name": "@oz-dao/dapp",
+  "name": "@dao/dapp",
   "version": "0.0.1",
-  "description": "Dapp for the oz-dao",
+  "description": "Dapp for the Dao",
   "keywords": [
     "ethereum",
     "solidity",
@@ -11,15 +11,15 @@
     "dao"
   ],
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
-  "homepage": "https://github.com/kostysh/oz-dao/packages/dapp#readme",
+  "homepage": "https://github.com/windingtree/dao/packages/dapp#README",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/kostysh/oz-dao.git"
+    "url": "git+ssh://git@github.com:windingtree/dao.git"
   },
   "scripts": {},
   "dependencies": {},
   "devDependencies": {
-    "eslint": "6.7.2"
+    "eslint": "6.8.0"
   }
 }

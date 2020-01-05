@@ -1,4 +1,4 @@
-# Dapp for the Dao
+# CLI for the Dao
 
 ## Initial setup  
 

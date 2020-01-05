@@ -1,0 +1,40 @@
+{
+  "name": "@dao/cli",
+  "version": "0.0.1",
+  "description": "CLI for the Dao",
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "cli",
+    "web3",
+    "dao"
+  ],
+  "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
+  "homepage": "ttps://github.com/windingtree/dao/packages/cli#README",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:windingtree/dao.git"
+  },
+  "bin": {
+    "dao": "./dist/cli.js"
+  },
+  "scripts": {
+    "test": "TS_NODE_PROJECT='tsconfig.test.json' npx mocha --require ts-node/register --recursive test",
+    "lint": "npx eslint '*/**/*.{js,ts}'",
+    "lint:check": "npx eslint '*/**/*.{js,ts}'"
+  },
+  "dependencies": {
+    "@dao/contracts": "0.1.1",
+    "@openzeppelin/upgrades": "2.6.0",
+    "@openzeppelin/cli": "2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "13.1.4",
+    "eslint": "6.8.0",
+    "typescript": "3.7.4",
+    "ts-node": "8.5.4",
+    "mocha": "7.0.0",
+    "chai": "4.2.0"
+  }
+}

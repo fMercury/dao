@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "./"
+		}
+	],
+	"settings": {
+		"solidity.compileUsingRemoteVersion" : "0.5.14",
+		"solidity.packageDefaultDependenciesContractsDirectory": "",
+		"solidity.packageDefaultDependenciesDirectory": "./node_modules",
+		"solidity.linter": "solhint"
+	}
+}
