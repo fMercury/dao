@@ -10,7 +10,7 @@
     "dao"
   ],
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
-  "homepage": "ttps://github.com/windingtree/dao/packages/cli#README",
+  "homepage": "https://github.com/windingtree/dao/packages/cli#README",
   "license": "MIT",
   "repository": {
     "type": "git",
