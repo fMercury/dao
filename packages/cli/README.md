@@ -15,7 +15,13 @@ npm i
 npm i @dao/cli
 ```
 
-Because of script natiure it requires truffle configuration (`truffle-config.js`) to be able to use scripts features. 
+Because of script natiure it requires truffle configuration (`truffle-config.js`) to be able to use scripts features.  
+
+### Create new Dao
+
+```bash
+npx truffle exec ./dao.js --network rinkeby owner=[INITIAL_DAO_QWNER_ADDRESS] token=[GOVERNANCE_TOKEN_ADDRESS] proposers=[PROPOSER_ADDRESS_1][, PROPOSER_ADDRESS_2][, ...]
+```
 
 ### Get Dao proxy admin owner address
 

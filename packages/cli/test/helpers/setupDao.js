@@ -1,13 +1,17 @@
 const path = require('path');
 const { Contracts, ProxyAdminProject, ZWeb3 } = require('@openzeppelin/upgrades');
+const contract = require('@truffle/contract');
+const ERC20Schema = require('@dao/contracts/artifacts/ERC20.json');
 
 // Use pre-built artifacts from the Dao repository
 const artifactsPath = path.join(__dirname, '../../node_modules/@dao/contracts/artifacts');
 
 module.exports = async (
     initialDaoOwner,
-    proposalCreators = [],
-    voters = []
+    proposalCreators,
+    voters = [],
+    tokenAddress = null,
+    makeSelfGoverned = false
 ) => {
     Contracts.setArtifactsDefaults({
         gas: 0xfffffffffff,
@@ -16,11 +20,20 @@ module.exports = async (
     ZWeb3.initialize(web3.currentProvider);
     const Erc20TokenContract = Contracts.getFromLocal('Erc20Token');
     const DaoContract = Contracts.getFromLocal('Dao');
+    let token;
 
-    // Create service token instance
-    const token = await Erc20TokenContract.new('Governance Coin', 'GOVC', 18, web3.utils.toWei('100000000', 'ether'), {
-        from: initialDaoOwner
-    });
+    if (tokenAddress) {
+
+        const tokenInstance = contract(ERC20Schema);
+        tokenInstance.setProvider(web3.currentProvider);
+        token = await tokenInstance.at(tokenAddress);
+    } else {
+
+        // Create service token instance
+        token = await Erc20TokenContract.new('Governance Coin', 'GOVC', 18, web3.utils.toWei('100000000', 'ether'), {
+            from: initialDaoOwner
+        });
+    }
 
     // Mint and transfer initial amount of tokens to voters
     await Promise.all(voters.map(
@@ -43,9 +56,13 @@ module.exports = async (
     });
 
     const adminAddress = await project.getAdminAddress();
-    const adminOwnerAddress = await project.proxyAdmin.getOwner();
+    let adminOwnerAddress = await project.proxyAdmin.getOwner();
     const proxyAddress = dao.address;
     const proxyImplementation = await project.proxyAdmin.getProxyImplementation(dao.address);
+
+    if (!Array.isArray(proposalCreators) || proposalCreators.length === 0) {
+        throw new Error('PROPOSERS_ARE_NOT_DEFINED');
+    }
 
     // Add proposals creator address to white-list
     await Promise.all(proposalCreators.map(p => dao.methods['addWhitelisted(address)'](p).send({
@@ -65,6 +82,13 @@ module.exports = async (
             from: initialDaoOwner
         }
     );
+
+    if (makeSelfGoverned) {
+
+        // Grant ability to upgrade all implementations via Dao itself only
+        await project.transferAdminOwnership(proxyAddress);
+        adminOwnerAddress = await project.proxyAdmin.getOwner();
+    }
 
     return {
         token,

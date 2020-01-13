@@ -1,4 +1,5 @@
 const { parseArgv, parseParams } = require('./utils/cli');
+const createDao = require('./commands/createdao');
 const getProxyAdminOwner = require('./commands/getproxyadminowner');
 const getProxyImplementation = require('./commands/getproxyimplementation');
 
@@ -10,11 +11,11 @@ const main = async () => {
     const args = parseArgv(process.argv, 6);
     const params = parseParams(args);
 
-    if (!args.address) {
-        throw new Error('DAO_ADDREESS_NOT_SPECIFIED');
-    }
-
     switch (args.cmd) {
+        case 'createdao':
+            await createDao(args.owner, args.token, parseParams(args.proposers));
+            break;
+
         case 'getproxyadmin':
             await getProxyAdminOwner(ProxyAdminSchema, args.address);
             break;
