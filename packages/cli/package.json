@@ -17,24 +17,26 @@
     "url": "git+ssh://git@github.com:windingtree/dao.git"
   },
   "bin": {
-    "dao": "./dist/cli.js"
+    "dao": "./dist/dao.js"
   },
   "scripts": {
-    "test": "TS_NODE_PROJECT='tsconfig.test.json' npx mocha --require ts-node/register --recursive test",
-    "lint": "npx eslint '*/**/*.{js,ts}'",
-    "lint:check": "npx eslint '*/**/*.{js,ts}'"
+    "test": "./scripts/test.sh",
+    "coverage": "COVERAGE=true ./scripts/test.sh",
+    "lint": "npx eslint './src/**/*.js' && npx eslint './test/**/*.js'"
   },
   "dependencies": {
     "@dao/contracts": "0.1.1",
     "@openzeppelin/upgrades": "2.6.0",
-    "@openzeppelin/cli": "2.6.0"
+    "@truffle/contract": "4.1.4"
   },
   "devDependencies": {
-    "@types/node": "13.1.4",
     "eslint": "6.8.0",
-    "typescript": "3.7.4",
-    "ts-node": "8.5.4",
     "mocha": "7.0.0",
-    "chai": "4.2.0"
+    "chai": "4.2.0",
+    "istanbul": "1.1.0-alpha.1",
+    "truffle": "5.1.8",
+    "truffle-hdwallet-provider": "1.0.17",
+    "web3-provider-engine": "15.0.4",
+    "ganache-cli": "6.8.1"
   }
 }
