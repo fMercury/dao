@@ -13,6 +13,7 @@ npm i
 
 ```bash
 npm i @dao/cli
+npm link
 ```
 
 Because of script natiure it requires truffle configuration (`truffle-config.js`) to be able to use scripts features.  
@@ -68,7 +69,7 @@ npx truffle exec ./dao.js --network rinkeby address=[DAO_ADDRESS] cmd=whitelist 
 ### Publish a custom proposal
 
 ```bash
-npx truffle exec ./dao.js --network rinkeby address=[DAO_ADDRESS] cmd=proposal params=[PROPOSAL_DESCRIPTION],[PROPOSAL_TYPE],[PROPOSAL_DURATION],[PROPOSAL_DESTINATION],[PROPOSAL_ETH_VALUE],[PROPOSAL_CALLDATA]
+npx truffle exec ./dao.js --network rinkeby address=[DAO_ADDRESS] proposer=[PROPOSER_ADDRESS] cmd=proposal params=[PROPOSAL_DETAILS],[PROPOSAL_TYPE],[PROPOSAL_DURATION],[PROPOSAL_DESTINATION],[PROPOSAL_ETH_VALUE] callname=[DESTINATION_METHOD_NAME] calltypes=[CALL_TYPE_1][,CALL_TYPE2][, ...] callvalues=[CALL_VALUE_1][,CALL_VALUE_2][, ...]
 ```
 
 ### Process a proposal

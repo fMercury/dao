@@ -2,6 +2,7 @@ const { parseArgv, parseParams } = require('./utils/cli');
 const createDao = require('./commands/createdao');
 const getProxyAdminOwner = require('./commands/getproxyadminowner');
 const getProxyImplementation = require('./commands/getproxyimplementation');
+const proposal = require('./commands/proposal');
 
 const ProxyAdminSchema = require('@openzeppelin/upgrades/build/contracts/ProxyAdmin.json');
 const DaoSchema = require('@dao/contracts/artifacts/Dao.json');
@@ -40,6 +41,21 @@ const main = async () => {
             break;
 
         case 'proposal':
+            await proposal(
+                DaoSchema,
+                args.address,
+                {
+                    details: params[0],
+                    proposalType: params[1],
+                    duration: params[2],
+                    destination: params[3],
+                    value: params[4],
+                    callName: args.callname, 
+                    callTypes: parseParams(args.calltypes), 
+                    callValues: parseParams(args.callvalues)
+                },
+                args.proposer
+            );
             break;
 
         case 'processproposal':
