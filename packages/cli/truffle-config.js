@@ -1,4 +1,4 @@
-const HDWalletProvider = require('truffle-hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 const NonceTrackerSubprovider = require('web3-provider-engine/subproviders/nonce-tracker');
 
 let pkey = process.env.ETH_PRIVATE_KEY;
@@ -20,6 +20,7 @@ module.exports = {
 
     networks: {
         ganache: {
+            provider: _ => new HDWalletProvider(pkey, 'http://localhost:8545'),
             host: '127.0.0.1',
             port: 8545,
             network_id: '*',

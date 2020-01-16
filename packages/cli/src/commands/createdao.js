@@ -1,4 +1,4 @@
-const { log } = require('../utils/stdout');
+const { title, log } = require('../utils/stdout');
 const setupDao = require('../../test/helpers/setupDao');
 
 module.exports = async (
@@ -6,6 +6,7 @@ module.exports = async (
     tokenAddress,
     proposers
 ) => {
+    title('New Dao creation and deployment');
 
     // Setup Dao
     const setup = await setupDao(
@@ -16,11 +17,11 @@ module.exports = async (
         true
     );
 
-    log('Dao', setup.proxyAddress, true);
-    log('Governance Token', setup.token.address, false);
-    log('Proxy Admin', setup.adminAddress, false);
-    log('Proxy Admin Owner', setup.adminOwnerAddress, false);
-    log('Proxy Implementation', setup.proxyImplementation, false);
+    log('Dao', setup.proxyAddress);
+    log('Governance Token', setup.token.address);
+    log('Proxy Admin', setup.adminAddress);
+    log('Proxy Admin Owner', setup.adminOwnerAddress);
+    log('Proxy Implementation', setup.proxyImplementation);
 
     return setup;
 };

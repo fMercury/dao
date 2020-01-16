@@ -13,7 +13,7 @@ module.exports = async (
     const daoContract = createContract(daoSchema);
     const daoInstance = await daoContract.at(daoAddress);
 
-    title('Creating of the proposal', null, true);
+    title('Creating of the proposal');
 
     return await new Promise((resolve, reject) => {
         
@@ -42,7 +42,13 @@ module.exports = async (
                     l.event === 'ProposalAdded'
                 ));
                 const proposalId = events[0].args.proposalId.toString();
-                log('Proposal created with Id', proposalId, false);
+                log('Proposal created with Id', proposalId);
+                title('Proposal parameters');
+                log('Details', options.details);
+                log('Proposal type', options.proposalType);
+                log('Duration', options.duration);
+                log('Destination', options.destination);
+                log('Call name', options.callName);
                 resolve(proposalId);
             })
             .catch(reject);

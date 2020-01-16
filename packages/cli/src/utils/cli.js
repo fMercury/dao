@@ -35,11 +35,11 @@ module.exports.parseArgv = (argv, skip = 0) => {
  */
 module.exports.parseParams = params => {
 
-    if (!params.params || params.params === '') {
-        throw new Error('ERROR_PARAMETERS_NOT_FOUND');
+    if (!params) {
+        return [];
     }
 
-    return params.params.split(',').map(p => {
+    return params.split(',').map(p => {
         const template = /^number:/g;
         return p.match(template) ? parseInt(p.replace(template, '')) : p;
     });

@@ -2,10 +2,14 @@ const { ganache, defaults } = require('../helpers/ganache');
 const { assertFailure } = require('../helpers/assertions');
 const setupDao = require('../helpers/setupDao');
 const { encodeCall } = require('@openzeppelin/upgrades');
+const packageJson = require('../../package.json');
+
+// Contracts schemas 
 const ProxyAdminSchema = require('@openzeppelin/upgrades/build/contracts/ProxyAdmin.json');
 const DaoSchema = require('@dao/contracts/artifacts/Dao.json');
 
 // Test targets
+const version = require('../../src/commands/version');
 const createDao = require('../../src/commands/createdao');
 const getProxyAminOwner = require('../../src/commands/getproxyadminowner');
 const getProxyImplementation = require('../../src/commands/getproxyimplementation');
@@ -45,6 +49,13 @@ describe('Commands', () => {
     });
 
     afterEach(() => server.close());
+
+    describe('#version', () => {
+
+        it('shoukd return cli version number', async () => {
+            (await version()).should.equal(packageJson.version);
+        });
+    });
 
     describe('#createdao', () => {
 
