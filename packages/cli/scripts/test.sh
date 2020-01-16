@@ -13,11 +13,10 @@ cleanup() {
     echo "Testing environment is cleaned"
 }
 
-if [ !$COVERAGE ]; then 
-    echo "Running tests without coverage"
-    npx mocha --exit -R spec --timeout 70000 ./test/spec/**/*.js 
-
-else 
+if [ "$COVERAGE" = true ]; then 
     echo "Running tests with coverage"
     npx istanbul cover _mocha --report lcovonly --  --exit -R spec --timeout 70000 ./test/spec/**/*.js
+else 
+    echo "Running tests without coverage"
+    npx mocha --exit -R spec --timeout 70000 ./test/spec/**/*.js    
 fi

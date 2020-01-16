@@ -52,7 +52,7 @@ describe('Commands', () => {
 
     describe('#version', () => {
 
-        it('shoukd return cli version number', async () => {
+        it('should return cli version number', async () => {
             (await version()).should.equal(packageJson.version);
         });
     });
