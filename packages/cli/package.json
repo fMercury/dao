@@ -27,7 +27,8 @@
     "test": "./scripts/test.sh",
     "coverage": "COVERAGE=true ./scripts/test.sh",
     "lint": "npx eslint './src/**/*.js' && npx eslint './test/**/*.js'",
-    "ganache": "./scripts/ganache.sh"
+    "ganache": "./scripts/ganache.sh",
+    "coveralls": "./scripts/coveralls.sh"
   },
   "dependencies": {
     "@dao/contracts": "0.1.1",
@@ -46,6 +47,7 @@
     "ganache-cli": "6.8.1",
     "@babel/core": "7.8.3",
     "@babel/cli": "7.8.3",
-    "@babel/preset-env": "7.8.3"
+    "@babel/preset-env": "7.8.3",
+    "coveralls": "3.0.9"
   }
 }
